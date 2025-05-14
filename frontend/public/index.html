@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipo de Basketball</title>
+    <link rel="stylesheet" href="normalize.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Equipo de Basketball</h1>
+        <nav>
+            <ul>
+                <li><a href="#galeria">Galería</a></li>
+                <li><a href="#inscripcion">Inscripción</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="galeria">
+            <h2>Galería de Fotos</h2>
+            <div class="carousel">
+                <img src="foto1.jpg" alt="Foto 1" data-description="Jugador 1">
+                <img src="foto2.jpg" alt="Foto 2" data-description="Jugador 2">
+                <img src="foto3.jpg" alt="Foto 3" data-description="Jugador 3">
+            </div>
+        </section>
+        <section id="inscripcion">
+            <h2>Formulario de Inscripción</h2>
+            <form id="form-inscripcion">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password" required>
+                <button type="submit">Enviar</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>Síguenos en:</p>
+        <ul>
+            <li><a href="https://facebook.com">Facebook</a></li>
+            <li><a href="https://twitter.com">Twitter</a></li>
+            <li><a href="https://instagram.com">Instagram</a></li>
+        </ul>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
