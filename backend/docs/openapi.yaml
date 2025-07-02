@@ -1,0 +1,359 @@
+openapi: 3.0.0
+info:
+  title: Basketball Team API
+  description: API para gestión de equipo de baloncesto
+  version: 1.0.0
+  contact:
+    name: Basketball Team
+    email: contact@basketballteam.com
+
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Servidor de desarrollo
+  - url: https://api.basketballteam.com/v1
+    description: Servidor de producción
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "64f1234567890abcdef12345"
+        email:
+          type: string
+          format: email
+          example: "usuario@example.com"
+        role:
+          type: string
+          enum: [user, admin]
+          example: "user"
+        createdAt:
+          type: string
+          format: date-time
+
+    Player:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "64f1234567890abcdef12345"
+        user_id:
+          type: string
+          example: "64f1234567890abcdef12345"
+        position:
+          type: string
+          example: "Point Guard"
+        height:
+          type: number
+          example: 180
+        weight:
+          type: number
+          example: 75
+        stats:
+          type: object
+          properties:
+            games_played:
+              type: number
+              example: 25
+            points_per_game:
+              type: number
+              example: 15.5
+            rebounds_per_game:
+              type: number
+              example: 8.2
+            assists_per_game:
+              type: number
+              example: 6.1
+
+    Error:
+      type: object
+      properties:
+        msg:
+          type: string
+          example: "Error message"
+        code:
+          type: string
+          example: "ERROR_CODE"
+
+security:
+  - bearerAuth: []
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      tags: [System]
+      security: []
+      responses:
+        200:
+          description: Sistema funcionando correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "OK"
+                  timestamp:
+                    type: string
+                    format: date-time
+                  uptime:
+                    type: number
+
+  /auth/register:
+    post:
+      summary: Registrar nuevo usuario
+      tags: [Authentication]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 6
+              required:
+                - email
+                - password
+      responses:
+        201:
+          description: Usuario creado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+                  token:
+                    type: string
+        400:
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/login:
+    post:
+      summary: Iniciar sesión
+      tags: [Authentication]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        200:
+          description: Login exitoso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+                  token:
+                    type: string
+        401:
+          description: Credenciales inválidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /players:
+    get:
+      summary: Obtener lista de jugadores
+      tags: [Players]
+      security: []
+      parameters:
+        - name: page
+          in: query
+          description: Número de página
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Elementos por página
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: position
+          in: query
+          description: Filtrar por posición
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: Buscar por nombre
+          schema:
+            type: string
+        - name: sortBy
+          in: query
+          description: Campo para ordenar
+          schema:
+            type: string
+            default: "nombre"
+        - name: order
+          in: query
+          description: Orden ascendente o descendente
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: "asc"
+      responses:
+        200:
+          description: Lista de jugadores
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Player'
+                  meta:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                      page:
+                        type: integer
+                      limit:
+                        type: integer
+
+    post:
+      summary: Crear nuevo jugador
+      tags: [Players]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                position:
+                  type: string
+                height:
+                  type: number
+                weight:
+                  type: number
+              required:
+                - user_id
+                - position
+                - height
+                - weight
+      responses:
+        201:
+          description: Jugador creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+        400:
+          description: Error de validación
+        401:
+          description: No autorizado
+
+  /players/{id}:
+    put:
+      summary: Actualizar jugador
+      tags: [Players]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Player'
+      responses:
+        200:
+          description: Jugador actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+        404:
+          description: Jugador no encontrado
+        401:
+          description: No autorizado
+
+    delete:
+      summary: Eliminar jugador
+      tags: [Players]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Jugador eliminado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: "Eliminado"
+        404:
+          description: Jugador no encontrado
+        401:
+          description: No autorizado
+
+tags:
+  - name: System
+    description: Endpoints del sistema
+  - name: Authentication
+    description: Autenticación y autorización
+  - name: Players
+    description: Gestión de jugadores
+  - name: Users
+    description: Gestión de usuarios
+  - name: Images
+    description: Gestión de imágenes
