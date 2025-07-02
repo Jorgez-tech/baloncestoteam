@@ -321,9 +321,9 @@ netlify deploy --prod --dir=build
 ## 📞 Soporte
 
 ### Contacto
-- **Email**: tu@email.com
-- **GitHub**: tu-usuario
-- **LinkedIn**: tu-perfil
+- **Email**: jzuta309@gmail.com
+- **GitHub**: Jorgez-tech
+- **LinkedIn**: Jorge Zuta
 
 ### Documentación adicional
 - [API Documentation](http://localhost:5000/api/v1/docs)
