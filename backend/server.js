@@ -15,7 +15,12 @@ const app = express();
 connectDB();
 
 // Conectar a Redis (opcional)
-connectRedis();
+try {
+    connectRedis();
+    console.log('🔄 Intentando conexión a Redis...');
+} catch (error) {
+    console.warn('⚠️  Redis no disponible, continuando sin cache:', error.message);
+}
 
 // Configurar CORS
 const corsOptions = {

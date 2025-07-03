@@ -1,23 +1,46 @@
 import React from 'react';
+import { useAuth } from '../context/AuthContext';
 
 const Home = () => {
+    const { user } = useAuth();
+
     return (
         <div className="home">
             {/* Hero Section */}
             <section className="hero">
                 <div className="hero-content">
                     <h1>Bienvenido al Equipo de Basketball</h1>
-                    <p>
-                        Únete a nosotros en esta increíble aventura deportiva.
-                        Somos más que un equipo, somos una familia.
-                    </p>
+                    {user ? (
+                        <div className="welcome-user">
+                            <p>¡Hola {user.email}!</p>
+                            <p>Rol: {user.role === 'admin' ? 'Administrador' : 'Jugador'}</p>
+                        </div>
+                    ) : (
+                        <p>
+                            Únete a nosotros en esta increíble aventura deportiva.
+                            Somos más que un equipo, somos una familia.
+                        </p>
+                    )}
                     <div className="hero-buttons">
-                        <button className="btn-primary">
-                            Únete al Equipo
-                        </button>
-                        <button className="btn-secondary">
-                            Ver Jugadores
-                        </button>
+                        {!user ? (
+                            <>
+                                <button className="btn-primary">
+                                    Únete al Equipo
+                                </button>
+                                <button className="btn-secondary">
+                                    Ver Jugadores
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <button className="btn-primary">
+                                    Ver Mi Perfil
+                                </button>
+                                <button className="btn-secondary">
+                                    Ver Equipo
+                                </button>
+                            </>
+                        )}
                     </div>
                 </div>
                 <div className="hero-image">
@@ -27,6 +50,36 @@ const Home = () => {
                     />
                 </div>
             </section>
+
+            {/* Test Credentials Section - Solo mostrar si no está logueado */}
+            {!user && (
+                <section className="test-credentials">
+                    <div className="container">
+                        <h2>🔐 Credenciales de Prueba</h2>
+                        <p>Puedes usar estas credenciales para probar la aplicación:</p>
+                        <div className="credentials-grid">
+                            <div className="credential-card admin">
+                                <h3>👨‍💼 Administrador</h3>
+                                <p><strong>Email:</strong> admin@basketballteam.com</p>
+                                <p><strong>Password:</strong> admin123</p>
+                                <p>Acceso completo al sistema</p>
+                            </div>
+                            <div className="credential-card player">
+                                <h3>🏀 Jugador 1</h3>
+                                <p><strong>Email:</strong> player1@basketballteam.com</p>
+                                <p><strong>Password:</strong> player123</p>
+                                <p>Juan Carlos Rodriguez - Point Guard</p>
+                            </div>
+                            <div className="credential-card player">
+                                <h3>🏀 Jugador 2</h3>
+                                <p><strong>Email:</strong> player2@basketballteam.com</p>
+                                <p><strong>Password:</strong> player123</p>
+                                <p>Miguel Angel Torres - Shooting Guard</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {/* Stats Section */}
             <section className="stats">

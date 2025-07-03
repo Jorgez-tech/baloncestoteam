@@ -12,27 +12,31 @@ const connectRedis = () => {
             retryDelayOnFailover: 100,
             enableReadyCheck: true,
             maxRetriesPerRequest: 3,
+            lazyConnect: true, // No conectar inmediatamente
+            connectTimeout: 5000,
+            commandTimeout: 5000
         });
 
         redisClient.on('connect', () => {
-            console.log('Redis client connected');
+            console.log('✅ Redis client connected');
         });
 
         redisClient.on('error', (err) => {
-            console.log('Redis client error:', err);
+            console.log('⚠️  Redis client error (continuando sin Redis):', err.message);
+            // No terminar el proceso, solo registrar el error
         });
 
         redisClient.on('ready', () => {
-            console.log('Redis client ready');
+            console.log('✅ Redis client ready');
         });
 
         redisClient.on('end', () => {
-            console.log('Redis client disconnected');
+            console.log('📴 Redis client disconnected');
         });
 
         return redisClient;
     } catch (error) {
-        console.error('Error connecting to Redis:', error);
+        console.warn('⚠️  Error connecting to Redis (continuando sin Redis):', error.message);
         return null;
     }
 };

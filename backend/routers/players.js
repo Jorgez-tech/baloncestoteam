@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
-const Player = require('../models/Player');
+const Player = require('../models/player');
 
 // GET /api/v1/players
 // Query: page, limit, position, minHeight, maxWeight, sortBy, order, search
 router.get('/', async (req, res) => {
-  const { page=1, limit=20, position, minHeight, maxWeight, sortBy='nombre', order='asc', search } = req.query;
+  const { page = 1, limit = 20, position, minHeight, maxWeight, sortBy = 'nombre', order = 'asc', search } = req.query;
   const filter = {};
   if (position) filter.posición = position;
   if (minHeight) filter.altura = { $gte: parseFloat(minHeight) };
@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
   const players = await Player
     .find(filter)
     .sort({ [sortBy]: order === 'asc' ? 1 : -1 })
-    .skip((page-1)*limit)
+    .skip((page - 1) * limit)
     .limit(parseInt(limit));
 
   const total = await Player.countDocuments(filter);
