@@ -5,14 +5,15 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Components
-import Header from './components/Header';
-import Footer from './components/Footer';
+import Header from './header';
+import Footer from './footer';
 import Login from './components/Login';
-import Signup from './components/Signup';
-import Gallery from './components/Gallery';
+import Signup from './components/Singnup';
+import Gallery from './gallery';
 import AdminDashboard from './components/AdminDashboard';
-import PlayerList from './components/PlayerList';
-import Home from './components/Home';
+import PlayerList from './PlayerList';
+import PlayerProfile from './PlayerProfile';
+import Home from './Home';
 
 // Context
 import { AuthProvider, useAuth } from '../context/AuthContext';
@@ -88,7 +89,7 @@ function App() {
                                 }
                             />
 
-                            {/* Protected Routes */}
+                            {/* Public Routes */}
                             <Route
                                 path="/"
                                 element={
@@ -110,6 +111,14 @@ function App() {
                                 element={
                                     <AppLayout>
                                         <PlayerList />
+                                    </AppLayout>
+                                }
+                            />
+                            <Route
+                                path="/players/:id"
+                                element={
+                                    <AppLayout>
+                                        <PlayerProfile />
                                     </AppLayout>
                                 }
                             />

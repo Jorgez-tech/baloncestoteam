@@ -1,14 +1,21 @@
 import React from 'react';
 import { useQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 import { playersAPI } from '../components/api/client';
 
 const PlayerList = () => {
+    const navigate = useNavigate();
     const {
         data: playersData,
         isLoading,
         error,
         refetch
     } = useQuery('players', () => playersAPI.getAll());
+
+    // Función para navegar al perfil del jugador
+    const handlePlayerClick = (playerId) => {
+        navigate(`/players/${playerId}`);
+    };
 
     if (isLoading) {
         return (
@@ -38,6 +45,18 @@ const PlayerList = () => {
             <div className="player-list-header">
                 <h2>Nuestros Jugadores</h2>
                 <p>Conoce a los integrantes de nuestro equipo</p>
+                <div className="list-stats">
+                    <div className="stat-chip">
+                        <span className="stat-number">{players.length}</span>
+                        <span className="stat-text">Jugadores</span>
+                    </div>
+                    {playersData?.data?.meta?.total && (
+                        <div className="stat-chip">
+                            <span className="stat-number">{playersData.data.meta.total}</span>
+                            <span className="stat-text">Total</span>
+                        </div>
+                    )}
+                </div>
             </div>
 
             {players.length === 0 ? (
@@ -48,10 +67,15 @@ const PlayerList = () => {
             ) : (
                 <div className="players-grid">
                     {players.map((player) => (
-                        <div key={player._id} className="player-card">
+                        <div
+                            key={player._id}
+                            className="player-card clickable"
+                            onClick={() => handlePlayerClick(player._id)}
+                            title={`Ver perfil de ${player.name}`}
+                        >
                             <div className="player-avatar">
                                 <img
-                                    src={player.avatar || '/api/placeholder/150/150'}
+                                    src={player.avatar || '/default-avatar.svg'}
                                     alt={`${player.name || 'Jugador'}`}
                                 />
                             </div>
@@ -94,6 +118,19 @@ const PlayerList = () => {
                                         </div>
                                     </div>
                                 )}
+
+                                {/* Botón para ver más detalles */}
+                                <div className="player-actions">
+                                    <button
+                                        className="btn btn-primary view-profile-btn"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handlePlayerClick(player._id);
+                                        }}
+                                    >
+                                        Ver Perfil Completo
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     ))}

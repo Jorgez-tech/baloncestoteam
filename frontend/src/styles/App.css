@@ -465,6 +465,38 @@ body {
   margin-bottom: 10px;
 }
 
+.list-stats {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.stat-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px 20px;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  min-width: 80px;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.stat-text {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+}
+
 .players-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -477,11 +509,44 @@ body {
   box-shadow: var(--box-shadow);
   padding: 20px;
   transition: var(--transition);
+  cursor: pointer;
+  position: relative;
 }
 
 .player-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.player-card.clickable {
+  cursor: pointer;
+}
+
+.player-card.clickable:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  border: 2px solid var(--primary-color);
+}
+
+.player-card.clickable::after {
+  content: '👁️ Ver perfil';
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: var(--primary-color);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.player-card.clickable:hover::after {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .player-avatar {
@@ -530,6 +595,67 @@ body {
 .stat-value {
   font-weight: 500;
   color: var(--dark-color);
+}
+
+.player-performance {
+  margin-top: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid var(--primary-color);
+}
+
+.player-performance h4 {
+  margin: 0 0 10px 0;
+  color: var(--dark-color);
+  font-size: 1rem;
+}
+
+.performance-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.perf-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.perf-stat span:first-child {
+  color: var(--gray-medium);
+}
+
+.perf-stat span:last-child {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.player-actions {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.view-profile-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.view-profile-btn:hover {
+  background: var(--secondary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* Test Credentials Section */
