@@ -4,21 +4,21 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "SET NODE_OPTIONS=--openssl-legacy-provider && SET SKIP_PREFLIGHT_CHECK=true && react-scripts start",
-    "build": "SET NODE_OPTIONS=--openssl-legacy-provider && SET SKIP_PREFLIGHT_CHECK=true && react-scripts build",
+    "start": "SET NODE_OPTIONS=--openssl-legacy-provider && SET SKIP_PREFLIGHT_CHECK=true && SET GENERATE_SOURCEMAP=false && react-scripts start",
+    "build": "SET NODE_OPTIONS=--openssl-legacy-provider && SET SKIP_PREFLIGHT_CHECK=true && SET GENERATE_SOURCEMAP=false && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.18",
+    "axios": "^1.4.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3",
-    "react-router-dom": "^6.3.0",
-    "axios": "^1.4.0",
+    "react-hook-form": "^7.34.0",
     "react-query": "^3.39.3",
-    "react-hook-form": "^7.45.0",
-    "react-toastify": "^8.2.0",
-    "@heroicons/react": "^2.0.18"
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "4.0.3",
+    "react-toastify": "^8.2.0"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",
@@ -36,5 +36,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5001"
+  "proxy": "http://localhost:5000"
 }
