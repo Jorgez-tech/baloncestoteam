@@ -11,6 +11,9 @@ require('dotenv').config();
 
 const app = express();
 
+// Configurar trust proxy para express-rate-limit
+app.set('trust proxy', 1);
+
 // Conectar a la base de datos
 connectDB();
 
@@ -31,7 +34,24 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Middleware de seguridad
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: false, // Desactiva CSP si no lo necesitas
+    xssFilter: false // Desactiva X-XSS-Protection (obsoleto)
+}));
+
+// Forzar header X-Content-Type-Options y charset utf-8
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    // Si la respuesta es HTML, fuerza charset utf-8
+    const send = res.send;
+    res.send = function (body) {
+        if (typeof body === 'string' && body.trim().startsWith('<!DOCTYPE html')) {
+            res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        }
+        return send.call(this, body);
+    };
+    next();
+});
 
 // Rate limiting
 const limiter = rateLimit({

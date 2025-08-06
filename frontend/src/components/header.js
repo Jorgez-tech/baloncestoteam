@@ -8,10 +8,14 @@ import {
     ArrowRightOnRectangleIcon
 } from '@heroicons/react/24/outline';
 
+
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { user, logout, isAuthenticated, isAdmin } = useAuth();
     const navigate = useNavigate();
+
+    // Log para depuración de reactividad
+    console.log('HEADER user:', user, 'isAuthenticated:', isAuthenticated);
 
     const handleLogout = async () => {
         await logout();

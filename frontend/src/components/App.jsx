@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Header from './header';
 import Footer from './footer';
 import Login from './components/Login';
-import Signup from './components/Singnup';
+import Signup from './components/Signup';
 import Gallery from './gallery';
 import AdminDashboard from './components/AdminDashboard';
 import PlayerList from './PlayerList';

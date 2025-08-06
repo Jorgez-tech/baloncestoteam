@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
         const token = localStorage.getItem('token');
         const savedUser = localStorage.getItem('user');
 
-        if (token && savedUser) {
+        if (token && savedUser && savedUser !== 'undefined') {
             try {
                 setUser(JSON.parse(savedUser));
             } catch (error) {
@@ -31,6 +31,10 @@ export const AuthProvider = ({ children }) => {
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
             }
+        } else if (savedUser === 'undefined' || !savedUser || !token) {
+            // Clean up corrupted data
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
         }
 
         setLoading(false);
