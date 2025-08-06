@@ -31,6 +31,7 @@ const queryClient = new QueryClient({
     },
 });
 
+
 // Protected Route Component
 const ProtectedRoute = ({ children, requireAdmin = false }) => {
     const { user, loading } = useAuth();
@@ -44,6 +45,21 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
     }
 
     if (requireAdmin && user.role !== 'admin') {
+        return <Navigate to="/" replace />;
+    }
+
+    return children;
+};
+
+// Public Only Route Component
+const PublicOnlyRoute = ({ children }) => {
+    const { user, loading } = useAuth();
+
+    if (loading) {
+        return <div className="loading">Cargando...</div>;
+    }
+
+    if (user) {
         return <Navigate to="/" replace />;
     }
 
@@ -72,20 +88,25 @@ function App() {
                     <div className="App">
                         <Routes>
                             {/* Public Routes */}
+
                             <Route
                                 path="/login"
                                 element={
-                                    <AppLayout>
-                                        <Login />
-                                    </AppLayout>
+                                    <PublicOnlyRoute>
+                                        <AppLayout>
+                                            <Login />
+                                        </AppLayout>
+                                    </PublicOnlyRoute>
                                 }
                             />
                             <Route
                                 path="/signup"
                                 element={
-                                    <AppLayout>
-                                        <Signup />
-                                    </AppLayout>
+                                    <PublicOnlyRoute>
+                                        <AppLayout>
+                                            <Signup />
+                                        </AppLayout>
+                                    </PublicOnlyRoute>
                                 }
                             />
 

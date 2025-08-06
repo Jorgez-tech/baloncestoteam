@@ -15,6 +15,8 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    // Estado para forzar re-render global tras login/logout
+    const [authVersion, setAuthVersion] = useState(0);
 
     useEffect(() => {
         // Check if user is logged in on app start
@@ -45,6 +47,7 @@ export const AuthProvider = ({ children }) => {
             localStorage.setItem('user', JSON.stringify(user));
 
             setUser(user);
+            setAuthVersion(v => v + 1); // Forzar re-render global
             toast.success('¡Bienvenido de vuelta!');
 
             return { success: true, user };
@@ -90,6 +93,7 @@ export const AuthProvider = ({ children }) => {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             setUser(null);
+            setAuthVersion(v => v + 1); // Forzar re-render global
             toast.info('Sesión cerrada');
         }
     };
@@ -108,10 +112,12 @@ export const AuthProvider = ({ children }) => {
         updateUser,
         isAuthenticated: !!user,
         isAdmin: user?.role === 'admin',
+        authVersion, // Para forzar re-render en consumidores si es necesario
     };
 
     return (
         <AuthContext.Provider value={value}>
+            {/* authVersion fuerza re-render global */}
             {children}
         </AuthContext.Provider>
     );
