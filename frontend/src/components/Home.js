@@ -1,8 +1,62 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+
+// Modal de contacto
+const ContactModal = ({ isOpen, onClose }) => {
+    const [form, setForm] = useState({ nombre: '', email: '', mensaje: '' });
+    const [enviado, setEnviado] = useState(false);
+
+    if (!isOpen) return null;
+
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setEnviado(true);
+        setTimeout(() => {
+            setEnviado(false);
+            onClose();
+            setForm({ nombre: '', email: '', mensaje: '' });
+        }, 2000);
+    };
+
+    return (
+        <div className="modal-overlay">
+            <div className="modal-content">
+                <button className="modal-close" onClick={onClose} aria-label="Cerrar">×</button>
+                {!enviado ? (
+                    <form className="contact-form" onSubmit={handleSubmit}>
+                        <h2>Únete al equipo</h2>
+                        <label>
+                            Nombre
+                            <input type="text" name="nombre" value={form.nombre} onChange={handleChange} required />
+                        </label>
+                        <label>
+                            Email
+                            <input type="email" name="email" value={form.email} onChange={handleChange} required />
+                        </label>
+                        <label>
+                            Mensaje
+                            <textarea name="mensaje" value={form.mensaje} onChange={handleChange} required />
+                        </label>
+                        <button type="submit" className="btn-primary">Enviar</button>
+                    </form>
+                ) : (
+                    <div className="modal-success">
+                        <h3>¡Gracias por tu interés!</h3>
+                        <p>Tu mensaje ha sido enviado.</p>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
 
 const Home = () => {
     const { user } = useAuth();
+    const [modalOpen, setModalOpen] = useState(false);
 
     return (
         <div className="home">
@@ -24,11 +78,8 @@ const Home = () => {
                     <div className="hero-buttons">
                         {!user ? (
                             <>
-                                <button className="btn-primary">
+                                <button className="btn-primary" onClick={() => setModalOpen(true)}>
                                     Únete al Equipo
-                                </button>
-                                <button className="btn-secondary">
-                                    Ver Jugadores
                                 </button>
                             </>
                         ) : (
@@ -50,6 +101,8 @@ const Home = () => {
                     />
                 </div>
             </section>
+
+            <ContactModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
 
             {/* Test Credentials Section - Solo mostrar si no está logueado */}
             {!user && (
@@ -133,20 +186,6 @@ const Home = () => {
                             </p>
                         </div>
                     </div>
-                </div>
-            </section>
-
-            {/* CTA Section */}
-            <section className="cta">
-                <div className="cta-content">
-                    <h2>¿Listo para unirte?</h2>
-                    <p>
-                        Comienza tu viaje con nosotros hoy mismo.
-                        Regístrate y sé parte de algo grande.
-                    </p>
-                    <button className="btn-primary large">
-                        Registrarse Ahora
-                    </button>
                 </div>
             </section>
         </div>

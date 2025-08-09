@@ -15,7 +15,6 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    // Estado para forzar re-render global tras login/logout
     const [authVersion, setAuthVersion] = useState(0);
 
     useEffect(() => {
@@ -53,6 +52,11 @@ export const AuthProvider = ({ children }) => {
             setUser(user);
             setAuthVersion(v => v + 1); // Forzar re-render global
             toast.success('¡Bienvenido de vuelta!');
+
+            // LOG: usuario tras login
+            console.log('[AUTHCONTEXT] login -> user:', user);
+            console.log('[AUTHCONTEXT] login -> localStorage token:', localStorage.getItem('token'));
+            console.log('[AUTHCONTEXT] login -> localStorage user:', localStorage.getItem('user'));
 
             return { success: true, user };
         } catch (error) {
@@ -99,6 +103,8 @@ export const AuthProvider = ({ children }) => {
             setUser(null);
             setAuthVersion(v => v + 1); // Forzar re-render global
             toast.info('Sesión cerrada');
+            // LOG: usuario tras logout
+            console.log('[AUTHCONTEXT] logout -> user:', user);
         }
     };
 
@@ -118,6 +124,9 @@ export const AuthProvider = ({ children }) => {
         isAdmin: user?.role === 'admin',
         authVersion, // Para forzar re-render en consumidores si es necesario
     };
+
+    // LOG: render AuthProvider
+    console.log('[AUTHCONTEXT] render -> user:', user, 'isAuthenticated:', !!user, 'authVersion:', authVersion);
 
     return (
         <AuthContext.Provider value={value}>

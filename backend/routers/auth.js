@@ -26,7 +26,12 @@ router.post('/login', async (req, res) => {
         if (!isMatch) return res.status(400).send('Invalid credentials');
 
         const token = jwt.sign({ id: user._id }, 'secret', { expiresIn: '1h' });
-        res.json({ token });
+
+        // Usar el método toJSON para devolver el usuario sin contraseña
+        res.json({
+            user: user.toJSON(),
+            token,
+        });
     } catch (error) {
         res.status(400).send(error.message);
     }
