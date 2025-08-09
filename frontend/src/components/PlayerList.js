@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { playersAPI } from '../components/api/client';
+import { playersAPI } from '../api/client';
 
 const PlayerList = () => {
     const navigate = useNavigate();

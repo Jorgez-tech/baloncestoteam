@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Components
-import Header from './header';
+import Header from './Header';
 import Footer from './footer';
 import Login from './components/Login';
 import Signup from './components/Signup';
