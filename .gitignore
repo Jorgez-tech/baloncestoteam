@@ -11,6 +11,10 @@ node_modules/
 .env.development.local
 .env.test.local
 .env.production.local
+frontend/.env
+frontend/.env.local
+backend/.env
+backend/.env.local
 
 # Nunca subas archivos .env ni credenciales a GitHub
 # Si accidentalmente subiste un secreto, revoca y rota inmediatamente
@@ -19,6 +23,7 @@ node_modules/
 dist/
 build/
 frontend/build/
+backend/build/
 
 # Uploads and user content
 uploads/
@@ -80,6 +85,10 @@ Thumbs.db
 # Cache directories
 .cache
 .parcel-cache
+
+# Python virtual envs
+venv/
+.venv/
 
 # Optional: Package lock files (uncomment if you don't want to commit them)
 # package-lock.json
