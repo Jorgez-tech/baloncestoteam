@@ -5,15 +5,16 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Components
-import Header from './Header';
+import Header from './Header.jsx';
 import Footer from './footer';
-import Login from './components/Login';
-import Signup from './components/Signup';
-import Gallery from './gallery';
-import AdminDashboard from './components/AdminDashboard';
+import Login from './Login';
+import Signup from './Signup';
+import Gallery from './Gallery';
+import AdminDashboard from './AdminDashboard';
 import PlayerList from './PlayerList';
 import PlayerProfile from './PlayerProfile';
 import Home from './Home';
+import Profile from './Profile';
 
 // Context
 import { AuthProvider, useAuth } from '../context/AuthContext';
@@ -151,6 +152,16 @@ function App() {
                                     <ProtectedRoute requireAdmin={true}>
                                         <AppLayout>
                                             <AdminDashboard />
+                                        </AppLayout>
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/profile"
+                                element={
+                                    <ProtectedRoute>
+                                        <AppLayout>
+                                            <Profile />
                                         </AppLayout>
                                     </ProtectedRoute>
                                 }

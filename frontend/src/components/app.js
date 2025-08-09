@@ -1,8 +1,8 @@
 import React from 'react';
-import Header from './components/Header';
-import Gallery from './components/Gallery';
-import SignupForm from './components/SignupForm';
-import Footer from './components/Footer';
+import Header from './Header';
+import Gallery from './Gallery';
+import SignupForm from './signupform';
+import Footer from './footer';
 import './index.css';
 
 const App = () => (

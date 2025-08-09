@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import { playersAPI } from './api/client';
+import { playersAPI } from '../api/client';
 import '../styles/PlayerProfile.css';
 
 const PlayerProfile = () => {

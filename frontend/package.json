@@ -4,10 +4,10 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "SET NODE_OPTIONS=--openssl-legacy-provider && SET SKIP_PREFLIGHT_CHECK=true && SET GENERATE_SOURCEMAP=false && react-scripts start",
-    "build": "SET NODE_OPTIONS=--openssl-legacy-provider && SET SKIP_PREFLIGHT_CHECK=true && SET GENERATE_SOURCEMAP=false && react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "npm start",
+    "build": "npm run build",
+    "test": "npm test",
+    "eject": "npm run eject"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
@@ -17,10 +17,12 @@
     "react-hook-form": "^7.34.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^5.0.1",
     "react-toastify": "^8.2.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^12.1.5",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0"
   },
@@ -36,5 +38,10 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5000"
+  "proxy": "http://localhost:5000",
+  "jest": {
+    "transformIgnorePatterns": [
+      "/node_modules/(?!axios)/"
+    ]
+  }
 }

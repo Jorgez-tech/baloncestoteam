@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// Cambiar baseURL para asegurar consistencia
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/v1';
 
 export const apiClient = axios.create({
@@ -28,6 +29,7 @@ apiClient.interceptors.response.use(
     }
 );
 
+// Asegurar que todos los endpoints usen el prefijo /api/v1
 export const authAPI = {
     login: (credentials) => apiClient.post('/auth/login', credentials),
     register: (userData) => apiClient.post('/auth/register', userData),
