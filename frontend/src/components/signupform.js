@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { authAPI } from '../api/client';
 
 const SignupForm = () => {
     const [email, setEmail] = useState('');
@@ -6,18 +7,12 @@ const SignupForm = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const response = await fetch('/api/auth/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email, password })
-        });
-        if (response.ok) {
+        try {
+            await authAPI.register({ email, password });
             alert('Formulario enviado!');
             setEmail('');
             setPassword('');
-        } else {
+        } catch (error) {
             alert('Error al enviar el formulario');
         }
     };
