@@ -65,7 +65,7 @@ describe('Rutas públicas', () => {
                 </AuthProvider>
             </MemoryRouter>
         );
-        // Ajusta el texto al mensaje real de tu componente 404
-        expect(screen.getByText(/no encontrada|not found/i)).toBeInTheDocument();
+        // Busca el título principal de la página 404
+        expect(screen.getByRole('heading', { name: /página no encontrada/i })).toBeInTheDocument();
     });
 });
