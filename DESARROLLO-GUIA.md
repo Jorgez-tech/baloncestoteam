@@ -92,7 +92,7 @@
 
 4) Automatización mínima
 - [x] ESLint + Prettier + scripts npm (lint, format, lint:fix).
-- [ ] commitlint + husky (commit-msg hook).
+- [x] commitlint + husky (commit-msg hook).
 - [ ] GitHub Actions (workflow: install → lint → test backend y frontend).
 
 5) Rendimiento incremental
