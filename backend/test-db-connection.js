@@ -36,7 +36,7 @@ const testPlayersEndpoint = async () => {
 
             console.log(`✅ Jugador: ${playerDetail.name}`);
             console.log(`📊 Estadísticas: ${stats.games_played} juegos, ${stats.points_per_game} PPG`);
-            console.log(`🎯 Métricas calculadas:`, metrics);
+            console.log('🎯 Métricas calculadas:', metrics);
         }
 
         await mongoose.connection.close();

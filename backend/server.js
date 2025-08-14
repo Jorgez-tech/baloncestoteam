@@ -7,7 +7,9 @@ const connectDB = require('./config/db');
 const { connectRedis } = require('./config/redis');
 const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
-require('dotenv').config();
+const path = require('path');
+// Cargar .env siempre desde la carpeta backend (independiente del cwd)
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 
@@ -15,7 +17,9 @@ const app = express();
 app.set('trust proxy', 1);
 
 // Conectar a la base de datos
-connectDB();
+if (process.env.NODE_ENV !== 'test') {
+    connectDB();
+}
 
 // Conectar a Redis (opcional)
 try {
@@ -114,3 +118,6 @@ app.listen(PORT, () => {
     console.log(`📚 API Documentation: http://localhost:${PORT}/api/v1/docs`);
     console.log(`🏥 Health Check: http://localhost:${PORT}/health`);
 });
+
+
+module.exports = app;

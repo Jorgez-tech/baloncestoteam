@@ -1,11 +1,12 @@
 const jwt = require('jsonwebtoken');
 const { getRedisClient } = require('../config/redis');
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const authMiddleware = async (req, res, next) => {
     try {
-        // Buscar token en header Authorization o en cookies
         const authHeader = req.header('Authorization');
-        const token = authHeader?.replace('Bearer ', '') || req.cookies?.token;
+        const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : req.cookies?.token;
 
         if (!token) {
             return res.status(401).json({
@@ -14,22 +15,25 @@ const authMiddleware = async (req, res, next) => {
             });
         }
 
-        // Verificar el token JWT
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const secret = process.env.JWT_SECRET;
+        if (!secret) {
+            return res.status(500).json({ msg: 'JWT secret not configured', code: 'NO_JWT_SECRET' });
+        }
 
-        // Verificar si el token está en la blacklist (Redis opcional)
-        const redisClient = getRedisClient();
+        const decoded = jwt.verify(token, secret);
+
+        const redisClient = getRedisClient?.();
         if (redisClient) {
-            const isBlacklisted = await redisClient.get(`blacklist_${token}`);
-            if (isBlacklisted) {
-                return res.status(401).json({
-                    msg: 'Token has been revoked',
-                    code: 'TOKEN_REVOKED'
-                });
+            try {
+                const isBlacklisted = await redisClient.get(`blacklist_${token}`);
+                if (isBlacklisted) {
+                    return res.status(401).json({ msg: 'Token has been revoked', code: 'TOKEN_REVOKED' });
+                }
+            } catch (e) {
+                console.warn('Redis check failed, continuing without blacklist');
             }
         }
 
-        // Agregar datos del usuario al request
         req.user = {
             id: decoded.id || decoded.userId,
             email: decoded.email,
@@ -39,22 +43,12 @@ const authMiddleware = async (req, res, next) => {
         next();
     } catch (error) {
         if (error.name === 'TokenExpiredError') {
-            return res.status(401).json({
-                msg: 'Token expired',
-                code: 'TOKEN_EXPIRED'
-            });
+            return res.status(401).json({ msg: 'Token expired', code: 'TOKEN_EXPIRED' });
         } else if (error.name === 'JsonWebTokenError') {
-            return res.status(401).json({
-                msg: 'Invalid token',
-                code: 'INVALID_TOKEN'
-            });
-        } else {
-            console.error('Auth middleware error:', error);
-            return res.status(500).json({
-                msg: 'Server error during authentication',
-                code: 'AUTH_ERROR'
-            });
+            return res.status(401).json({ msg: 'Invalid token', code: 'INVALID_TOKEN' });
         }
+        console.error('Auth middleware error:', error);
+        return res.status(500).json({ msg: 'Server error during authentication', code: 'AUTH_ERROR' });
     }
 };
 

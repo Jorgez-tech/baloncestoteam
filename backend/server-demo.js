@@ -146,5 +146,5 @@ app.listen(PORT, () => {
     console.log(`🚀 Servidor demo funcionando en puerto ${PORT}`);
     console.log(`🏥 Health Check: http://localhost:${PORT}/health`);
     console.log(`👥 Jugadores: http://localhost:${PORT}/api/v1/players`);
-    console.log(`📱 Frontend: http://localhost:3000`);
+    console.log('📱 Frontend: http://localhost:3000');
 });

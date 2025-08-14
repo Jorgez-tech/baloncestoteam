@@ -24,7 +24,7 @@ async function testPlayerEndpoint() {
         // Probar la búsqueda individual
         const firstPlayer = players[0];
         console.log(`\n🔍 Probando búsqueda individual del jugador: ${firstPlayer.name}`);
-        console.log(`📊 Estadísticas:`, firstPlayer.stats);
+        console.log('📊 Estadísticas:', firstPlayer.stats);
 
         // Calcular métricas como lo haría el endpoint
         const stats = firstPlayer.stats || {};
@@ -36,7 +36,7 @@ async function testPlayerEndpoint() {
                 Math.round(((stats.points_per_game || 0) + (stats.rebounds_per_game || 0) + (stats.assists_per_game || 0)) * 10) / 10 : 0
         };
 
-        console.log(`📈 Métricas calculadas:`, metrics);
+        console.log('📈 Métricas calculadas:', metrics);
 
         console.log('\n✅ Endpoint GET /api/v1/players/:id listo para usar');
         console.log(`🌐 Prueba en navegador: http://localhost:5000/api/v1/players/${firstPlayer._id}`);
