@@ -1,1 +1,1 @@
-// Eliminar este archivo, usar solo Header.jsx para evitar duplicidad y problemas de contexto.
+// Archivo eliminado. Usar solo Header.jsx para evitar duplicidad y problemas de casing en imports.

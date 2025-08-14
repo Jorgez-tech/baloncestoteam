@@ -126,7 +126,9 @@ export const AuthProvider = ({ children }) => {
     };
 
     // LOG: render AuthProvider
-    console.log('[AUTHCONTEXT] render -> user:', user, 'isAuthenticated:', !!user, 'authVersion:', authVersion);
+    if (process.env.NODE_ENV === 'development') {
+        console.log('[AUTHCONTEXT] render -> user:', user, 'isAuthenticated:', !!user, 'authVersion:', authVersion);
+    }
 
     return (
         <AuthContext.Provider value={value}>
