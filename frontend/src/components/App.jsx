@@ -6,15 +6,17 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // Components
 import Header from './Header.jsx';
-import Footer from './footer';
-import Login from './Login';
-import Signup from './Signup';
+import Footer from './Footer';
 import Gallery from './Gallery';
-import AdminDashboard from './AdminDashboard';
-import PlayerList from './PlayerList';
-import PlayerProfile from './PlayerProfile';
-import Home from './Home';
-import Profile from './Profile';
+
+// Pages
+import Login from '../pages/Login';
+import Signup from '../pages/Signup';
+import AdminDashboard from '../pages/AdminDashboard';
+import PlayerList from '../pages/PlayerListPage';
+import PlayerProfile from '../pages/PlayerProfilePage';
+import Home from '../pages/HomePage';
+import Profile from '../pages/Profile';
 
 // Context
 import { AuthProvider, useAuth } from '../context/AuthContext';

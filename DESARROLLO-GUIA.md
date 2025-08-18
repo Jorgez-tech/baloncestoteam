@@ -4,7 +4,30 @@
 
 ---
 
-## Gap Analysis y Checklist Priorizado
+## 📊 Estado Actual del Proyecto (Agosto 2025)
+
+### ✅ Completado:
+- [x] Estructura base del proyecto (frontend/backend/landing)
+- [x] CRUD completo jugadores (backend)
+- [x] Autenticación JWT + roles (backend)
+- [x] Vistas principales en React (Home, Login, Gallery, etc.)
+- [x] React Router configurado con rutas públicas y protegidas
+- [x] Tests de rutas básicos en frontend
+- [x] ESLint + Prettier configurados
+- [x] Middlewares de seguridad (Helmet, CORS, rate limiting)
+
+### 🔄 En progreso:
+- [x] Tests de backend (Jest + Supertest + MongoDB memory server)
+- [ ] Cobertura de pruebas ≥70%
+- [ ] Lazy loading para componentes grandes
+- [ ] Validación robusta de entrada en backend
+- [x] GitHub Actions para CI configurado
+
+### 📋 Pendientes prioritarios:
+- [x] Completar suite de tests en backend
+- [x] Mejorar documentación técnica para frontend
+- [ ] Implementar React.lazy + Suspense para optimización
+- [ ] Configuración de entorno de producción (.env.production)
 
 ### Estado por Sprint
 
@@ -21,12 +44,12 @@
 #### Sprint 2 – Testing y automatización
 - Pruebas: [~] Parcial
   - [x] Frontend: tests de rutas con RTL y Jest funcionando (Login, Admin, PlayerList OK).
-  - [ ] Backend: No hay suite de tests visible (pendiente: Jest + supertest + mongodb-memory-server).
+  - [x] Backend: Implementados tests con Jest + supertest + mongodb-memory-server.
   - [ ] Cobertura ≥70%: No medido aún; requerirá más pruebas (componentes, hooks y flujos).
-- Automatización: [ ] Pendiente
-  - [ ] GitHub Actions: no hay workflow.
-  - [ ] ESLint + Prettier: no veo configuración consolidada (pendiente .eslintrc, .prettierrc, scripts).
-  - [ ] Convencional Commits: usado de facto, pero no validado (pendiente commitlint + husky).
+- Automatización: [x] Implementado
+  - [x] GitHub Actions: workflow implementado para CI/CD.
+  - [x] ESLint + Prettier: configuración consolidada con .eslintrc.js y .prettierrc.js.
+  - [x] Convencional Commits: implementado con husky pre-commit hook.
 
 #### Sprint 3 – Limpieza y buenas prácticas
 - Código: [x] Realizado
