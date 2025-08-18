@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+
+// .husky/pre-commit
+const { execSync } = require('child_process');
+
+console.log('Running pre-commit hook...');
+const rootDir = process.cwd();
+
+try {
+    // Get a list of staged files that are being committed
+    const stagedFiles = execSync('git diff --cached --name-only', { encoding: 'utf8' })
+        .split('\n')
+        .filter(Boolean);
+
+    // Separate files by project
+    const frontendFiles = stagedFiles.filter(file => file.startsWith('frontend/'));
+    const backendFiles = stagedFiles.filter(file => file.startsWith('backend/'));
+
+    // Run linting for frontend files
+    if (frontendFiles.length > 0) {
+        console.log('\nRunning lint-staged for frontend files...');
+        execSync('cd frontend && npx lint-staged', { stdio: 'inherit' });
+    }
+
+    // Run linting for backend files
+    if (backendFiles.length > 0) {
+        console.log('\nRunning lint-staged for backend files...');
+        execSync('cd backend && npx lint-staged', { stdio: 'inherit' });
+    }
+
+    console.log('\nAll checks passed!');
+} catch (error) {
+    console.error('\nPre-commit hook failed:', error.message);
+    process.exit(1);
+}
