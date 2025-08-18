@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// Components
+// Components (mantener importación directa para componentes pequeños)
 import Header from './Header.jsx';
 import Footer from './Footer';
 import Gallery from './Gallery';
 
-// Pages
-import Login from '../pages/Login';
-import Signup from '../pages/Signup';
-import AdminDashboard from '../pages/AdminDashboard';
-import PlayerList from '../pages/PlayerListPage';
-import PlayerProfile from '../pages/PlayerProfilePage';
-import Home from '../pages/HomePage';
-import Profile from '../pages/Profile';
+// Lazy loading para páginas (componentes grandes)
+const Login = React.lazy(() => import('../pages/Login'));
+const Signup = React.lazy(() => import('../pages/Signup'));
+const AdminDashboard = React.lazy(() => import('../pages/AdminDashboard'));
+const PlayerList = React.lazy(() => import('../pages/PlayerListPage'));
+const PlayerProfile = React.lazy(() => import('../pages/PlayerProfilePage'));
+const Home = React.lazy(() => import('../pages/HomePage'));
+const Profile = React.lazy(() => import('../pages/Profile'));
 
 // Context
 import { AuthProvider, useAuth } from '../context/AuthContext';
@@ -34,6 +34,27 @@ const queryClient = new QueryClient({
     },
 });
 
+
+// Loading component
+const LoadingSpinner = () => (
+    <div className="loading-container" style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '200px',
+        flexDirection: 'column'
+    }}>
+        <div className="spinner" style={{
+            width: '40px',
+            height: '40px',
+            border: '4px solid #f3f3f3',
+            borderTop: '4px solid #3498db',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite'
+        }}></div>
+        <p style={{ marginTop: '10px', color: '#666' }}>Cargando...</p>
+    </div>
+);
 
 // Protected Route Component
 const ProtectedRoute = ({ children, requireAdmin = false }) => {
@@ -69,13 +90,15 @@ const PublicOnlyRoute = ({ children }) => {
     return children;
 };
 
-// Main App Layout
+// Main App Layout with Suspense
 const AppLayout = ({ children }) => {
     return (
         <div className="app">
             <Header />
             <main className="main-content">
-                {children}
+                <Suspense fallback={<LoadingSpinner />}>
+                    {children}
+                </Suspense>
             </main>
             <Footer />
         </div>
