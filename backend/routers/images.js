@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const auth = require('../middleware/auth');
+const { validatePhoto } = require('../middleware/validation');
 
 const router = express.Router();
 
@@ -21,29 +22,50 @@ const upload = multer({
         fileSize: parseInt(process.env.MAX_FILE_SIZE) || 5242880 // 5MB por defecto
     },
     fileFilter: function (req, file, cb) {
-        if (file.mimetype.startsWith('image/')) {
+        // Validar tipo de archivo
+        const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+        if (allowedMimeTypes.includes(file.mimetype)) {
             cb(null, true);
         } else {
-            cb(new Error('Solo se permiten archivos de imagen'));
+            cb(new Error('Solo se permiten archivos de imagen (JPEG, PNG, GIF, WebP)'));
         }
     }
 });
 
 // POST /api/v1/images/upload
-router.post('/upload', auth, upload.single('image'), (req, res) => {
+router.post('/upload', auth, upload.single('image'), validatePhoto, (req, res) => {
     try {
         if (!req.file) {
-            return res.status(400).json({ error: 'No se proporcionó ningún archivo' });
+            return res.status(400).json({
+                success: false,
+                error: 'No se proporcionó ningún archivo'
+            });
         }
 
-        res.json({
-            message: 'Imagen subida exitosamente',
+        // Datos adicionales de la imagen (title, description, category)
+        const imageData = {
             filename: req.file.filename,
+            originalName: req.file.originalname,
             path: req.file.path,
-            size: req.file.size
+            size: req.file.size,
+            mimetype: req.file.mimetype,
+            uploadedBy: req.user.id,
+            title: req.body.title || req.file.originalname,
+            description: req.body.description || '',
+            category: req.body.category || 'other',
+            uploadDate: new Date()
+        };
+
+        res.json({
+            success: true,
+            message: 'Imagen subida exitosamente',
+            data: imageData
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
     }
 });
 

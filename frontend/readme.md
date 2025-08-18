@@ -11,19 +11,29 @@ frontend/
 │   ├── favicon.ico     # Icono de la página
 │   └── ...
 ├── src/                # Código fuente
-│   ├── components/     # Componentes React
-│   │   ├── App.jsx     # Componente principal con rutas
+│   ├── components/     # Componentes React reutilizables
+│   │   ├── App.jsx     # Componente principal con rutas y lazy loading
 │   │   ├── Header.jsx  # Barra de navegación
-│   │   ├── Login.jsx   # Formulario de inicio de sesión
-│   │   └── ...
+│   │   ├── Footer.jsx  # Pie de página
+│   │   └── Gallery.jsx # Componente de galería
+│   ├── pages/          # Páginas de la aplicación (lazy loaded)
+│   │   ├── HomePage.jsx     # Página principal
+│   │   ├── Login.jsx        # Página de inicio de sesión
+│   │   ├── Signup.jsx       # Página de registro
+│   │   ├── PlayerListPage.jsx    # Lista de jugadores
+│   │   ├── PlayerProfilePage.jsx # Perfil de jugador
+│   │   ├── AdminDashboard.jsx    # Dashboard administrativo
+│   │   └── Profile.jsx      # Perfil de usuario
 │   ├── context/        # Contextos de React
-│   │   ├── AuthContext.js  # Contexto de autenticación
-│   │   └── ...
+│   │   └── AuthContext.js  # Contexto de autenticación
 │   ├── api/            # Cliente API y servicios
 │   │   └── client.js   # Cliente axios configurado
-│   ├── styles/         # Hojas de estilo CSS
 │   ├── utils/          # Utilidades y helpers
+│   │   └── test-utils.jsx  # Utilidades para testing
 │   ├── __tests__/      # Tests unitarios y de integración
+│   │   ├── components/ # Tests de componentes
+│   │   └── routes.test.jsx # Tests de rutas
+│   ├── styles/         # Hojas de estilo CSS
 │   └── index.js        # Punto de entrada
 └── package.json        # Dependencias y scripts
 ```
@@ -50,8 +60,11 @@ La aplicación estará disponible en [http://localhost:3000](http://localhost:30
 
 - `npm start` - Inicia el servidor de desarrollo
 - `npm build` - Crea la versión de producción
-- `npm test` - Ejecuta los tests
+- `npm test` - Ejecuta los tests en modo interactivo
+- `npm run test:coverage` - Ejecuta tests con reporte de cobertura
 - `npm run lint` - Ejecuta el linter (ESLint)
+- `npm run lint:fix` - Corrige automáticamente problemas de linting
+- `npm run format` - Formatea el código con Prettier
 
 ## 🧪 Testing
 
@@ -64,7 +77,8 @@ npm test
 ### Estructura de tests
 
 - `__tests__/routes.test.jsx` - Tests de rutas públicas y protegidas
-- (Otros tests por implementar)
+- `__tests__/components/Header.test.jsx` - Tests del componente Header
+- `utils/test-utils.jsx` - Utilidades para testing con providers
 
 ### Utilidades para testing
 
@@ -135,12 +149,24 @@ export { customRender as render };
 - GitHub Actions para integración continua
 - Netlify/Vercel para despliegue automático (pendiente)
 
-## 📈 Próximos pasos
+## 📈 Características implementadas
+
+### ✅ Funcionalidades actuales
+
+- **Lazy Loading**: Páginas cargadas dinámicamente con React.lazy y Suspense
+- **Autenticación**: Sistema completo con JWT y Context API
+- **Rutas protegidas**: Componente ProtectedRoute para control de acceso
+- **Testing**: Tests con React Testing Library y utilidades personalizadas
+- **Linting**: ESLint y Prettier configurados con pre-commit hooks
+- **Responsive Design**: Interfaz adaptable a dispositivos móviles
+
+### 📋 Próximos pasos
 
 - Implementar tests para componentes individuales
-- Agregar React.lazy para código splitting
-- Optimizar carga de imágenes
+- Agregar internacionalización (i18n)
+- Optimizar carga de imágenes con lazy loading
 - Mejorar gestión de errores global
+- Implementar Progressive Web App (PWA)
 
 ---
 

@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const authMiddleware = require('../middleware/auth');
+const { validateUser, validateLogin, validateUserUpdate } = require('../middleware/validation');
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
@@ -16,37 +17,75 @@ function getJwtSecret() {
     return process.env.JWT_SECRET;
 }
 
-router.post('/register', async (req, res) => {
-    const { email, password } = req.body;
+router.post('/register', validateUser, async (req, res) => {
+    const { email, password, username, firstName, lastName } = req.body;
     try {
-        const existing = await User.findOne({ email });
-        if (existing) return res.status(400).json({ msg: 'Email already registered' });
-        const user = new User({ email, password });
+        const existing = await User.findOne({
+            $or: [{ email }, { username }]
+        });
+        if (existing) {
+            return res.status(400).json({
+                success: false,
+                msg: existing.email === email ? 'Email ya registrado' : 'Nombre de usuario ya registrado'
+            });
+        }
+
+        const user = new User({
+            email,
+            password,
+            username,
+            firstName,
+            lastName
+        });
         await user.save();
-        res.status(201).json({ msg: 'User registered' });
+
+        res.status(201).json({
+            success: true,
+            msg: 'Usuario registrado exitosamente'
+        });
     } catch (error) {
-        res.status(400).json({ msg: 'Registration error', error: error.message });
+        res.status(400).json({
+            success: false,
+            msg: 'Error en el registro',
+            error: error.message
+        });
     }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', validateLogin, async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await User.findOne({ email });
-        if (!user) return res.status(400).json({ msg: 'Invalid credentials' });
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                msg: 'Credenciales invÃ¡lidas'
+            });
+        }
 
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
+        if (!isMatch) {
+            return res.status(400).json({
+                success: false,
+                msg: 'Credenciales invÃ¡lidas'
+            });
+        }
 
-        const token = jwt.sign({ id: user._id }, getJwtSecret(), { expiresIn: process.env.JWT_EXPIRE || '1h' });
+        const token = jwt.sign({ id: user._id }, getJwtSecret(), {
+            expiresIn: process.env.JWT_EXPIRE || '1h'
+        });
 
-        // Usar el método toJSON para devolver el usuario sin contraseña
         res.json({
+            success: true,
             user: user.toJSON(),
             token,
         });
     } catch (error) {
-        res.status(400).json({ msg: 'Login error', error: error.message });
+        res.status(400).json({
+            success: false,
+            msg: 'Error en el login',
+            error: error.message
+        });
     }
 });
 
@@ -63,7 +102,7 @@ router.get('/profile', authMiddleware, async (req, res) => {
 
 // POST /auth/logout - Idempotente
 router.post('/logout', authMiddleware, async (req, res) => {
-    // Si usas blacklist de tokens, aquí podrías invalidar el token
+    // Si usas blacklist de tokens, aquï¿½ podrï¿½as invalidar el token
     // Por ahora, solo responde OK
     res.json({ msg: 'Logout successful' });
 });

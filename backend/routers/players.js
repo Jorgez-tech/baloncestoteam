@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
+const { validatePlayer, validatePlayerUpdate } = require('../middleware/validation');
 const Player = require('../models/player');
 const mongoose = require('mongoose');
 
@@ -96,8 +97,21 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST /api/v1/players
-router.post('/', auth, async (req, res) => {
+router.post('/', auth, validatePlayer, async (req, res) => {
   try {
+    // Verificar que el número de jugador no esté en uso
+    const existingPlayerWithNumber = await Player.findOne({
+      number: req.body.number,
+      team: req.body.team || { $exists: false }
+    });
+
+    if (existingPlayerWithNumber) {
+      return res.status(400).json({
+        success: false,
+        message: `El número ${req.body.number} ya está en uso${req.body.team ? ` en el equipo ${req.body.team}` : ''}`
+      });
+    }
+
     const player = new Player(req.body);
     await player.save();
 
@@ -119,7 +133,7 @@ router.post('/', auth, async (req, res) => {
 });
 
 // PUT /api/v1/players/:id
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', auth, validatePlayerUpdate, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -129,6 +143,22 @@ router.put('/:id', auth, async (req, res) => {
         success: false,
         message: 'ID de jugador inválido'
       });
+    }
+
+    // Si se está actualizando el número, verificar que no esté en uso
+    if (req.body.number) {
+      const existingPlayerWithNumber = await Player.findOne({
+        number: req.body.number,
+        team: req.body.team || { $exists: false },
+        _id: { $ne: id } // Excluir el jugador actual
+      });
+
+      if (existingPlayerWithNumber) {
+        return res.status(400).json({
+          success: false,
+          message: `El número ${req.body.number} ya está en uso${req.body.team ? ` en el equipo ${req.body.team}` : ''}`
+        });
+      }
     }
 
     const player = await Player.findByIdAndUpdate(
