@@ -38,9 +38,11 @@ router.post('/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
 
-        const token = jwt.sign({ id: user._id }, getJwtSecret(), { expiresIn: process.env.JWT_EXPIRE || '1h' });
+        const token = jwt.sign({ id: user._id }, getJwtSecret(), {
+            expiresIn: process.env.JWT_EXPIRE || '1h',
+        });
 
-        // Usar el método toJSON para devolver el usuario sin contraseña
+        // Usar el mï¿½todo toJSON para devolver el usuario sin contraseï¿½a
         res.json({
             user: user.toJSON(),
             token,
@@ -63,7 +65,7 @@ router.get('/profile', authMiddleware, async (req, res) => {
 
 // POST /auth/logout - Idempotente
 router.post('/logout', authMiddleware, async (req, res) => {
-    // Si usas blacklist de tokens, aquí podrías invalidar el token
+    // Si usas blacklist de tokens, aquï¿½ podrï¿½as invalidar el token
     // Por ahora, solo responde OK
     res.json({ msg: 'Logout successful' });
 });

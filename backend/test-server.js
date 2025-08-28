@@ -19,7 +19,7 @@ app.get('/api/test', (req, res) => {
     res.json({
         message: '✅ Servidor funcionando correctamente',
         timestamp: new Date().toISOString(),
-        database: 'MongoDB conectado'
+        database: 'MongoDB conectado',
     });
 });
 
@@ -30,7 +30,7 @@ app.get('/api/users', async (req, res) => {
         const users = await User.find({}).select('-password');
         res.json({
             count: users.length,
-            users: users
+            users: users,
         });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -44,7 +44,7 @@ app.get('/api/players', async (req, res) => {
         const players = await Player.find({}).populate('user_id', 'email');
         res.json({
             count: players.length,
-            players: players
+            players: players,
         });
     } catch (error) {
         res.status(500).json({ error: error.message });

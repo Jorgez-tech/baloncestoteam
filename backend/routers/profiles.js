@@ -60,14 +60,15 @@ router.put('/player', auth, async (req, res) => {
         const user = await User.findById(req.user.userId);
 
         if (!user || user.role !== 'user') {
-            return res.status(403).json({ error: 'Solo los jugadores pueden actualizar estos datos' });
+            return res
+                .status(403)
+                .json({ error: 'Solo los jugadores pueden actualizar estos datos' });
         }
 
-        const player = await Player.findOneAndUpdate(
-            { user_id: req.user.userId },
-            req.body,
-            { new: true, runValidators: true }
-        );
+        const player = await Player.findOneAndUpdate({ user_id: req.user.userId }, req.body, {
+            new: true,
+            runValidators: true,
+        });
 
         if (!player) {
             return res.status(404).json({ error: 'Perfil de jugador no encontrado' });

@@ -33,15 +33,17 @@ try {
 const corsOptions = {
     origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     credentials: true,
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
 
 // Middleware de seguridad
-app.use(helmet({
-    contentSecurityPolicy: false, // Desactiva CSP si no lo necesitas
-    xssFilter: false // Desactiva X-XSS-Protection (obsoleto)
-}));
+app.use(
+    helmet({
+        contentSecurityPolicy: false, // Desactiva CSP si no lo necesitas
+        xssFilter: false, // Desactiva X-XSS-Protection (obsoleto)
+    })
+);
 
 // Forzar header X-Content-Type-Options y charset utf-8
 app.use((req, res, next) => {
@@ -62,8 +64,8 @@ const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos
     max: 100, // límite de 100 requests por IP por ventana de tiempo
     message: {
-        error: 'Too many requests from this IP, please try again later.'
-    }
+        error: 'Too many requests from this IP, please try again later.',
+    },
 });
 app.use('/api/', limiter);
 
@@ -84,7 +86,7 @@ app.get('/health', (req, res) => {
     res.status(200).json({
         status: 'OK',
         timestamp: new Date().toISOString(),
-        uptime: process.uptime()
+        uptime: process.uptime(),
     });
 });
 
@@ -99,7 +101,7 @@ app.use('/api/v1/profiles', require('./routers/profiles'));
 app.use('*', (req, res) => {
     res.status(404).json({
         msg: 'Route not found',
-        path: req.originalUrl
+        path: req.originalUrl,
     });
 });
 
@@ -108,7 +110,7 @@ app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({
         msg: 'Something went wrong!',
-        error: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
+        error: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error',
     });
 });
 
@@ -118,6 +120,5 @@ app.listen(PORT, () => {
     console.log(`📚 API Documentation: http://localhost:${PORT}/api/v1/docs`);
     console.log(`🏥 Health Check: http://localhost:${PORT}/health`);
 });
-
 
 module.exports = app;

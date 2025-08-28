@@ -28,20 +28,32 @@ const testPlayersEndpoint = async () => {
             const stats = playerDetail.stats || {};
             const metrics = {
                 total_points: Math.round((stats.points_per_game || 0) * (stats.games_played || 0)),
-                total_rebounds: Math.round((stats.rebounds_per_game || 0) * (stats.games_played || 0)),
-                total_assists: Math.round((stats.assists_per_game || 0) * (stats.games_played || 0)),
-                efficiency: stats.games_played > 0 ?
-                    Math.round(((stats.points_per_game || 0) + (stats.rebounds_per_game || 0) + (stats.assists_per_game || 0)) * 10) / 10 : 0
+                total_rebounds: Math.round(
+                    (stats.rebounds_per_game || 0) * (stats.games_played || 0)
+                ),
+                total_assists: Math.round(
+                    (stats.assists_per_game || 0) * (stats.games_played || 0)
+                ),
+                efficiency:
+                    stats.games_played > 0
+                        ? Math.round(
+                              ((stats.points_per_game || 0) +
+                                  (stats.rebounds_per_game || 0) +
+                                  (stats.assists_per_game || 0)) *
+                                  10
+                          ) / 10
+                        : 0,
             };
 
             console.log(`✅ Jugador: ${playerDetail.name}`);
-            console.log(`📊 Estadísticas: ${stats.games_played} juegos, ${stats.points_per_game} PPG`);
+            console.log(
+                `📊 Estadísticas: ${stats.games_played} juegos, ${stats.points_per_game} PPG`
+            );
             console.log('🎯 Métricas calculadas:', metrics);
         }
 
         await mongoose.connection.close();
         console.log('\n✅ Prueba completada exitosamente');
-
     } catch (error) {
         console.error('❌ Error en la prueba:', error.message);
         process.exit(1);

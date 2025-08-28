@@ -10,15 +10,15 @@ const storage = multer.diskStorage({
         cb(null, process.env.UPLOAD_PATH || './uploads/');
     },
     filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
         cb(null, file.fieldname + '-' + uniqueSuffix + '.' + file.originalname.split('.').pop());
-    }
+    },
 });
 
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: parseInt(process.env.MAX_FILE_SIZE) || 5242880 // 5MB por defecto
+        fileSize: parseInt(process.env.MAX_FILE_SIZE) || 5242880, // 5MB por defecto
     },
     fileFilter: function (req, file, cb) {
         if (file.mimetype.startsWith('image/')) {
@@ -26,7 +26,7 @@ const upload = multer({
         } else {
             cb(new Error('Solo se permiten archivos de imagen'));
         }
-    }
+    },
 });
 
 // POST /api/v1/images/upload
@@ -40,7 +40,7 @@ router.post('/upload', auth, upload.single('image'), (req, res) => {
             message: 'Imagen subida exitosamente',
             filename: req.file.filename,
             path: req.file.path,
-            size: req.file.size
+            size: req.file.size,
         });
     } catch (error) {
         res.status(500).json({ error: error.message });

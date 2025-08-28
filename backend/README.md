@@ -3,6 +3,7 @@
 ## Configuración del Backend
 
 ### Requisitos previos
+
 - Node.js (versión 16 o superior)
 - MongoDB (local o remoto)
 - Redis (opcional, para cache y sesiones)
@@ -10,17 +11,20 @@
 ### Instalación
 
 1. Instalar dependencias:
+
 ```bash
 cd backend
 npm install
 ```
 
 2. Configurar variables de entorno:
+
 ```bash
 cp .env.example .env
 ```
 
 3. Editar el archivo `.env` con tus configuraciones:
+
 - Configurar MONGO_URI con tu conexión a MongoDB
 - Cambiar JWT_SECRET por uno seguro
 - Configurar Redis si lo usas
@@ -28,11 +32,13 @@ cp .env.example .env
 ### Ejecución
 
 Desarrollo:
+
 ```bash
 npm run dev
 ```
 
 Producción:
+
 ```bash
 npm start
 ```
