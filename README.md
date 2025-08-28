@@ -10,6 +10,25 @@ Este es un proyecto completo para la gestión de un equipo de baloncesto que inc
 - **Base de datos**: MongoDB para almacenar información de usuarios y jugadores
 - **Autenticación**: Sistema JWT con middleware de seguridad
 
+## 📋 Estado del Desarrollo
+
+> Para información detallada del progreso, consulta [DESARROLLO-GUIA.md](./DESARROLLO-GUIA.md)
+
+### Sprints Completados
+- ✅ **Sprint 1 - Funcionalidades Base**: CRUD jugadores, autenticación JWT, Landing Page
+- ✅ **Sprint 3 - Limpieza y Buenas Prácticas**: Refactorización de código, logging, documentación
+
+### Sprints en Progreso
+- 🟡 **Sprint 2 - Testing y Automatización**: Tests configurados, pendiente coverage completo
+- 🟡 **Sprint 4 - Seguridad y Rendimiento**: Seguridad básica implementada, optimizaciones pendientes  
+- 🟡 **Sprint 5 - Despliegue y Demo**: Configuración lista, pipeline automatizado pendiente
+
+### Próximos Pasos Priorizados
+- [ ] Completar suite de tests backend
+- [ ] Implementar GitHub Actions CI/CD
+- [ ] Optimización de rendimiento (lazy loading, code splitting)
+- [ ] Configuración de entorno productivo
+
 ## 🏗️ Arquitectura del Sistema
 
 ```
@@ -64,6 +83,16 @@ nano .env
 
 #### Variables de entorno requeridas:
 
+| Variable | Descripción | Valor por defecto | Requerido |
+|----------|-------------|-------------------|-----------|
+| `PORT` | Puerto del servidor backend | `5000` | No |
+| `NODE_ENV` | Entorno de ejecución | `development` | No |
+| `MONGO_URI` | URL de conexión a MongoDB | `mongodb://localhost:27017/basketball_team` | Sí |
+| `JWT_SECRET` | Clave secreta para JWT tokens | - | Sí |
+| `JWT_EXPIRE` | Tiempo de expiración de tokens | `7d` | No |
+| `FRONTEND_URL` | URL del frontend para CORS | `http://localhost:3000` | No |
+| `REDIS_URL` | URL de conexión a Redis (opcional) | - | No |
+
 ```env
 # Server Configuration
 PORT=5000
@@ -72,22 +101,37 @@ NODE_ENV=development
 # Database Configuration
 MONGO_URI=mongodb://localhost:27017/basketball_team
 
-# JWT Configuration
-JWT_SECRET=tu_jwt_secret_super_seguro_aqui
+# JWT Configuration  
+JWT_SECRET=tu_jwt_secret_super_seguro_aqui_minimo_32_caracteres
 JWT_EXPIRE=7d
 
 # CORS Configuration
 FRONTEND_URL=http://localhost:3000
+
+# Redis Configuration (opcional para blacklist de tokens)
+REDIS_URL=redis://localhost:6379
 ```
 
-### 3. Configurar el Frontend
+### 3. Configurar Variables de Entorno Frontend
+
+```bash
+cd ../frontend
+# Crear archivo .env local
+echo "REACT_APP_API_URL=http://localhost:5000/api/v1" > .env.local
+```
+
+| Variable | Descripción | Valor por defecto |
+|----------|-------------|-------------------|
+| `REACT_APP_API_URL` | URL base de la API backend | `http://localhost:5000/api/v1` |
+
+### 4. Instalar Dependencias Frontend
 
 ```bash
 cd ../frontend
 npm install
 ```
 
-### 4. Iniciar los servicios
+### 5. Iniciar los servicios
 
 #### Terminal 1 - Backend:
 ```bash
@@ -230,20 +274,36 @@ GET /api/v1/docs             # Documentación Swagger
 
 ## 🧪 Testing
 
+> **Estado Actual**: Tests configurados, algunos requieren ajustes de configuración
+
 ### Backend
 ```bash
 cd backend
-npm test                     # Ejecutar tests
+npm test                     # Ejecutar tests (requiere MongoDB)
 npm run test:watch          # Tests en modo watch
-npm run test:coverage       # Coverage report
+npm run test:coverage       # Coverage report (pendiente configurar)
 ```
+
+**Estado**: 
+- ✅ Jest configurado con mongodb-memory-server
+- ⚠️ Algunos tests requieren conexión a internet para MongoDB download
+- 📋 Cobertura pendiente de configurar (objetivo: ≥70%)
 
 ### Frontend
 ```bash
 cd frontend
 npm test                    # Ejecutar tests de React
-npm run test:coverage       # Coverage report
+npm run test:coverage       # Coverage report (pendiente configurar)
 ```
+
+**Estado**:
+- ✅ React Testing Library configurado
+- ✅ Tests básicos de componentes y rutas funcionando
+- ⚠️ Algunos tests requieren ajustes en configuración de React Router
+- 📋 Cobertura pendiente de configurar (objetivo: ≥70%)
+
+### Tests Manuales
+- Ver [frontend/ROUTES_CHECKLIST.md](./frontend/ROUTES_CHECKLIST.md) para validación manual de rutas
 
 ## 🚀 Despliegue
 
@@ -286,6 +346,35 @@ netlify deploy --prod --dir=build
 - **Error Tracking**: Manejo global de errores
 - **Performance**: Rate limiting y optimizaciones
 
+## ⚙️ Herramientas de Desarrollo
+
+### Linting y Formateo
+```bash
+# Backend
+cd backend
+npm run lint              # Ejecutar ESLint
+npm run format           # Formatear con Prettier
+npm run lint:fix         # Fix automático de problemas
+
+# Frontend
+cd frontend  
+npm run lint             # Ejecutar ESLint
+npm run format          # Formatear con Prettier
+npm run lint:fix        # Fix automático de problemas
+```
+
+### Git Hooks (Husky)
+- ✅ **commit-msg**: Valida mensajes de commit (Conventional Commits)
+- ✅ **pre-commit**: Ejecuta linting antes de commit
+- 📋 **pre-push**: Tests antes de push (pendiente configurar)
+
+### Herramientas Configuradas
+- ✅ **ESLint**: Análisis estático de código
+- ✅ **Prettier**: Formateo automático de código
+- ✅ **Commitlint**: Validación de mensajes de commit
+- ✅ **EditorConfig**: Configuración consistente del editor
+- 📋 **GitHub Actions**: CI/CD pipeline (pendiente)
+
 ## 🔒 Seguridad
 
 ### Implementado
@@ -326,9 +415,12 @@ netlify deploy --prod --dir=build
 - **LinkedIn**: Jorge Zuta
 
 ### Documentación adicional
-- [API Documentation](http://localhost:5000/api/v1/docs)
-- [Frontend Components](./frontend/README.md)
-- [Backend Architecture](./backend/README.md)
+- [Guía de Desarrollo](./DESARROLLO-GUIA.md) - Estado del proyecto y checklist por sprints
+- [API Documentation](http://localhost:5000/api/v1/docs) - Documentación interactiva de la API
+- [Frontend Components](./frontend/README.md) - Documentación del frontend (*pendiente*)
+- [Backend Architecture](./backend/README.md) - Arquitectura del backend
+- [Routes Documentation](./docs/ROUTES.md) - Estructura de rutas frontend y backend
+- [Contribution Guide](./CONTRIBUTING.md) - Guía de contribución (*pendiente*)
 
 ## 📄 Licencia
 
@@ -336,21 +428,32 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para
 
 ---
 
-## 🎯 Roadmap Futuro
+## 🎯 Roadmap y Próximos Pasos
 
-### Corto plazo (1-2 meses)
+> Basado en [DESARROLLO-GUIA.md](./DESARROLLO-GUIA.md) - Sprint planning y checklist detallado
+
+### 🚨 Prioridad Alta (1-2 semanas)
+- [ ] **Testing**: Completar suite de tests backend con cobertura ≥70%
+- [ ] **CI/CD**: Implementar GitHub Actions para build, lint y test
+- [ ] **Performance**: Code splitting con React.lazy + Suspense
+- [ ] **Security**: Migrar validaciones a express-validator/Joi
+- [ ] **Docs**: Tabla de variables de entorno por ambiente
+
+### 📅 Corto plazo (1-2 meses)
 - [ ] Sistema de notificaciones en tiempo real
-- [ ] Chat entre jugadores
+- [ ] Chat entre jugadores  
 - [ ] Calendario de entrenamientos
 - [ ] Sistema de reservas
+- [ ] Refresh tokens para seguridad mejorada
 
-### Mediano plazo (3-6 meses)
+### 🔮 Mediano plazo (3-6 meses)
 - [ ] App móvil React Native
 - [ ] Sistema de estadísticas avanzadas
 - [ ] Integración con redes sociales
 - [ ] Sistema de pagos
+- [ ] Deployment automatizado a producción
 
-### Largo plazo (6+ meses)
+### 🌟 Largo plazo (6+ meses)
 - [ ] IA para análisis de rendimiento
 - [ ] Streaming de partidos
 - [ ] E-commerce de merchandise
