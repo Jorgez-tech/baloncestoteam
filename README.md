@@ -24,6 +24,7 @@ Este es un proyecto completo para la gestión de un equipo de baloncesto que inc
 - 🟡 **Sprint 5 - Despliegue y Demo**: Configuración lista, pipeline automatizado pendiente
 
 ### Próximos Pasos Priorizados
+- [ ] **Branch Cleanup**: Eliminar rama backup/antes-recuperacion (Issue #5)
 - [ ] Completar suite de tests backend
 - [ ] Implementar GitHub Actions CI/CD
 - [ ] Optimización de rendimiento (lazy loading, code splitting)
@@ -433,6 +434,7 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para
 > Basado en [DESARROLLO-GUIA.md](./DESARROLLO-GUIA.md) - Sprint planning y checklist detallado
 
 ### 🚨 Prioridad Alta (1-2 semanas)
+- [ ] **Branch Cleanup**: Eliminar rama backup/antes-recuperacion (Issue #5) 
 - [ ] **Testing**: Completar suite de tests backend con cobertura ≥70%
 - [ ] **CI/CD**: Implementar GitHub Actions para build, lint y test
 - [ ] **Performance**: Code splitting con React.lazy + Suspense

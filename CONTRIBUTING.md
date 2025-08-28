@@ -113,6 +113,21 @@ git push origin feature/nombre-descriptivo
 - Incluye screenshots si hay cambios de UI
 - Asegúrate que pasen todos los checks
 
+### 7. Limpieza de Ramas
+
+Después de que tu PR sea mergeado:
+
+```bash
+# Eliminar rama local
+git checkout main
+git branch -d feature/nombre-descriptivo
+
+# Eliminar rama remota
+git push origin --delete feature/nombre-descriptivo
+```
+
+**Para administradores**: Consulta [docs/BRANCH-MANAGEMENT.md](docs/BRANCH-MANAGEMENT.md) para tareas de limpieza de ramas.
+
 ## 📝 Estándares de Código
 
 ### JavaScript/JSX
