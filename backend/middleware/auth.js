@@ -6,18 +6,22 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const authMiddleware = async (req, res, next) => {
     try {
         const authHeader = req.header('Authorization');
-        const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : req.cookies?.token;
+        const token = authHeader?.startsWith('Bearer ')
+            ? authHeader.substring(7)
+            : req.cookies?.token;
 
         if (!token) {
             return res.status(401).json({
                 msg: 'No token provided, authorization denied',
-                code: 'NO_TOKEN'
+                code: 'NO_TOKEN',
             });
         }
 
         const secret = process.env.JWT_SECRET;
         if (!secret) {
-            return res.status(500).json({ msg: 'JWT secret not configured', code: 'NO_JWT_SECRET' });
+            return res
+                .status(500)
+                .json({ msg: 'JWT secret not configured', code: 'NO_JWT_SECRET' });
         }
 
         const decoded = jwt.verify(token, secret);
@@ -27,7 +31,9 @@ const authMiddleware = async (req, res, next) => {
             try {
                 const isBlacklisted = await redisClient.get(`blacklist_${token}`);
                 if (isBlacklisted) {
-                    return res.status(401).json({ msg: 'Token has been revoked', code: 'TOKEN_REVOKED' });
+                    return res
+                        .status(401)
+                        .json({ msg: 'Token has been revoked', code: 'TOKEN_REVOKED' });
                 }
             } catch (e) {
                 console.warn('Redis check failed, continuing without blacklist');
@@ -37,7 +43,7 @@ const authMiddleware = async (req, res, next) => {
         req.user = {
             id: decoded.id || decoded.userId,
             email: decoded.email,
-            role: decoded.role || 'user'
+            role: decoded.role || 'user',
         };
 
         next();
@@ -48,7 +54,9 @@ const authMiddleware = async (req, res, next) => {
             return res.status(401).json({ msg: 'Invalid token', code: 'INVALID_TOKEN' });
         }
         console.error('Auth middleware error:', error);
-        return res.status(500).json({ msg: 'Server error during authentication', code: 'AUTH_ERROR' });
+        return res
+            .status(500)
+            .json({ msg: 'Server error during authentication', code: 'AUTH_ERROR' });
     }
 };
 

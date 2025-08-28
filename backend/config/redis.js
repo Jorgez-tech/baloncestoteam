@@ -14,7 +14,7 @@ const connectRedis = () => {
             maxRetriesPerRequest: 3,
             lazyConnect: true, // No conectar inmediatamente
             connectTimeout: 5000,
-            commandTimeout: 5000
+            commandTimeout: 5000,
         });
 
         redisClient.on('connect', () => {
@@ -51,5 +51,5 @@ const getRedisClient = () => {
 module.exports = {
     connectRedis,
     getRedisClient,
-    redisClient: getRedisClient()
+    redisClient: getRedisClient(),
 };

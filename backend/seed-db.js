@@ -10,23 +10,23 @@ const sampleUsers = [
     {
         email: 'admin@basketballteam.com',
         password: 'admin123',
-        role: 'admin'
+        role: 'admin',
     },
     {
         email: 'player1@basketballteam.com',
         password: 'player123',
-        role: 'user'
+        role: 'user',
     },
     {
         email: 'player2@basketballteam.com',
         password: 'player123',
-        role: 'user'
+        role: 'user',
     },
     {
         email: 'player3@basketballteam.com',
         password: 'player123',
-        role: 'user'
-    }
+        role: 'user',
+    },
 ];
 
 const samplePlayers = [
@@ -39,8 +39,8 @@ const samplePlayers = [
             games_played: 24,
             points_per_game: 18.5,
             rebounds_per_game: 4.2,
-            assists_per_game: 8.7
-        }
+            assists_per_game: 8.7,
+        },
     },
     {
         name: 'Miguel Angel Torres',
@@ -51,8 +51,8 @@ const samplePlayers = [
             games_played: 22,
             points_per_game: 22.3,
             rebounds_per_game: 5.1,
-            assists_per_game: 3.4
-        }
+            assists_per_game: 3.4,
+        },
     },
     {
         name: 'Carlos Alberto Mendez',
@@ -63,9 +63,9 @@ const samplePlayers = [
             games_played: 23,
             points_per_game: 15.8,
             rebounds_per_game: 12.3,
-            assists_per_game: 2.1
-        }
-    }
+            assists_per_game: 2.1,
+        },
+    },
 ];
 
 const seedDatabase = async () => {
@@ -73,7 +73,7 @@ const seedDatabase = async () => {
         console.log('🔗 Conectando a MongoDB...');
         await mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: true,
-            useUnifiedTopology: true
+            useUnifiedTopology: true,
         });
         console.log('✅ Conectado a MongoDB');
 
@@ -99,7 +99,7 @@ const seedDatabase = async () => {
         for (let i = 0; i < samplePlayers.length; i++) {
             const playerData = {
                 ...samplePlayers[i],
-                user_id: createdUsers[i + 1]._id // Saltar el admin (index 0)
+                user_id: createdUsers[i + 1]._id, // Saltar el admin (index 0)
             };
 
             const player = new Player(playerData);
@@ -121,7 +121,6 @@ const seedDatabase = async () => {
         await mongoose.connection.close();
         console.log('\n✅ Conexión cerrada');
         process.exit(0);
-
     } catch (error) {
         console.error('❌ Error al poblar la base de datos:', error);
         await mongoose.connection.close();
@@ -135,7 +134,7 @@ const testConnection = async () => {
         console.log('🔗 Probando conexión a MongoDB...');
         await mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: true,
-            useUnifiedTopology: true
+            useUnifiedTopology: true,
         });
 
         console.log('✅ Conexión exitosa a MongoDB');
@@ -146,7 +145,7 @@ const testConnection = async () => {
         // Verificar colecciones
         const collections = await mongoose.connection.db.listCollections().toArray();
         console.log('\n📂 Colecciones encontradas:');
-        collections.forEach(col => {
+        collections.forEach((col) => {
             console.log(`  - ${col.name}`);
         });
 
@@ -160,7 +159,6 @@ const testConnection = async () => {
 
         await mongoose.connection.close();
         console.log('\n✅ Prueba de conexión completada');
-
     } catch (error) {
         console.error('❌ Error de conexión:', error.message);
         process.exit(1);

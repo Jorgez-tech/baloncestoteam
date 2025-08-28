@@ -32,15 +32,23 @@ async function testPlayerEndpoint() {
             total_points: Math.round((stats.points_per_game || 0) * (stats.games_played || 0)),
             total_rebounds: Math.round((stats.rebounds_per_game || 0) * (stats.games_played || 0)),
             total_assists: Math.round((stats.assists_per_game || 0) * (stats.games_played || 0)),
-            efficiency: stats.games_played > 0 ?
-                Math.round(((stats.points_per_game || 0) + (stats.rebounds_per_game || 0) + (stats.assists_per_game || 0)) * 10) / 10 : 0
+            efficiency:
+                stats.games_played > 0
+                    ? Math.round(
+                          ((stats.points_per_game || 0) +
+                              (stats.rebounds_per_game || 0) +
+                              (stats.assists_per_game || 0)) *
+                              10
+                      ) / 10
+                    : 0,
         };
 
         console.log('📈 Métricas calculadas:', metrics);
 
         console.log('\n✅ Endpoint GET /api/v1/players/:id listo para usar');
-        console.log(`🌐 Prueba en navegador: http://localhost:5000/api/v1/players/${firstPlayer._id}`);
-
+        console.log(
+            `🌐 Prueba en navegador: http://localhost:5000/api/v1/players/${firstPlayer._id}`
+        );
     } catch (error) {
         console.error('❌ Error:', error.message);
     } finally {
