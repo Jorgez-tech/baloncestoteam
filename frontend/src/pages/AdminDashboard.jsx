@@ -59,10 +59,27 @@ const AdminDashboard = () => {
         logAdminAccess();
     }, [isAdmin]);
 
+    // Envía el log de auditoría al backend
+    const sendAuditLogToServer = async (logMessage) => {
+        try {
+            await fetch('/api/audit-log', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: logMessage }),
+            });
+        } catch (error) {
+            // Opcional: mostrar error en consola, pero no interrumpir el flujo
+            console.error('Error sending audit log to server:', error);
+        }
+    };
+
     // Log de auditoría para acceso al panel
     const logAdminAccess = () => {
-        console.log(`[AUDIT] Admin access: ${user?.email} at ${new Date().toISOString()}`);
-        // Aquí podrías enviar al backend para logging persistente
+        const logMessage = `[AUDIT] Admin access: ${user?.email} at ${new Date().toISOString()}`;
+        console.log(logMessage); // Para desarrollo/debug
+        sendAuditLogToServer(logMessage);
     };
 
     // Carga datos del dashboard
