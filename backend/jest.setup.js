@@ -1,28 +1,63 @@
-// jest.setup.js
-process.env.NODE_ENV = 'test';
+const { MongoMemoryServer } = require('mongodb-memory-server');
+const mongoose = require('mongoose');
 
-// Suppress console during tests
-if (process.env.SUPPRESS_LOGS !== 'false') {
-    global.console = {
-        ...console,
-        // Keep console.error and console.warn for debugging test failures
-        log: jest.fn(),
-        info: jest.fn(),
-        debug: jest.fn(),
-    };
-}
+let mongoServer;
 
-// Setup environment variables for testing
-process.env.JWT_SECRET = 'test_jwt_secret';
-process.env.PORT = 5001; // Different port from development
+// Global setup - runs once before all tests
+beforeAll(async () => {
+    console.log('🧪 Iniciando setup de tests...');
 
-// Global teardown to clean test resources
+    // Crear MongoDB Memory Server
+    mongoServer = await MongoMemoryServer.create({
+        instance: {
+            port: 27018, // Puerto específico para tests
+            dbName: 'basketball_test'
+        }
+    });
+
+    const uri = mongoServer.getUri();
+    console.log(`📦 MongoDB Memory Server URI: ${uri}`);
+
+    // Conectar a la base de datos de test
+    await mongoose.connect(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
+
+    console.log('✅ Conexión a MongoDB de test establecida');
+});
+
+// Global teardown - runs once after all tests
 afterAll(async () => {
-    // Force close any remaining async operations
-    await new Promise(resolve => setTimeout(resolve, 100));
+    console.log('🧹 Iniciando limpieza de tests...');
 
-    // Close any remaining handles
-    if (global.gc) {
-        global.gc();
+    try {
+        // Cerrar conexión de Mongoose
+        await mongoose.connection.close();
+        console.log('✅ Conexión de Mongoose cerrada');
+
+        // Detener MongoDB Memory Server
+        if (mongoServer) {
+            await mongoServer.stop();
+            console.log('✅ MongoDB Memory Server detenido');
+        }
+
+        // Forzar desconexión de Mongoose
+        await mongoose.disconnect();
+        console.log('✅ Mongoose desconectado completamente');
+
+    } catch (error) {
+        console.error('❌ Error durante limpieza:', error);
+    }
+
+    console.log('🏁 Limpieza de tests completada');
+});
+
+// Limpiar base de datos entre tests
+beforeEach(async () => {
+    // Limpiar todas las colecciones antes de cada test
+    const collections = mongoose.connection.collections;
+    for (const key in collections) {
+        await collections[key].deleteMany({});
     }
 });
