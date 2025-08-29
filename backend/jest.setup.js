@@ -18,5 +18,11 @@ process.env.PORT = 5001; // Different port from development
 
 // Global teardown to clean test resources
 afterAll(async () => {
-    // Any global cleanup needed
+    // Force close any remaining async operations
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Close any remaining handles
+    if (global.gc) {
+        global.gc();
+    }
 });
