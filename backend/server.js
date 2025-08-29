@@ -106,7 +106,7 @@ app.use('*', (req, res) => {
 });
 
 // Error handler global
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
     console.error(err.stack);
     res.status(500).json({
         msg: 'Something went wrong!',

@@ -24,8 +24,7 @@ jobs:
           cd backend
           timeout 10s npm start > /dev/null 2>&1 || echo "Backend startup test completed (expected to timeout without MongoDB)"
       - name: Test
-        run: npm test --prefix backend || echo "Backend tests fail due to MongoDB Memory Server network restrictions - this is expected in CI environment"
-        continue-on-error: true
+        run: npm run test:ci --prefix backend
       # - name: Coverage
       #   run: npm run test:coverage --prefix backend
 
