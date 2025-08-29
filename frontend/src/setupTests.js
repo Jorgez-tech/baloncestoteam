@@ -10,8 +10,8 @@ import { rest } from 'msw';
 // Establish API mocking before all tests.
 const server = setupServer(
     // Auth API mocks
-    rest.post('/api/auth/login', (req, res, ctx) => {
-        const { email, password } = req.body;
+    rest.post('/api/auth/login', async (req, res, ctx) => {
+        const { email, password } = await req.json();
 
         if (email === 'admin@example.com' && password === 'password123') {
             return res(
@@ -37,8 +37,8 @@ const server = setupServer(
         );
     }),
 
-    rest.post('/api/auth/register', (req, res, ctx) => {
-        const { username, email, password } = req.body;
+    rest.post('/api/auth/register', async (req, res, ctx) => {
+        const { username, email, password } = await req.json();
 
         if (!username || !email || !password) {
             return res(

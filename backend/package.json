@@ -14,7 +14,7 @@
     "db:test": "node seed-db.js test",
     "db:seed": "node seed-db.js seed",
     "db:reset": "node seed-db.js reset",
-    "prepare": "cd .. && husky install backend/.husky"
+    "prepare": "husky install"
   },
   "keywords": [
     "basketball",
@@ -38,6 +38,7 @@
     "ioredis": "^5.3.2",
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.4.0",
+    "mongoose-paginate-v2": "^1.7.4",
     "multer": "^1.4.5-lts.1",
     "swagger-ui-express": "^5.0.0",
     "yamljs": "^0.3.0"

@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { playersAPI, usersAPI, imagesAPI } from '../api/client';
 import { toast } from 'react-toastify';
+import ConfirmModal from '../components/ConfirmModal';
+import { sendAuditLog, AUDIT_ACTIONS, AUDIT_SEVERITY } from '../utils/auditLogger';
+import styles from './AdminDashboard.module.css';
 
 /**
  * Panel de Administración Completo
@@ -29,6 +32,15 @@ const AdminDashboard = () => {
     const [showModal, setShowModal] = useState(false);
     const [modalType, setModalType] = useState(''); // 'player', 'user', 'delete'
     const [editingItem, setEditingItem] = useState(null);
+
+    // Estado para modal de confirmación
+    const [confirmModal, setConfirmModal] = useState({
+        isOpen: false,
+        title: '',
+        message: '',
+        onConfirm: null,
+        type: 'danger'
+    });
 
     // Form states
     const [playerForm, setPlayerForm] = useState({
@@ -60,26 +72,22 @@ const AdminDashboard = () => {
     }, [isAdmin]);
 
     // Envía el log de auditoría al backend
-    const sendAuditLogToServer = async (logMessage) => {
-        try {
-            await fetch('/api/audit-log', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ message: logMessage }),
-            });
-        } catch (error) {
-            // Opcional: mostrar error en consola, pero no interrumpir el flujo
-            console.error('Error sending audit log to server:', error);
-        }
-    };
-
     // Log de auditoría para acceso al panel
-    const logAdminAccess = () => {
-        const logMessage = `[AUDIT] Admin access: ${user?.email} at ${new Date().toISOString()}`;
-        console.log(logMessage); // Para desarrollo/debug
-        sendAuditLogToServer(logMessage);
+    const logAdminAccess = async () => {
+        try {
+            await sendAuditLog(
+                AUDIT_ACTIONS.ADMIN_ACCESS,
+                `Admin panel access by ${user?.email}`,
+                {
+                    userEmail: user?.email,
+                    userId: user?.id,
+                    accessTime: new Date().toISOString()
+                },
+                AUDIT_SEVERITY.MEDIUM
+            );
+        } catch (error) {
+            console.error('Error logging admin access:', error);
+        }
     };
 
     // Carga datos del dashboard
@@ -185,7 +193,12 @@ const AdminDashboard = () => {
 
             if (response.data.success) {
                 toast.success('Jugador creado exitosamente');
-                logAuditAction('CREATE_PLAYER', playerForm.name);
+                logAuditAction(
+                    AUDIT_ACTIONS.PLAYER_CREATE,
+                    playerForm.name,
+                    { playerData: playerForm },
+                    AUDIT_SEVERITY.MEDIUM
+                );
                 setShowModal(false);
                 resetPlayerForm();
                 loadDashboardData();
@@ -213,7 +226,12 @@ const AdminDashboard = () => {
 
             if (response.data.success) {
                 toast.success('Jugador actualizado exitosamente');
-                logAuditAction('UPDATE_PLAYER', playerForm.name);
+                logAuditAction(
+                    AUDIT_ACTIONS.PLAYER_UPDATE,
+                    playerForm.name,
+                    { playerId: editingPlayer, playerData: playerForm },
+                    AUDIT_SEVERITY.MEDIUM
+                );
                 setShowModal(false);
                 resetPlayerForm();
                 loadDashboardData();
@@ -226,16 +244,27 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleDeletePlayer = async (player) => {
-        if (!window.confirm(`¿Estás seguro de eliminar al jugador ${player.name}?`)) {
-            return;
-        }
+    const handleDeletePlayer = (player) => {
+        setConfirmModal({
+            isOpen: true,
+            title: 'Eliminar Jugador',
+            message: `¿Estás seguro de eliminar al jugador ${player.name}? Esta acción no se puede deshacer.`,
+            onConfirm: () => deletePlayer(player),
+            type: 'danger'
+        });
+    };
 
+    const deletePlayer = async (player) => {
         setLoading(true);
         try {
             await playersAPI.delete(player._id);
             toast.success('Jugador eliminado exitosamente');
-            logAuditAction('DELETE_PLAYER', player.name);
+            logAuditAction(
+                AUDIT_ACTIONS.PLAYER_DELETE,
+                player.name,
+                { playerId: player._id, playerName: player.name },
+                AUDIT_SEVERITY.HIGH
+            );
             loadDashboardData();
         } catch (error) {
             console.error('Error deleting player:', error);
@@ -253,7 +282,12 @@ const AdminDashboard = () => {
         try {
             const response = await usersAPI.update(editingItem._id, userForm);
             toast.success('Usuario actualizado exitosamente');
-            logAuditAction('UPDATE_USER', userForm.email);
+            logAuditAction(
+                AUDIT_ACTIONS.USER_UPDATE,
+                userForm.email,
+                { userId: editingUser, userData: userForm },
+                AUDIT_SEVERITY.MEDIUM
+            );
             setShowModal(false);
             resetUserForm();
             loadDashboardData();
@@ -279,7 +313,12 @@ const AdminDashboard = () => {
         try {
             await usersAPI.delete(userToDelete._id);
             toast.success('Usuario eliminado exitosamente');
-            logAuditAction('DELETE_USER', userToDelete.email);
+            logAuditAction(
+                AUDIT_ACTIONS.USER_DELETE,
+                userToDelete.email,
+                { userId: userToDelete._id, userEmail: userToDelete.email },
+                AUDIT_SEVERITY.HIGH
+            );
             loadDashboardData();
         } catch (error) {
             console.error('Error deleting user:', error);
@@ -290,16 +329,21 @@ const AdminDashboard = () => {
     };
 
     // Utilidades
-    const logAuditAction = (action, target) => {
-        const auditLog = {
-            action,
-            target,
-            adminUser: user?.email,
-            timestamp: new Date().toISOString(),
-            ip: 'client-side' // En producción, obtener del backend
-        };
-        console.log('[AUDIT]', auditLog);
-        // Enviar al backend para persistir
+    const logAuditAction = async (action, target, details = null, severity = AUDIT_SEVERITY.MEDIUM) => {
+        try {
+            await sendAuditLog(action, target, details, severity);
+        } catch (error) {
+            console.error('Error logging audit action:', error);
+            // Fallback local para desarrollo
+            console.log('[AUDIT-FALLBACK]', {
+                action,
+                target,
+                details,
+                adminUser: user?.email,
+                timestamp: new Date().toISOString(),
+                error: error.message
+            });
+        }
     };
 
     const resetPlayerForm = () => {
@@ -361,7 +405,7 @@ const AdminDashboard = () => {
     // Verificación de acceso
     if (!isAdmin) {
         return (
-            <div className="admin-access-denied">
+            <div className={styles.adminAccessDenied}>
                 <h2>🚫 Acceso Denegado</h2>
                 <p>Se requieren permisos de administrador para acceder a esta página.</p>
             </div>
@@ -369,8 +413,8 @@ const AdminDashboard = () => {
     }
 
     return (
-        <div className="admin-dashboard">
-            <div className="admin-header">
+        <div className={styles.adminDashboard}>
+            <div className={styles.adminHeader}>
                 <h1>🛠️ Panel de Administración</h1>
                 <p>Bienvenido, {user?.email}</p>
             </div>
@@ -762,6 +806,16 @@ const AdminDashboard = () => {
                     </div>
                 </div>
             )}
+
+            {/* Modal de Confirmación */}
+            <ConfirmModal
+                isOpen={confirmModal.isOpen}
+                onClose={() => setConfirmModal({ ...confirmModal, isOpen: false })}
+                onConfirm={confirmModal.onConfirm}
+                title={confirmModal.title}
+                message={confirmModal.message}
+                type={confirmModal.type}
+            />
         </div>
     );
 };

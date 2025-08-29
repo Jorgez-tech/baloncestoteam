@@ -1,0 +1,242 @@
+/* === ADMIN DASHBOARD STYLES === */
+.adminDashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.adminAccessDenied {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  margin: 2rem auto;
+  max-width: 500px;
+}
+
+.adminAccessDenied h2 {
+  color: #856404;
+  margin-bottom: 1rem;
+}
+
+.adminAccessDenied p {
+  color: #856404;
+  margin-bottom: 2rem;
+}
+
+.adminHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.adminHeader h1 {
+  color: #495057;
+  margin: 0;
+}
+
+.adminStats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-left: 4px solid #007bff;
+}
+
+.statCard h3 {
+  margin: 0 0 0.5rem 0;
+  color: #495057;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statCard .number {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #007bff;
+  margin: 0;
+}
+
+.adminSections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.adminSection {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.adminSection h2 {
+  color: #495057;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.adminTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.adminTable th,
+.adminTable td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.adminTable th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+}
+
+.adminTable tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.actionButton {
+  padding: 0.375rem 0.75rem;
+  margin: 0 0.25rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.editButton {
+  color: #fff;
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+
+.editButton:hover {
+  background-color: #e0a800;
+  border-color: #d39e00;
+}
+
+.deleteButton {
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.deleteButton:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+.roleSelect {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 0.875rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+}
+
+.error {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 1rem;
+  border-radius: 4px;
+  margin: 1rem 0;
+  border: 1px solid #f5c6cb;
+}
+
+.noData {
+  text-align: center;
+  color: #6c757d;
+  padding: 2rem;
+  font-style: italic;
+}
+
+.addButton {
+  color: #fff;
+  background-color: #28a745;
+  border-color: #28a745;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 1rem;
+  transition: all 0.15s ease-in-out;
+}
+
+.addButton:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+  text-decoration: none;
+  color: #fff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .adminDashboard {
+    padding: 1rem;
+  }
+
+  .adminHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .adminSections {
+    grid-template-columns: 1fr;
+  }
+
+  .adminStats {
+    grid-template-columns: 1fr;
+  }
+
+  .adminTable {
+    font-size: 0.875rem;
+  }
+
+  .adminTable th,
+  .adminTable td {
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .adminTable th,
+  .adminTable td {
+    padding: 0.25rem;
+    font-size: 0.75rem;
+  }
+
+  .actionButton {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+}
