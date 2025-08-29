@@ -1,7 +1,7 @@
 // frontend/src/__tests__/components/Header.test.jsx
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '../../utils/test-utils';
-import Header from '../../components/header';
+import Header from '../../components/Header';
 import { useAuth } from '../../context/AuthContext';
 
 // Mock the useAuth hook
