@@ -65,8 +65,8 @@ router.get('/profile', authMiddleware, async (req, res) => {
 
 // POST /auth/logout - Idempotente
 router.post('/logout', authMiddleware, async (req, res) => {
-    // Si usas blacklist de tokens, aqu� podr�as invalidar el token
-    // Por ahora, solo responde OK
+    // If you use a token blacklist, you could invalidate the token here
+    // For now, just respond OK
     res.json({ msg: 'Logout successful' });
 });
 
