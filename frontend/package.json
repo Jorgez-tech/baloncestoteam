@@ -12,7 +12,7 @@
     "lint:fix": "eslint --ext .js,.jsx src --fix",
     "format": "prettier --write 'src/**/*.{js,jsx,css,json}'",
     "test:coverage": "react-scripts test --coverage --watchAll=false",
-    "prepare": "cd .. && husky install frontend/.husky"
+    "prepare": "husky install"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
