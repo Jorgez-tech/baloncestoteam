@@ -1031,30 +1031,7 @@ body {
     cursor: not-allowed;
   }
 
-  /* === ADMIN DASHBOARD STYLES === */
-  .admin-dashboard {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    background: #f8f9fa;
-    min-height: 100vh;
-  }
-
-  .admin-access-denied {
-    text-align: center;
-    padding: 4rem 2rem;
-    background: #fff3cd;
-    border: 1px solid #ffeaa7;
-    border-radius: 8px;
-    margin: 2rem auto;
-    max-width: 500px;
-  }
-
-  .admin-access-denied h2 {
-    color: #856404;
-    margin-bottom: 1rem;
-  }
-
+  /* === ADMIN DASHBOARD STYLES MOVED TO AdminDashboard.module.css === */
   .admin-access-denied p {
     color: #856404;
   }
