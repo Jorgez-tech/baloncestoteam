@@ -42,7 +42,7 @@ router.post('/login', async (req, res) => {
             expiresIn: process.env.JWT_EXPIRE || '1h',
         });
 
-        // Usar el m�todo toJSON para devolver el usuario sin contrase�a
+        // Use the toJSON method to return the user without the password
         res.json({
             user: user.toJSON(),
             token,
