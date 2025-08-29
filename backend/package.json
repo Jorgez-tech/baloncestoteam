@@ -55,18 +55,6 @@
     "prettier": "^3.0.0",
     "supertest": "^7.1.4"
   },
-  "jest": {
-    "testEnvironment": "node",
-    "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"],
-    "collectCoverageFrom": [
-      "**/*.js",
-      "!**/node_modules/**",
-      "!**/coverage/**",
-      "!**/tests/**",
-      "!jest.config.js",
-      "!jest.setup.js"
-    ]
-  },
   "lint-staged": {
     "*.js": [
       "eslint --fix",
