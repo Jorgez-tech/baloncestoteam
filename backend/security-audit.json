@@ -1,0 +1,68 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "lint-staged": {
+      "name": "lint-staged",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "micromatch"
+      ],
+      "effects": [],
+      "range": "7.0.0 - 8.2.1 || 13.3.0 - 15.2.4",
+      "nodes": [
+        "node_modules/lint-staged"
+      ],
+      "fixAvailable": true
+    },
+    "micromatch": {
+      "name": "micromatch",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1098681,
+          "name": "micromatch",
+          "dependency": "micromatch",
+          "title": "Regular Expression Denial of Service (ReDoS) in micromatch",
+          "url": "https://github.com/advisories/GHSA-952p-6rrq-rcjv",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L"
+          },
+          "range": "<4.0.8"
+        }
+      ],
+      "effects": [
+        "lint-staged"
+      ],
+      "range": "<4.0.8",
+      "nodes": [
+        "node_modules/lint-staged/node_modules/micromatch"
+      ],
+      "fixAvailable": true
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 2,
+      "high": 0,
+      "critical": 0,
+      "total": 2
+    },
+    "dependencies": {
+      "prod": 179,
+      "dev": 506,
+      "optional": 27,
+      "peer": 1,
+      "peerOptional": 0,
+      "total": 684
+    }
+  }
+}
