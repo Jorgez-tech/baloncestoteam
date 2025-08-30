@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+// bcrypt imported for future password hashing functionality
 require('dotenv').config();
 
 // Import models

@@ -7,7 +7,7 @@ jest.mock('../models/player');
 jest.mock('../models/user');
 
 const Player = require('../models/player');
-const User = require('../models/user');
+// User model imported but not used in current tests
 
 // Mock del middleware de autenticación
 jest.mock('../middleware/auth', () => {
@@ -36,7 +36,7 @@ const createTestApp = () => {
     app.use('/api/v1/players', playersRouter);
 
     // Middleware básico de error
-    app.use((err, req, res, next) => {
+    app.use((err, req, res, _next) => {
         res.status(500).json({
             success: false,
             message: err.message
