@@ -1,4 +1,4 @@
-// TODO: Implementar lógica real
-import React from 'react';
-const AdminDashboard = () => <div>AdminDashboard Component (pendiente de implementación)</div>;
-export default AdminDashboard;
+// Este archivo ha sido movido a src/pages/AdminDashboard.jsx
+// Mantenemos este archivo para compatibilidad hacia atrás
+
+export { default } from '../pages/AdminDashboard';
