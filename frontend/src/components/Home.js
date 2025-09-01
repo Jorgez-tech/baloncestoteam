@@ -104,35 +104,7 @@ const Home = () => {
 
             <ContactModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
 
-            {/* Test Credentials Section - Solo mostrar si no está logueado */}
-            {!user && (
-                <section className="test-credentials">
-                    <div className="container">
-                        <h2>🔐 Credenciales de Prueba</h2>
-                        <p>Puedes usar estas credenciales para probar la aplicación:</p>
-                        <div className="credentials-grid">
-                            <div className="credential-card admin">
-                                <h3>👨‍💼 Administrador</h3>
-                                <p><strong>Email:</strong> admin@basketballteam.com</p>
-                                <p><strong>Password:</strong> admin123</p>
-                                <p>Acceso completo al sistema</p>
-                            </div>
-                            <div className="credential-card player">
-                                <h3>🏀 Jugador 1</h3>
-                                <p><strong>Email:</strong> player1@basketballteam.com</p>
-                                <p><strong>Password:</strong> player123</p>
-                                <p>Juan Carlos Rodriguez - Point Guard</p>
-                            </div>
-                            <div className="credential-card player">
-                                <h3>🏀 Jugador 2</h3>
-                                <p><strong>Email:</strong> player2@basketballteam.com</p>
-                                <p><strong>Password:</strong> player123</p>
-                                <p>Miguel Angel Torres - Shooting Guard</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            )}
+            {/* ...existing code... */}
 
             {/* Stats Section */}
             <section className="stats">

@@ -123,3 +123,37 @@
 **Última actualización:** [fecha]
 **Responsable:** Jorge Zuta
 **Repositorio:** [GitHub - Basketball Team](https://github.com/Jorgez-tech/baloncestoteam)
+
+---
+
+## Checklist de Limpieza Final (Septiembre 2025)
+
+> Realizar cada punto en la rama `chore/limpieza-final-sept2025` antes de fusionar a main.
+
+### Nota sobre tests backend
+Los archivos de test del backend (`players.test.js`, `test-api-endpoints.js`, `test-db-connection.js`, `test-player-endpoint.js`, `test-server.js`) se mantienen en el repositorio. No se ejecutan automáticamente ni afectan el build/lint debido a las limitaciones de entorno (MongoDB no disponible). Se recomienda conservarlos para futuras validaciones o refactorizaciones.
+
+### Archivos y Carpetas
+- [ ] Eliminar archivos duplicados (ej: Header.jsx/header.js, componentes repetidos)
+- [ ] Eliminar CSS, imágenes y assets no utilizados
+- [ ] Eliminar scripts, tests y configuraciones obsoletas
+- [ ] Eliminar documentos de ayuda, guías o checklist que ya no aporten valor
+- [ ] Eliminar código comentado o funciones sin uso en backend y frontend
+- [ ] Validar que solo queden endpoints/documentos realmente usados
+- [ ] Revisar y limpiar archivos en `src/components`, `src/pages`, `src/styles`, `backend/routers`, `backend/models`, `docs/`
+
+### Código
+- [ ] Eliminar imports, variables y funciones no utilizadas
+- [ ] Unificar estilos y eliminar clases CSS duplicadas
+- [ ] Revisar y limpiar comentarios innecesarios
+- [ ] Validar que no haya warnings en build/lint/test
+- [ ] Revisar que los tests cubran solo código vigente
+
+### Documentación
+- [ ] Actualizar README principal y secundarios tras la limpieza
+- [ ] Actualizar guías y checklist para reflejar la nueva estructura
+- [ ] Documentar cambios relevantes en el changelog
+
+---
+
+**Validar cada punto antes de fusionar a main.**
