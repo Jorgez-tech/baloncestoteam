@@ -55,54 +55,46 @@
 ---
 
 ## Ajustes recomendados a la guía
-- Sprint 2
-  - [ ] Añadir: “Crear test utils con render con providers” (customRender que envuelva QueryClientProvider, AuthProvider y Router para evitar repetir en cada test).
-  - [ ] Definir KPI de cobertura por paquete: Frontend ≥70% líneas/branches; Backend ≥70% líneas/branches.
-  - [ ] Incluir matriz mínima de pruebas: rutas públicas, rutas protegidas, flujo de login/logout, lista de jugadores, perfil, errores API.
-- Sprint 3
-  - [x] Añadir tarea específica: “Eliminar header.js duplicado o asegurar único Header.jsx” (consistencia de casing en Windows). (Ya realizado)
-  - [x] Añadir “logger central con niveles (info/warn/error/debug) y desactivar debug en prod/test”. (Ya realizado)
-- Sprint 4
-  - [ ] Añadir “migrar validaciones a express-validator/Joi con esquemas compartidos”.
-  - [ ] Añadir “lazy load para AdminDashboard, PlayerProfile y Gallery con React.lazy + Suspense”.
-- Sprint 5
-  - [ ] Añadir “workflows de CI (build, lint, test) y CD (deploy frontend y backend)”.
-  - [ ] Añadir “.env.production de ejemplo y tabla de variables por entorno”.
+
+## Plan de Validación Lógica (Frontend y Backend)
+
+**Objetivo:**
+Asegurar que todas las funcionalidades implementadas cumplen con los requisitos del proyecto y están alineadas con la lógica de negocio antes de avanzar con la auditoría de tests.
+
+### 1. Listado de funcionalidades clave a validar
+- Autenticación y registro de usuarios (roles, JWT, flujo completo)
+- Gestión de jugadores (CRUD, filtros, paginación, estadísticas)
+- Panel de administración (acceso, acciones, restricciones)
+- Navegación y rutas protegidas (React Router, redirecciones)
+- Formularios y validaciones (frontend y backend)
+- Seguridad (CORS, Helmet, rate limiting, validación de datos)
+- Integración entre frontend y backend (API endpoints, manejo de errores)
+- Notificaciones y feedback al usuario
+
+### 2. Criterios de validación
+- ¿La funcionalidad cumple con el flujo esperado?
+- ¿Existen casos borde o errores no gestionados?
+- ¿La lógica de negocio está documentada y es consistente?
+- ¿El usuario recibe feedback claro en cada acción?
+- ¿Las restricciones de roles y permisos funcionan correctamente?
+
+### 3. Acciones recomendadas
+- Revisar cada funcionalidad en la aplicación y documentar hallazgos.
+- Actualizar la guía de desarrollo y el README con el estado de cada funcionalidad.
+- Marcar lo que está validado y lo que requiere revisión/refactorización.
+- Solo después de esta validación, avanzar con la auditoría y mejora de los tests.
+
 
 ---
 
 ## Siguientes pasos priorizados (1-2 días)
-1) Seguridad y coherencia de auth (rápido impacto)
-- [x] Cambiar ‘secret’ por process.env.JWT_SECRET y validar presencia (backend).
-- [x] Implementar /auth/profile (GET) con middleware auth (usa id del token) y /auth/logout (POST) idempotente.
-- [x] Agregar CORS, Helmet, rate limit si aún no están en server.js.
 
-2) Limpieza y riesgos CI (baja fricción)
-- [x] Eliminar archivo duplicado frontend/src/components/header.js (mantener Header.jsx).
-- [x] Quitar logs de depuración o condicionar por NODE_ENV.
-- [x] Agregar .editorconfig para consistencia.
-
-3) Testing base
-- [x] Frontend: crear test utils (customRender); tests de:
-  - [x] /login render y submit OK (mock authAPI).
-  - [x] /admin redirige sin auth (ProtectedRoute).
-  - [x] PlayerList estados loading/error/success (mock playersAPI).
-- Backend: configurar Jest + supertest + mongodb-memory-server y cubrir:
-  - [x] /players GET lista, GET not found, POST/PUT/DELETE con/sin auth.
-
-4) Automatización mínima
-- [x] ESLint + Prettier + scripts npm (lint, format, lint:fix).
-- [x] commitlint + husky (commit-msg hook).
-- [ ] GitHub Actions (workflow: install → lint → test backend y frontend).
-
-5) Rendimiento incremental
-- [ ] React.lazy + Suspense en AdminDashboard/PlayerProfile/Gallery.
-- [ ] Revisión de imágenes (lazy en gallery/landing).
-
-6) Documentación
-- [ ] README frontend (scripts, estructura, tests).
-- [ ] CONTRIBUTING.md (flujo ramas, commits, PRs).
-- [ ] Tabla de variables (.env.*) en README o docs/.
+## Siguientes pasos priorizados
+1) Validar la lógica de negocio y funcionalidad en frontend y backend.
+2) Documentar hallazgos y actualizar la guía y los README.
+3) Auditar y mejorar la suite de tests (solo después de validar la lógica).
+4) Implementar CI/CD y optimizaciones de rendimiento.
+5) Mantener la documentación técnica y funcional actualizada.
 
 ---
 

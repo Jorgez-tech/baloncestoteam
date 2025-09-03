@@ -15,20 +15,31 @@ Este es un proyecto completo para la gestión de un equipo de baloncesto que inc
 > Para información detallada del progreso, consulta [DESARROLLO-GUIA.md](./DESARROLLO-GUIA.md)
 
 ### Sprints Completados
-- ✅ **Sprint 1 - Funcionalidades Base**: CRUD jugadores, autenticación JWT, Landing Page
-- ✅ **Sprint 3 - Limpieza y Buenas Prácticas**: Refactorización de código, logging, documentación
 
 ### Sprints en Progreso
-- 🟡 **Sprint 2 - Testing y Automatización**: Tests configurados, pendiente coverage completo
-- 🟡 **Sprint 4 - Seguridad y Rendimiento**: Seguridad básica implementada, optimizaciones pendientes  
-- 🟡 **Sprint 5 - Despliegue y Demo**: Configuración lista, pipeline automatizado pendiente
 
 ### Próximos Pasos Priorizados
-- [ ] **Branch Cleanup**: Eliminar rama backup/antes-recuperacion (Issue #5)
-- [ ] Completar suite de tests backend
-- [ ] Implementar GitHub Actions CI/CD
-- [ ] Optimización de rendimiento (lazy loading, code splitting)
-- [ ] Configuración de entorno productivo
+
+## 📋 Estado del Desarrollo y Roadmap
+
+Para información detallada del progreso y checklist, consulta:
+- [Guía de Desarrollo](./DESARROLLO-GUIA.md)
+- [README Frontend](./frontend/readme.md)
+- [README Backend](./backend/README.md)
+
+### Roadmap y próximos pasos
+- Validar la lógica de negocio en frontend y backend antes de auditar tests
+- Completar y auditar la suite de tests (backend y frontend)
+- Implementar CI/CD (GitHub Actions)
+- Optimizar rendimiento y seguridad
+- Actualizar documentación técnica y funcional
+
+### Recomendaciones profesionales
+1. Antes de avanzar con los tests, revisa y documenta la lógica de negocio actual en frontend y backend.
+2. Crea un plan de validación lógica: lista de funcionalidades, criterios de aceptación y escenarios de uso.
+3. Marca lo que está validado y lo que requiere revisión/refactorización.
+4. Solo después de validar la lógica, audita y mejora los tests.
+5. Mantén la documentación actualizada y separada por área (global, frontend, backend).
 
 ## 🏗️ Arquitectura del Sistema
 
@@ -54,6 +65,16 @@ basketball-team/
     └── public/
 ```
 
+## 🏗️ Arquitectura del Sistema
+
+```
+basketball-team/
+├── index.html              # Landing page principal
+├── assets/                 # Recursos estáticos
+├── backend/                # API REST (ver README backend)
+└── frontend/               # Aplicación React (ver README frontend)
+```
+
 ## 🚀 Instalación y Configuración
 
 ### Prerrequisitos
@@ -63,9 +84,6 @@ basketball-team/
 - Git
 
 ### 1. Clonar el repositorio
-
-```bash
-git clone <tu-repositorio>
 cd baloncestoteam
 ```
 
@@ -159,67 +177,28 @@ npx serve . -p 8080
 - **Backend API**: http://localhost:5000
 - **Documentación API**: http://localhost:5000/api/v1/docs
 - **Health Check**: http://localhost:5000/health
-
-## 🔧 Características Principales
-
-### Backend API
-
 #### Autenticación
 - ✅ Registro de usuarios con validación
 - ✅ Login con JWT tokens
 - ✅ Middleware de autenticación
 - ✅ Blacklist de tokens (Redis)
 - ✅ Roles de usuario (admin/user)
-
-#### Gestión de Jugadores
-- ✅ CRUD completo de jugadores
-- ✅ Filtros y búsqueda
-- ✅ Paginación
 - ✅ Estadísticas de jugadores
 
-#### Seguridad
-- ✅ CORS configurado
-- ✅ Helmet para headers de seguridad
-- ✅ Rate limiting
 - ✅ Validación de datos
 - ✅ Manejo de errores
-
-### Frontend React
-
-#### Componentes Principales
-- ✅ Sistema de autenticación
 - ✅ Dashboard de administración
 - ✅ Lista de jugadores
 - ✅ Galería de imágenes
 - ✅ Formularios con validación
-
-#### Características
-- ✅ React Router para navegación
-- ✅ React Query para gestión de estado
-- ✅ Context API para autenticación
 - ✅ Responsive design
 - ✅ Notificaciones toast
-
-### Landing Page
-
-#### Secciones
-- ✅ Hero section con call-to-action
 - ✅ Galería de imágenes interactiva
 - ✅ Lista de jugadores desde API
 - ✅ Formulario de inscripción
 - ✅ Footer con información de contacto
-
-#### Funcionalidades
-- ✅ Navegación suave
-- ✅ Menú móvil responsive
-- ✅ Animaciones CSS
 - ✅ Conexión con backend API
 - ✅ Sistema de notificaciones
-
-## 📊 API Endpoints
-
-### Autenticación
-```http
 POST /api/v1/auth/register    # Registro de usuario
 POST /api/v1/auth/login       # Login
 POST /api/v1/auth/logout      # Logout
@@ -291,9 +270,6 @@ npm run test:coverage       # Coverage report (pendiente configurar)
 - 📋 Cobertura pendiente de configurar (objetivo: ≥70%)
 
 ### Frontend
-```bash
-cd frontend
-npm test                    # Ejecutar tests de React
 npm run test:coverage       # Coverage report (pendiente configurar)
 ```
 
@@ -303,13 +279,8 @@ npm run test:coverage       # Coverage report (pendiente configurar)
 - ⚠️ Algunos tests requieren ajustes en configuración de React Router
 - 📋 Cobertura pendiente de configurar (objetivo: ≥70%)
 
-### Tests Manuales
-- Ver [frontend/ROUTES_CHECKLIST.md](./frontend/ROUTES_CHECKLIST.md) para validación manual de rutas
-
-## 🚀 Despliegue
 
 ### Backend (Heroku/Railway/DigitalOcean)
-
 1. Configurar variables de entorno en producción
 2. Configurar base de datos MongoDB (MongoDB Atlas)
 3. Configurar Redis (Redis Cloud)
@@ -347,10 +318,6 @@ netlify deploy --prod --dir=build
 - **Error Tracking**: Manejo global de errores
 - **Performance**: Rate limiting y optimizaciones
 
-## ⚙️ Herramientas de Desarrollo
-
-### Linting y Formateo
-```bash
 # Backend
 cd backend
 npm run lint              # Ejecutar ESLint
@@ -370,31 +337,13 @@ npm run lint:fix        # Fix automático de problemas
 - 📋 **pre-push**: Tests antes de push (pendiente configurar)
 
 ### Herramientas Configuradas
-- ✅ **ESLint**: Análisis estático de código
-- ✅ **Prettier**: Formateo automático de código
-- ✅ **Commitlint**: Validación de mensajes de commit
 - ✅ **EditorConfig**: Configuración consistente del editor
 - 📋 **GitHub Actions**: CI/CD pipeline (pendiente)
-
-## 🔒 Seguridad
-
-### Implementado
-- ✅ HTTPS en producción
 - ✅ JWT tokens seguros
 - ✅ Validación de entrada
 - ✅ Rate limiting
 - ✅ CORS apropiado
-- ✅ Headers de seguridad
-
-### Recomendaciones adicionales
-- [ ] Implementar refresh tokens
-- [ ] Audit logs
-- [ ] Captcha en formularios
 - [ ] 2FA para administradores
-
-## 🤝 Contribución
-
-### Flujo de trabajo
 
 1. Fork del repositorio
 2. Crear rama feature: `git checkout -b feature/nueva-funcionalidad`
@@ -409,32 +358,25 @@ npm run lint:fix        # Fix automático de problemas
 - **Testing**: Jest para backend, React Testing Library para frontend
 
 ## 📞 Soporte
-
-### Contacto
-- **Email**: jzuta309@gmail.com
 - **GitHub**: Jorgez-tech
 - **LinkedIn**: Jorge Zuta
 
 ### Documentación adicional
-- [Guía de Desarrollo](./DESARROLLO-GUIA.md) - Estado del proyecto y checklist por sprints
-- [API Documentation](http://localhost:5000/api/v1/docs) - Documentación interactiva de la API
-- [Frontend Components](./frontend/README.md) - Documentación del frontend (*pendiente*)
 - [Backend Architecture](./backend/README.md) - Arquitectura del backend
 - [Routes Documentation](./docs/ROUTES.md) - Estructura de rutas frontend y backend
-- [Contribution Guide](./CONTRIBUTING.md) - Guía de contribución (*pendiente*)
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.
-
 ---
 
 ## 🎯 Roadmap y Próximos Pasos
 
 > Basado en [DESARROLLO-GUIA.md](./DESARROLLO-GUIA.md) - Sprint planning y checklist detallado
-
 ### 🚨 Prioridad Alta (1-2 semanas)
 - [ ] **Branch Cleanup**: Eliminar rama backup/antes-recuperacion (Issue #5) 
+
+Consulta la guía de desarrollo para el roadmap detallado y próximos pasos.
+
+---
+
+**¡Gracias por usar Basketball Team! 🏀**
 - [ ] **Testing**: Completar suite de tests backend con cobertura ≥70%
 - [ ] **CI/CD**: Implementar GitHub Actions para build, lint y test
 - [ ] **Performance**: Code splitting con React.lazy + Suspense
