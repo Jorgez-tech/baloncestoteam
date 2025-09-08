@@ -31,13 +31,29 @@ components:
                     type: string
                     format: email
                     example: 'usuario@example.com'
+                name:
+                    type: string
+                    nullable: true
+                    example: 'Juan Pérez'
+                    description: Nombre completo del usuario
                 role:
                     type: string
                     enum: [user, admin]
+                    default: user
                     example: 'user'
+                isActive:
+                    type: boolean
+                    default: true
+                    example: true
+                    description: Estado de activación del usuario
                 createdAt:
                     type: string
                     format: date-time
+                    example: '2023-01-15T10:30:00Z'
+                updatedAt:
+                    type: string
+                    format: date-time
+                    example: '2023-01-20T14:45:00Z'
 
         Player:
             type: object
@@ -46,32 +62,78 @@ components:
                     type: string
                     example: '64f1234567890abcdef12345'
                 user_id:
+                    oneOf:
+                        - type: string
+                          example: '64f1234567890abcdef12345'
+                        - $ref: '#/components/schemas/User'
+                    description: ID del usuario asociado o objeto usuario completo
+                name:
                     type: string
-                    example: '64f1234567890abcdef12345'
+                    example: 'Juan Pérez'
                 position:
                     type: string
+                    enum: ['Point Guard', 'Shooting Guard', 'Small Forward', 'Power Forward', 'Center']
                     example: 'Point Guard'
                 height:
                     type: number
+                    minimum: 150
+                    maximum: 230
                     example: 180
+                    description: Altura en centímetros
                 weight:
                     type: number
+                    minimum: 50
+                    maximum: 150
                     example: 75
+                    description: Peso en kilogramos
+                jersey_number:
+                    type: number
+                    minimum: 1
+                    maximum: 99
+                    example: 23
+                    description: Número de camiseta
+                age:
+                    type: number
+                    minimum: 16
+                    maximum: 50
+                    example: 25
+                    description: Edad del jugador
+                avatar:
+                    type: string
+                    nullable: true
+                    example: 'avatar-123.jpg'
+                    description: Nombre del archivo de avatar
                 stats:
                     type: object
                     properties:
                         games_played:
                             type: number
+                            minimum: 0
+                            default: 0
                             example: 25
                         points_per_game:
                             type: number
+                            minimum: 0
+                            default: 0
                             example: 15.5
                         rebounds_per_game:
                             type: number
+                            minimum: 0
+                            default: 0
                             example: 8.2
                         assists_per_game:
                             type: number
+                            minimum: 0
+                            default: 0
                             example: 6.1
+                createdAt:
+                    type: string
+                    format: date-time
+                    example: '2023-01-15T10:30:00Z'
+                updatedAt:
+                    type: string
+                    format: date-time
+                    example: '2023-01-20T14:45:00Z'
 
         Error:
             type: object
@@ -346,6 +408,366 @@ paths:
                 401:
                     description: No autorizado
 
+        get:
+            summary: Obtener jugador por ID
+            tags: [Players]
+            security: []
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: ID único del jugador
+                  schema:
+                      type: string
+                      example: '64f1234567890abcdef12345'
+            responses:
+                200:
+                    description: Jugador encontrado
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                                    data:
+                                        allOf:
+                                            - $ref: '#/components/schemas/Player'
+                                            - type: object
+                                              properties:
+                                                  metrics:
+                                                      type: object
+                                                      properties:
+                                                          total_points:
+                                                              type: number
+                                                              example: 387
+                                                          total_rebounds:
+                                                              type: number
+                                                              example: 205
+                                                          total_assists:
+                                                              type: number
+                                                              example: 152
+                                                          efficiency:
+                                                              type: number
+                                                              example: 29.8
+                400:
+                    description: ID inválido
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                404:
+                    description: Jugador no encontrado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+
+    /auth/profile:
+        get:
+            summary: Obtener perfil del usuario autenticado
+            tags: [Authentication]
+            responses:
+                200:
+                    description: Perfil del usuario
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    user:
+                                        $ref: '#/components/schemas/User'
+                401:
+                    description: No autorizado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                404:
+                    description: Usuario no encontrado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+
+    /auth/logout:
+        post:
+            summary: Cerrar sesión
+            tags: [Authentication]
+            responses:
+                200:
+                    description: Logout exitoso
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    msg:
+                                        type: string
+                                        example: 'Logout successful'
+                401:
+                    description: No autorizado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+
+    /users:
+        get:
+            summary: Obtener lista de usuarios (solo admin)
+            tags: [Users]
+            responses:
+                200:
+                    description: Lista de usuarios
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/User'
+                401:
+                    description: No autorizado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+
+    /images/upload:
+        post:
+            summary: Subir imagen
+            tags: [Images]
+            requestBody:
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                image:
+                                    type: string
+                                    format: binary
+                                    description: Archivo de imagen
+            responses:
+                200:
+                    description: Imagen subida exitosamente
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: 'Imagen subida exitosamente'
+                                    filename:
+                                        type: string
+                                        example: 'image-1234567890.jpg'
+                                    path:
+                                        type: string
+                                        example: './uploads/image-1234567890.jpg'
+                                    size:
+                                        type: number
+                                        example: 1048576
+                400:
+                    description: Error en la subida
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                401:
+                    description: No autorizado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+
+    /images/{filename}:
+        get:
+            summary: Obtener imagen por nombre de archivo
+            tags: [Images]
+            security: []
+            parameters:
+                - name: filename
+                  in: path
+                  required: true
+                  description: Nombre del archivo de imagen
+                  schema:
+                      type: string
+                      example: 'image-1234567890.jpg'
+            responses:
+                200:
+                    description: Imagen encontrada
+                    content:
+                        image/*:
+                            schema:
+                                type: string
+                                format: binary
+                404:
+                    description: Imagen no encontrada
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+
+    /profiles/me:
+        get:
+            summary: Obtener perfil completo del usuario autenticado
+            tags: [Profiles]
+            responses:
+                200:
+                    description: Perfil del usuario
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/User'
+                                    - type: object
+                                      properties:
+                                          player:
+                                              $ref: '#/components/schemas/Player'
+                                              description: Datos del jugador (solo si el usuario es jugador)
+                401:
+                    description: No autorizado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                404:
+                    description: Usuario no encontrado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+
+        put:
+            summary: Actualizar perfil del usuario autenticado
+            tags: [Profiles]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                    example: 'Juan Pérez'
+                                email:
+                                    type: string
+                                    format: email
+                                    example: 'juan.perez@example.com'
+            responses:
+                200:
+                    description: Perfil actualizado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'
+                400:
+                    description: Error de validación o email en uso
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                401:
+                    description: No autorizado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                404:
+                    description: Usuario no encontrado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+
+    /profiles/player:
+        put:
+            summary: Actualizar datos del jugador (solo para usuarios tipo jugador)
+            tags: [Profiles]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                    example: 'Juan Pérez'
+                                position:
+                                    type: string
+                                    enum: ['Point Guard', 'Shooting Guard', 'Small Forward', 'Power Forward', 'Center']
+                                    example: 'Point Guard'
+                                height:
+                                    type: number
+                                    minimum: 150
+                                    maximum: 230
+                                    example: 180
+                                weight:
+                                    type: number
+                                    minimum: 50
+                                    maximum: 150
+                                    example: 75
+                                jersey_number:
+                                    type: number
+                                    minimum: 1
+                                    maximum: 99
+                                    example: 23
+                                age:
+                                    type: number
+                                    minimum: 16
+                                    maximum: 50
+                                    example: 25
+                                avatar:
+                                    type: string
+                                    example: 'avatar-123.jpg'
+                                stats:
+                                    type: object
+                                    properties:
+                                        games_played:
+                                            type: number
+                                            minimum: 0
+                                            example: 25
+                                        points_per_game:
+                                            type: number
+                                            minimum: 0
+                                            example: 15.5
+                                        rebounds_per_game:
+                                            type: number
+                                            minimum: 0
+                                            example: 8.2
+                                        assists_per_game:
+                                            type: number
+                                            minimum: 0
+                                            example: 6.1
+            responses:
+                200:
+                    description: Datos del jugador actualizados
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Player'
+                401:
+                    description: No autorizado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                403:
+                    description: Solo los jugadores pueden actualizar estos datos
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                404:
+                    description: Perfil de jugador no encontrado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+
 tags:
     - name: System
       description: Endpoints del sistema
@@ -357,3 +779,5 @@ tags:
       description: Gestión de usuarios
     - name: Images
       description: Gestión de imágenes
+    - name: Profiles
+      description: Gestión de perfiles de usuario
