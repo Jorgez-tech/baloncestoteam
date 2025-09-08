@@ -81,6 +81,11 @@ app.use('/uploads', express.static('uploads'));
 const swaggerDocument = YAML.load(__dirname + '/docs/openapi.yaml');
 app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+// Alias for /api-docs as requested in the issue
+app.get('/api-docs', (req, res) => {
+    res.redirect('/api/v1/docs');
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.status(200).json({

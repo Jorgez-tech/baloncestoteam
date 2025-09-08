@@ -217,6 +217,7 @@ DELETE /api/v1/players/:id    # Eliminar jugador (requiere auth)
 ```http
 GET /health                   # Health check
 GET /api/v1/docs             # Documentación Swagger
+GET /api-docs                # Documentación Swagger (alias)
 ```
 
 ## 🗄️ Modelos de Datos
