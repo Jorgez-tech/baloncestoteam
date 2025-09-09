@@ -157,4 +157,4 @@ El panel de administración cumple con **todos los estándares de seguridad** pa
 
 El panel está **listo para producción** con todas las medidas de seguridad implementadas y validadas.
 
-**Última actualización**: 17 Agosto 2025 - Jorge Zuñiga Tech
+**Última actualización**: 17 Agosto 2025 - Jorgez-Tech
