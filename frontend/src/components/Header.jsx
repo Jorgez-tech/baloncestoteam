@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
     Bars3Icon,
@@ -11,9 +11,8 @@ import {
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { user, logout, isAuthenticated, isAdmin, authVersion } = useAuth();
-    // Log para depuración de contexto
-    console.log('HEADER CONTEXT:', { user, logout, isAuthenticated, isAdmin, authVersion });
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleLogout = async () => {
         await logout();
@@ -27,6 +26,44 @@ const Header = () => {
 
     const closeMenu = () => {
         setIsMenuOpen(false);
+    };
+
+    // Smooth scroll helper for home page sections
+    const scrollToSection = (sectionId) => {
+        if (location.pathname !== '/') {
+            navigate('/');
+            setTimeout(() => {
+                const element = document.getElementById(sectionId);
+                if (element) {
+                    const headerHeight = 80;
+                    const targetPosition = element.offsetTop - headerHeight - 20;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 100);
+        } else {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                const headerHeight = 80;
+                const targetPosition = element.offsetTop - headerHeight - 20;
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }
+        closeMenu();
+    };
+
+    const handleNavigation = (path, sectionId = null) => {
+        if (sectionId && (path === '/' || location.pathname === '/')) {
+            scrollToSection(sectionId);
+        } else {
+            navigate(path);
+            closeMenu();
+        }
     };
 
     return (
@@ -43,17 +80,35 @@ const Header = () => {
                 <nav className="desktop-nav">
                     <ul className="nav-links">
                         <li>
-                            <Link to="/">Inicio</Link>
+                            <button onClick={() => handleNavigation('/', 'inicio')} className="nav-button">
+                                Inicio
+                            </button>
                         </li>
                         <li>
-                            <Link to="/gallery">Galería</Link>
+                            <button onClick={() => handleNavigation('/', 'galeria')} className="nav-button">
+                                Galería
+                            </button>
                         </li>
                         <li>
-                            <Link to="/players">Jugadores</Link>
+                            <button onClick={() => handleNavigation('/', 'jugadores')} className="nav-button">
+                                Jugadores
+                            </button>
+                        </li>
+                        {!user && (
+                            <li>
+                                <button onClick={() => handleNavigation('/', 'inscripcion')} className="nav-button">
+                                    Inscripción
+                                </button>
+                            </li>
+                        )}
+                        <li>
+                            <button onClick={() => handleNavigation('/', 'contacto')} className="nav-button">
+                                Contacto
+                            </button>
                         </li>
                         {isAdmin && (
                             <li>
-                                <Link to="/admin">Admin</Link>
+                                <Link to="/admin" onClick={closeMenu}>Admin</Link>
                             </li>
                         )}
                     </ul>
@@ -92,13 +147,31 @@ const Header = () => {
                     <div className="mobile-nav-content">
                         <ul className="mobile-nav-links">
                             <li>
-                                <Link to="/" onClick={closeMenu}>Inicio</Link>
+                                <button onClick={() => handleNavigation('/', 'inicio')} className="mobile-nav-button">
+                                    Inicio
+                                </button>
                             </li>
                             <li>
-                                <Link to="/gallery" onClick={closeMenu}>Galería</Link>
+                                <button onClick={() => handleNavigation('/', 'galeria')} className="mobile-nav-button">
+                                    Galería
+                                </button>
                             </li>
                             <li>
-                                <Link to="/players" onClick={closeMenu}>Jugadores</Link>
+                                <button onClick={() => handleNavigation('/', 'jugadores')} className="mobile-nav-button">
+                                    Jugadores
+                                </button>
+                            </li>
+                            {!user && (
+                                <li>
+                                    <button onClick={() => handleNavigation('/', 'inscripcion')} className="mobile-nav-button">
+                                        Inscripción
+                                    </button>
+                                </li>
+                            )}
+                            <li>
+                                <button onClick={() => handleNavigation('/', 'contacto')} className="mobile-nav-button">
+                                    Contacto
+                                </button>
                             </li>
                             {isAdmin && (
                                 <li>
