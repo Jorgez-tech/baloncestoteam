@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { playersAPI, usersAPI, imagesAPI } from '../api/client';
+import { playersAPI, usersAPI } from '../api/client';
 import { toast } from 'react-toastify';
 
 /**
@@ -234,7 +234,7 @@ const AdminDashboard = () => {
 
         setLoading(true);
         try {
-            const response = await usersAPI.update(editingItem._id, userForm);
+            await usersAPI.update(editingItem._id, userForm);
             toast.success('Usuario actualizado exitosamente');
             logAuditAction('UPDATE_USER', userForm.email);
             setShowModal(false);
