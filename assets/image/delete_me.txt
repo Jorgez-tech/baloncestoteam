@@ -1,7 +1,0 @@
-Las imágenes en esta carpeta no están referenciadas en el código ni en los assets. Se recomienda eliminar:
-- imagen1.jpeg
-- imagen2.jpeg
-- imagen3.jpg
-- Papá_Jorge.jpg
-
-Validado el 01/09/2025 en la rama chore/limpieza-final-sept2025.
