@@ -1,8 +1,28 @@
 import React from 'react';
 import './styles/sportpar-base.css';
 import './styles/responsive.css';
+import { api } from './api';
 
 function App() {
+    function handleContactSubmit(event) {
+        event.preventDefault();
+        const formData = {
+            name: event.target[0].value,
+            email: event.target[1].value,
+            phone: event.target[2].value,
+            message: event.target[3].value,
+        };
+
+        api.sendContact(formData)
+            .then(() => {
+                alert('Mensaje enviado exitosamente');
+            })
+            .catch(error => {
+                console.error('Error al enviar el mensaje:', error);
+                alert('Hubo un error al enviar el mensaje.');
+            });
+    }
+
     return (
         <div className="App">
             {/* Header Section */}
@@ -79,7 +99,7 @@ function App() {
                         <div className="col-md-6 mx-auto">
                             <div className="contact_form">
                                 <h2>Contacta con nosotros</h2>
-                                <form>
+                                <form onSubmit={handleContactSubmit}>
                                     <input type="text" placeholder="Nombre completo" />
                                     <input type="email" placeholder="Email" />
                                     <input type="text" placeholder="Teléfono" />
