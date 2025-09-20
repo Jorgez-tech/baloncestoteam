@@ -1,0 +1,405 @@
+/* ===================================
+   MICROINTERACTIONS - PREMIUM DESIGN
+   ================================== */
+
+/* ===== HOVER EFFECTS PREMIUM ===== */
+
+.auth-card {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.auth-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Button Hover Effects */
+.auth-submit-button,
+.modal-button,
+.auth-link-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.auth-submit-button::before,
+.modal-button::before,
+.auth-link-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.auth-submit-button:hover::before,
+.modal-button:hover::before,
+.auth-link-button:hover::before {
+  left: 100%;
+}
+
+.auth-submit-button:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
+}
+
+.auth-submit-button:active {
+  transform: translateY(0) scale(0.98);
+  transition: all 0.1s ease;
+}
+
+/* FormField Hover Effects */
+.form-field:hover {
+  transform: translateY(-1px);
+}
+
+.form-field:hover .form-input {
+  border-color: var(--primary-color, #3b82f6);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* ===== FOCUS STATES PREMIUM ===== */
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary-color, #3b82f6);
+  box-shadow: 
+    0 0 0 3px rgba(59, 130, 246, 0.1),
+    0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  transform: scale(1.01);
+  transition: all 0.2s ease;
+}
+
+.form-input:focus + .form-label {
+  color: var(--primary-color, #3b82f6);
+  transform: translateY(-2px);
+}
+
+/* Checkbox Focus */
+.checkbox-input:focus + .checkbox-custom {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--primary-color, #3b82f6);
+}
+
+.checkbox-input:focus + .checkbox-custom::after {
+  transform: scale(1.1);
+}
+
+/* ===== CLICK FEEDBACK ===== */
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  pointer-events: none;
+}
+
+/* Button Click Animation */
+.auth-submit-button:active,
+.modal-button:active,
+.auth-link-button:active {
+  animation: button-click 0.15s ease-in-out;
+}
+
+@keyframes button-click {
+  0% { transform: translateY(-1px) scale(1.02); }
+  50% { transform: translateY(1px) scale(0.98); }
+  100% { transform: translateY(-1px) scale(1.02); }
+}
+
+/* ===== LOADING ANIMATIONS PREMIUM ===== */
+
+.auth-submit-button[data-loading="true"] {
+  animation: loading-pulse 2s ease-in-out infinite;
+}
+
+@keyframes loading-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+}
+
+/* ===== SUCCESS ANIMATIONS ===== */
+
+.form-field.success {
+  animation: success-bounce 0.5s ease-out;
+}
+
+@keyframes success-bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40%, 43% {
+    transform: translateY(-4px);
+  }
+  70% {
+    transform: translateY(-2px);
+  }
+  90% {
+    transform: translateY(-1px);
+  }
+}
+
+.success-checkmark {
+  animation: success-pop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes success-pop {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* ===== ERROR ANIMATIONS ===== */
+
+.form-field.error {
+  animation: error-shake 0.5s ease-in-out;
+}
+
+@keyframes error-shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+  20%, 40%, 60%, 80% { transform: translateX(3px); }
+}
+
+.auth-error {
+  animation: error-slide-down 0.3s ease-out;
+}
+
+@keyframes error-slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== MICROINTERACTIONS ESPECÍFICAS ===== */
+
+/* Password Toggle */
+.password-toggle:hover {
+  background: rgba(59, 130, 246, 0.1);
+  transform: scale(1.1) rotate(5deg);
+}
+
+.password-toggle:active {
+  transform: scale(0.9) rotate(-5deg);
+}
+
+/* Checkbox Animation */
+.checkbox-custom {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.checkbox-input:checked + .checkbox-custom {
+  animation: checkbox-check 0.4s ease-in-out;
+}
+
+@keyframes checkbox-check {
+  0% {
+    transform: scale(1);
+    background: var(--bg-secondary, #f8fafc);
+  }
+  50% {
+    transform: scale(1.1);
+    background: var(--primary-light, #93c5fd);
+  }
+  100% {
+    transform: scale(1);
+    background: var(--primary-color, #3b82f6);
+  }
+}
+
+/* Link Hover Effects */
+.forgot-password-link,
+.auth-link-button {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.forgot-password-link::after,
+.auth-link-button::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 50%;
+  background: var(--primary-color, #3b82f6);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.forgot-password-link:hover::after,
+.auth-link-button:hover::after {
+  width: 100%;
+}
+
+.forgot-password-link:hover,
+.auth-link-button:hover {
+  color: var(--primary-color, #3b82f6);
+  transform: translateY(-1px);
+}
+
+/* ===== RESPONSIVE MICROINTERACTIONS ===== */
+
+@media (max-width: 768px) {
+  /* Reducir animaciones en móvil para mejor performance */
+  .auth-card:hover {
+    transform: none;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .auth-submit-button:hover {
+    transform: scale(1.01);
+  }
+  
+  .form-field:hover {
+    transform: none;
+  }
+}
+
+/* ===== TOUCH INTERACTIONS ===== */
+
+@media (hover: none) and (pointer: coarse) {
+  /* Estilos específicos para dispositivos táctiles */
+  .auth-submit-button:active {
+    transform: scale(0.95);
+    transition: all 0.1s ease;
+  }
+  
+  .form-field:active {
+    background: rgba(59, 130, 246, 0.05);
+  }
+  
+  .checkbox-label:active .checkbox-custom {
+    transform: scale(0.95);
+  }
+}
+
+/* ===== DARK THEME MICROINTERACTIONS ===== */
+
+@media (prefers-color-scheme: dark) {
+  .auth-card:hover {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+  
+  .auth-submit-button::before,
+  .modal-button::before,
+  .auth-link-button::before {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+  }
+  
+  .form-input:focus {
+    box-shadow: 
+      0 0 0 3px rgba(96, 165, 250, 0.2),
+      0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* ===== HIGH CONTRAST ADAPTATIONS ===== */
+
+@media (prefers-contrast: high) {
+  .auth-submit-button:hover {
+    border: 3px solid var(--primary-color, #3b82f6);
+    background: var(--bg-primary, #ffffff) !important;
+    color: var(--primary-color, #3b82f6) !important;
+  }
+  
+  .form-input:focus {
+    border: 3px solid var(--primary-color, #3b82f6) !important;
+  }
+  
+  .checkbox-input:checked + .checkbox-custom {
+    border: 3px solid var(--primary-color, #3b82f6);
+  }
+}
+
+/* ===== ACCESSIBILITY ENHANCEMENTS ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Deshabilitar animaciones para usuarios que prefieren menos movimiento */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus visible para navegación por teclado */
+.auth-submit-button:focus-visible,
+.modal-button:focus-visible,
+.auth-link-button:focus-visible,
+.forgot-password-link:focus-visible {
+  outline: 2px solid var(--primary-color, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+
+/* Usar will-change para elementos que van a animar */
+.auth-card,
+.auth-submit-button,
+.form-field,
+.modal-container {
+  will-change: transform;
+}
+
+/* Usar containment para mejor performance */
+.auth-container {
+  contain: layout style paint;
+}
+
+.modal-overlay {
+  contain: layout style paint;
+}

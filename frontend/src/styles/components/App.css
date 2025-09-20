@@ -1,0 +1,128 @@
+/* App Component Styles - Clean Architecture */
+
+.app {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+  padding: var(--spacing-lg);
+}
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: var(--white);
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.app-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+  color: var(--white);
+  padding: var(--spacing-2xl);
+  text-align: center;
+}
+
+.app-header h1 {
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  margin-bottom: var(--spacing-sm);
+}
+
+.app-header p {
+  font-size: var(--text-lg);
+  opacity: 0.9;
+  margin-bottom: 0;
+}
+
+.app-main {
+  padding: var(--spacing-2xl);
+}
+
+.status-section {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.status-section h2 {
+  color: var(--gray-800);
+  font-size: var(--text-2xl);
+  margin-bottom: var(--spacing-lg);
+  border-bottom: 2px solid var(--gray-200);
+  padding-bottom: var(--spacing-sm);
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.status-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  background: var(--gray-50);
+  border-radius: var(--border-radius-md);
+  border-left: 4px solid var(--gray-300);
+}
+
+.status-label {
+  font-weight: 500;
+  color: var(--gray-700);
+}
+
+.status-value.success {
+  color: var(--secondary-color);
+  font-weight: 600;
+}
+
+.status-value.pending {
+  color: var(--warning-color);
+  font-weight: 600;
+}
+
+.info-section h3 {
+  color: var(--gray-800);
+  font-size: var(--text-xl);
+  margin-bottom: var(--spacing-md);
+}
+
+.info-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.info-section li {
+  padding: var(--spacing-sm) var(--spacing-md);
+  margin-bottom: var(--spacing-xs);
+  background: var(--gray-50);
+  border-radius: var(--border-radius-sm);
+  border-left: 3px solid var(--primary-color);
+  color: var(--gray-700);
+}
+
+.info-section li::before {
+  content: '→';
+  color: var(--primary-color);
+  font-weight: bold;
+  margin-right: var(--spacing-sm);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .app {
+    padding: var(--spacing-md);
+  }
+  
+  .app-header {
+    padding: var(--spacing-xl);
+  }
+  
+  .app-main {
+    padding: var(--spacing-xl);
+  }
+  
+  .status-grid {
+    grid-template-columns: 1fr;
+  }
+}
