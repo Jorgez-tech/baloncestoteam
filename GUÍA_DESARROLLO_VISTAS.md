@@ -1,0 +1,65 @@
+# Guía de Personalización e Integración de Vistas - Basketball Team
+
+## 1. Checklist de Vistas Principales
+- [x] Home (convertida a JSX funcional, integrada en App.js)
+- [x] Jugadores (convertida a JSX funcional, integrada en App.js)
+- [x] Contacto (convertida a JSX funcional, integrada en App.js)
+- [ ] Registro/Login (si aplica)
+- [ ] Panel de gestión (si aplica)
+
+---
+
+## 2. Personalización Visual
+Por cada vista:
+- [ ] Cambiar imágenes por las del equipo de baloncesto (`frontend/public/images/`)
+- [ ] Renombrar botones y textos para reflejar la temática
+- [ ] Ajustar colores y estilos en los archivos CSS (`frontend/public/css/`)
+
+---
+
+## 3. Integración de Lógica
+Por cada vista:
+- [x] Identificar componentes interactivos (formularios, botones, listas) en Home, Jugadores y Contacto
+- [ ] Conectar formularios y componentes al backend (API en puerto 5000)
+- [ ] Validar la recepción y envío de datos correctamente
+
+---
+
+## 4. Pruebas y Validación
+Por cada vista:
+- [x] Validación con linter (`npm run lint`) sin errores críticos
+- [ ] Probar la vista en diferentes dispositivos y navegadores
+- [ ] Verificar que las funcionalidades conectadas funcionen correctamente
+- [ ] Corregir errores visuales y funcionales detectados
+
+---
+
+## 5. Documentación
+Por cada avance:
+- [x] Documentar los cambios realizados en esta guía y README
+- [ ] Registrar endpoints y flujos principales usados en cada vista
+
+---
+
+## Comandos de Desarrollo
+- Backend:  
+  ```bash
+  cd backend && npm run dev
+  ```
+- Frontend:  
+  ```bash
+  cd frontend && npm start
+  ```
+
+---
+
+## Referencias Clave
+- Arquitectura: `.github/copilot-instructions.md`
+- CSS: `frontend/public/css/`
+- Imágenes: `frontend/public/images/`
+- Componente principal: `frontend/src/App.js`
+- Backend API: Puerto 5000
+
+---
+
+**Recomendación:** Avanza punto a punto, personalizando y conectando la lógica de cada vista antes de pasar a la siguiente. Actualiza la documentación conforme completes cada etapa.
