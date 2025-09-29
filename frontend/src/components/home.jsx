@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 export default function Home() {
   // This component is a JSX conversion of the original home HTML page.
@@ -16,7 +17,7 @@ export default function Home() {
           <div className="container-fluid">
             <nav className="navbar navbar-expand-lg custom_nav-container ">
               <a className="navbar-brand" href="/">
-                <span>Sportpar</span>
+                <span>BaloncestoTeam</span>
               </a>
               <button
                 className="navbar-toggler"
@@ -37,16 +38,16 @@ export default function Home() {
                       <a className="nav-link" href="/">Home <span className="sr-only">(current)</span></a>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link" href="/about">About</a>
+                      <Link className="nav-link" to="/nosotros">Nosotros</Link>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link" href="/products">Products</a>
+                      <Link className="nav-link" to="/jugadores">Jugadores</Link>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link" href="/contact">Contact us</a>
+                      <Link className="nav-link" to="/contacto">Contácto</Link>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link" href="#">Login</a>
+                      <Link className="nav-link" to="/login">Iniciar Sesión</Link>
                     </li>
                   </ul>
                   <div className="quote_btn-container">
@@ -79,13 +80,13 @@ export default function Home() {
               <div className="col-md-5 col-xl-4 offset-xl-1">
                 <div className="detail-box">
                   <h1>
-                    Sports and <br />
-                    Fitness Store
+                    Baloncesto Team <br />
+                    Donde tus Sueños Comienzan!
                   </h1>
-                  <p>There are many variations of passages of Lorem Ipsum available.</p>
+                  <p>Se Parte de Esta Gran Familia.</p>
                   <div className="btn-box">
-                    <a href="#" className="btn-1">Shop Now</a>
-                    <a href="#" className="btn-2">Get A Quote</a>
+                    <a href="#" className="btn-1">Nosotros</a>
+                    <a href="#" className="btn-2">Jugadores</a>
                   </div>
                 </div>
               </div>
@@ -100,7 +101,7 @@ export default function Home() {
                     <div className="carousel-inner">
                       <div className="carousel-item active">
                         <div className="img-box">
-                          <img src="/images/slider-img.jpg" alt="slide 1" />
+                          <img src="/images/slider-img2.jpg" alt="imagen principal." />
                         </div>
                       </div>
                       <div className="carousel-item">
@@ -237,29 +238,29 @@ export default function Home() {
       */}
 
       {/*
-      <section className="info_section">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-4">
-              <h5>About</h5>
-              <p>Short about text or address goes here.</p>
-            </div>
-            <div className="col-md-4">
-              <h5>Contact</h5>
-              <p>Phone: +123456789</p>
-            </div>
-            <div className="col-md-4">
-              <h5>Hours</h5>
-              <p>Mon - Fri: 9am - 6pm</p>
+        <section className="info_section">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-4">
+                <h5>About</h5>
+                <p>Short about text or address goes here.</p>
+              </div>
+              <div className="col-md-4">
+                <h5>Contact</h5>
+                <p>Phone: +123456789</p>
+              </div>
+              <div className="col-md-4">
+                <h5>Hours</h5>
+                <p>Mon - Fri: 9am - 6pm</p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
       */}
 
       <footer className="footer_section">
         <div className="container">
-          <p>© 2025 Sportpar - All Rights Reserved</p>
+          <p>© 2025 BaloncestoTeam - All Rights Reserved</p>
         </div>
       </footer>
     </>
