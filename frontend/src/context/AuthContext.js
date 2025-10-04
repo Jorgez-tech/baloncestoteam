@@ -52,13 +52,15 @@ export const AuthProvider = ({ children }) => {
         try {
             setLoading(true);
             const response = await authAPI.login(credentials);
-            const { success, data, msg } = response.data;
 
-            if (success && data) {
-                saveAuthData(data);
-                return { success: true, user: data.user };
+            // El backend responde directamente con { user, token }
+            const { user, token } = response.data;
+
+            if (user && token) {
+                saveAuthData({ user, token });
+                return { success: true, user };
             } else {
-                return { success: false, error: msg || 'Error al iniciar sesión' };
+                return { success: false, error: 'Error al iniciar sesión' };
             }
         } catch (error) {
             let errorMessage = 'Error al iniciar sesión';
@@ -82,13 +84,16 @@ export const AuthProvider = ({ children }) => {
         try {
             setLoading(true);
             const response = await authAPI.register(userData);
-            const { success, data, msg } = response.data;
 
-            if (success && data) {
-                saveAuthData(data);
-                return { success: true, user: data.user };
+            // El backend solo responde con { msg: 'User registered' }
+            // NO devuelve token, así que el usuario debe hacer login después
+            if (response.status === 201) {
+                return {
+                    success: true,
+                    message: 'Cuenta creada exitosamente. Por favor inicia sesión.'
+                };
             } else {
-                return { success: false, error: msg || 'Error al crear la cuenta' };
+                return { success: false, error: 'Error al crear la cuenta' };
             }
         } catch (error) {
             let errorMessage = 'Error al crear la cuenta';

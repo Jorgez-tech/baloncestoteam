@@ -13,10 +13,12 @@ export default function Registro() {
     });
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        setSuccessMessage('');
 
         // Validación de contraseñas
         if (formData.password !== formData.confirmPassword) {
@@ -36,7 +38,18 @@ export default function Registro() {
         });
 
         if (result.success) {
-            navigate('/');
+            setSuccessMessage(result.message || 'Cuenta creada exitosamente. Por favor inicia sesión.');
+            // Limpiar el formulario
+            setFormData({
+                email: '',
+                username: '',
+                password: '',
+                confirmPassword: ''
+            });
+            // Opcional: redirigir a login después de 2 segundos
+            setTimeout(() => {
+                navigate('/login');
+            }, 2000);
         } else {
             setError(result.error || 'Error al crear la cuenta');
         }
@@ -134,6 +147,19 @@ export default function Registro() {
                                             border: '1px solid #f5c6cb'
                                         }}>
                                             {error}
+                                        </div>
+                                    )}
+
+                                    {successMessage && (
+                                        <div style={{
+                                            backgroundColor: '#d4edda',
+                                            color: '#155724',
+                                            padding: '12px',
+                                            borderRadius: '4px',
+                                            marginBottom: '15px',
+                                            border: '1px solid #c3e6cb'
+                                        }}>
+                                            {successMessage}
                                         </div>
                                     )}
 
