@@ -1,11 +1,11 @@
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/home";
-import { Link } from "react-router-dom";
 import Nosotros from "./components/nosotros";
 import Jugadores from "./components/jugadores";
 import Contacto from "./components/contacto";
 import Login from "./components/login";
+import Registro from "./components/registro";
 
 
 function App() {
@@ -20,6 +20,7 @@ function App() {
                     <Route path="/jugadores" element={<Jugadores />} />
                     <Route path="/contacto" element={<Contacto />} />
                     <Route path="/login" element={<Login />} />
+                    <Route path="/registro" element={<Registro />} />
                 </Routes>
             </div>
         </Router>

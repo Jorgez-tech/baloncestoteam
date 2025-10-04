@@ -2,12 +2,14 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-export default function Login() {
+export default function Registro() {
     const navigate = useNavigate();
-    const { login, loading } = useAuth();
+    const { register, loading } = useAuth();
     const [formData, setFormData] = useState({
         email: '',
-        password: ''
+        username: '',
+        password: '',
+        confirmPassword: ''
     });
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
@@ -16,17 +18,27 @@ export default function Login() {
         e.preventDefault();
         setError('');
 
-        const result = await login(formData);
+        // Validación de contraseñas
+        if (formData.password !== formData.confirmPassword) {
+            setError('Las contraseñas no coinciden');
+            return;
+        }
+
+        if (formData.password.length < 6) {
+            setError('La contraseña debe tener al menos 6 caracteres');
+            return;
+        }
+
+        const result = await register({
+            email: formData.email,
+            username: formData.username,
+            password: formData.password
+        });
 
         if (result.success) {
-            // Redirigir según el rol del usuario
-            if (result.user.role === 'admin') {
-                navigate('/admin');
-            } else {
-                navigate('/');
-            }
+            navigate('/');
         } else {
-            setError(result.error || 'Error al iniciar sesión');
+            setError(result.error || 'Error al crear la cuenta');
         }
     };
 
@@ -35,7 +47,7 @@ export default function Login() {
             ...formData,
             [e.target.name]: e.target.value
         });
-        setError(''); // Limpiar error al escribir
+        setError('');
     };
 
     return (
@@ -64,7 +76,7 @@ export default function Login() {
                                 <div className="d-flex ml-auto flex-column flex-lg-row align-items-center">
                                     <ul className="navbar-nav">
                                         <li className="nav-item">
-                                            <Link className="nav-link" to="/">Home <span className="sr-only">(current)</span></Link>
+                                            <Link className="nav-link" to="/">Home</Link>
                                         </li>
                                         <li className="nav-item">
                                             <Link className="nav-link" to="/nosotros">Nosotros</Link>
@@ -75,7 +87,7 @@ export default function Login() {
                                         <li className="nav-item">
                                             <Link className="nav-link" to="/contacto">Contácto</Link>
                                         </li>
-                                        <li className="nav-item active">
+                                        <li className="nav-item">
                                             <Link className="nav-link" to="/login">Iniciar Sesión</Link>
                                         </li>
                                     </ul>
@@ -98,7 +110,7 @@ export default function Login() {
                 {/* end header section */}
             </div>
 
-            {/* login section */}
+            {/* registro section */}
             <section className="contact_section">
                 <div className="contact_container">
                     <div className="container">
@@ -106,9 +118,9 @@ export default function Login() {
                             <div className="col-md-6 mx-auto">
                                 <div className="contact_form layout_padding">
                                     <div className="heading_container heading_center">
-                                        <h2>Iniciar Sesión</h2>
+                                        <h2>Crear Cuenta</h2>
                                         <p style={{ marginTop: '10px', fontSize: '16px', color: '#666' }}>
-                                            Accede a tu cuenta de BaloncestoTeam
+                                            Únete a la comunidad de BaloncestoTeam
                                         </p>
                                     </div>
 
@@ -127,6 +139,16 @@ export default function Login() {
 
                                     <form onSubmit={handleSubmit}>
                                         <input
+                                            type="text"
+                                            name="username"
+                                            placeholder="Nombre de usuario"
+                                            value={formData.username}
+                                            onChange={handleChange}
+                                            required
+                                            disabled={loading}
+                                            minLength={3}
+                                        />
+                                        <input
                                             type="email"
                                             name="email"
                                             placeholder="Correo electrónico"
@@ -139,11 +161,12 @@ export default function Login() {
                                             <input
                                                 type={showPassword ? "text" : "password"}
                                                 name="password"
-                                                placeholder="Contraseña"
+                                                placeholder="Contraseña (mínimo 6 caracteres)"
                                                 value={formData.password}
                                                 onChange={handleChange}
                                                 required
                                                 disabled={loading}
+                                                minLength={6}
                                             />
                                             <button
                                                 type="button"
@@ -160,18 +183,27 @@ export default function Login() {
                                                 {showPassword ? '👁️' : '👁️‍🗨️'}
                                             </button>
                                         </div>
+                                        <input
+                                            type={showPassword ? "text" : "password"}
+                                            name="confirmPassword"
+                                            placeholder="Confirmar contraseña"
+                                            value={formData.confirmPassword}
+                                            onChange={handleChange}
+                                            required
+                                            disabled={loading}
+                                        />
                                         <div className="btn-box">
                                             <button type="submit" disabled={loading}>
-                                                {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+                                                {loading ? 'Creando cuenta...' : 'Registrarse'}
                                             </button>
                                         </div>
                                     </form>
 
                                     <div style={{ textAlign: 'center', marginTop: '20px' }}>
                                         <p>
-                                            ¿No tienes cuenta?{' '}
-                                            <Link to="/registro" style={{ color: '#007bff', textDecoration: 'none' }}>
-                                                Regístrate aquí
+                                            ¿Ya tienes cuenta?{' '}
+                                            <Link to="/login" style={{ color: '#007bff', textDecoration: 'none' }}>
+                                                Inicia sesión aquí
                                             </Link>
                                         </p>
                                     </div>
@@ -194,7 +226,7 @@ export default function Login() {
                                     </a>
                                 </div>
                                 <p>
-                                    Accede a tu cuenta para gestionar tu perfil, ver estadísticas y participar en todas las actividades del club. ¡Forma parte de nuestra comunidad deportiva!
+                                    Crea tu cuenta para acceder a todas las funcionalidades del club. ¡Únete a nuestra comunidad deportiva!
                                 </p>
                             </div>
                         </div>
