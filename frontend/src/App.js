@@ -6,6 +6,8 @@ import Jugadores from "./components/jugadores";
 import Contacto from "./components/contacto";
 import Login from "./components/login";
 import Registro from "./components/registro";
+import AdminDashboard from "./pages/AdminDashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 
 function App() {
@@ -21,6 +23,16 @@ function App() {
                     <Route path="/contacto" element={<Contacto />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/registro" element={<Registro />} />
+
+                    {/* Ruta protegida de administración */}
+                    <Route
+                        path="/admin"
+                        element={
+                            <ProtectedRoute requireAdmin={true}>
+                                <AdminDashboard />
+                            </ProtectedRoute>
+                        }
+                    />
                 </Routes>
             </div>
         </Router>
