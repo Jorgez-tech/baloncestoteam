@@ -75,7 +75,7 @@ export default function Nosotros() {
               <div className="detail-box">
                 <h2>Nosotros</h2>
                 <p>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Natus hic, dolore error nulla similique cum minima rem, distinctio animi architecto inventore temporibus consequuntur quibusdam modi atque est fuga dicta quae!
+                  En BaloncestoTeam creemos que el deporte es el punto de partida de grandes sueños y amistades. Somos una familia apasionada por el baloncesto, dedicada a formar jugadores y personas íntegras, donde cada miembro encuentra un espacio para crecer, aprender y disfrutar. ¡Únete y sé parte de esta gran familia donde tus sueños comienzan!
                 </p>
                 <div>
                   <a href="#">Comprar Ahora</a>
@@ -92,35 +92,35 @@ export default function Nosotros() {
       </section>
 
       {/* info section */}
-      <section className="info_section layout_padding2">
+      <section className="info_section layout_padding2" style={{ padding: '30px 0', margin: '0' }}>
         <div className="container">
           <div className="row">
             <div className="col-md-4">
               <div className="logo_detail">
                 <div className="logo-box">
                   <a className="navbar-brand" href="/">
-                    <span>Sportpar</span>
+                    <span>BaloncestoTeam</span>
                   </a>
                 </div>
                 <p>
-                  There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or
+                  Somos BaloncestoTeam, un club dedicado a la formación deportiva y humana de nuestros jugadores. Fomentamos el trabajo en equipo, la disciplina y la pasión por el baloncesto. ¡Descubre todo lo que podemos lograr juntos!
                 </p>
               </div>
             </div>
             <div className="col-md-4 col-lg-3 mx-auto">
               <div className="address_box">
-                <h5>Adderess</h5>
-                <a href="#"><i className="fa fa-map-marker" aria-hidden="true" />passages of Lorem Ipsum available, but the majority have</a>
-                <a href="#"><i className="fa fa-phone" aria-hidden="true" />(+71) 1234567890</a>
-                <a href="#"><i className="fa fa-envelope" aria-hidden="true" />demo@gmail.com</a>
+                <h5>Dirección</h5>
+                <a href="#"><i className="fa fa-map-marker" aria-hidden="true" />Calle 123, Ciudad Deportiva</a>
+                <a href="#"><i className="fa fa-phone" aria-hidden="true" />(+57) 3001234567</a>
+                <a href="#"><i className="fa fa-envelope" aria-hidden="true" />contacto@baloncestoteam.com</a>
               </div>
             </div>
             <div className="col-md-3">
               <div className="info_form">
                 <h5>Newsletter</h5>
                 <form onSubmit={handleSubmitNoop}>
-                  <input type="text" placeholder="Enter Your Email" />
-                  <button type="submit">Subscribe</button>
+                  <input type="text" placeholder="Ingresa tu correo" />
+                  <button type="submit">Suscribirse</button>
                 </form>
               </div>
               <div className="social_box">
@@ -137,7 +137,7 @@ export default function Nosotros() {
       {/* footer section */}
       <footer className="footer_section">
         <div className="container-fluid">
-          <p>© 2021 All Rights Reserved By <a href="https://html.design/">Free Html Templates</a></p>
+          <p>© 2025 BaloncestoTeam - Todos los derechos reservados</p>
         </div>
       </footer>
     </>

@@ -63,22 +63,31 @@ export default function Jugadores() {
       <section className="product_section layout_padding">
         <div className="container">
           <div className="heading_container heading_center">
-            <h2>Our Products</h2>
+            <h2>Nuestros Jugadores</h2>
           </div>
           <div className="row">
-            {Array.from({ length: 9 }).map((_, idx) => (
+            {[
+              { img: '/images/hakeem.jpg', nombre: 'Hakeem Olajuwon' },
+              { img: '/images/mj.jpg', nombre: 'Michael Jordan' },
+              { img: '/images/dennis-rodman.jpg', nombre: 'Dennis Rodman' },
+              { img: '/images/kobe.jpg', nombre: 'Kobe Bryant' },
+              { img: '/images/hakeem.jpg', nombre: 'Hakeem Olajuwon' },
+              { img: '/images/mj.jpg', nombre: 'Michael Jordan' },
+              { img: '/images/dennis-rodman.jpg', nombre: 'Dennis Rodman' },
+              { img: '/images/kobe.jpg', nombre: 'Kobe Bryant' },
+              { img: '/images/hakeem.jpg', nombre: 'Hakeem Olajuwon' },
+            ].map((jugador, idx) => (
               <div className="col-sm-6 col-lg-4" key={idx}>
                 <div className="box">
-                  <div className="img-box">
-                    <img src={`/images/p${idx + 1}.png`} alt={`product ${idx + 1}`} />
+                  <div className="img-box" style={{ width: '100%', height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                    <img src={jugador.img} alt={jugador.nombre} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                   <div className="detail-box">
                     <div className="text">
-                      <a href="#" className="p_name">Sport Product</a>
-                      <h5><span>$</span> 300</h5>
+                      <a href="#" className="p_name">{jugador.nombre}</a>
                     </div>
                     <div className="like">
-                      <h6>Rating</h6>
+                      <h6>Valoración</h6>
                       <div className="star_container">
                         <i className="fa fa-star" aria-hidden="true" />
                         <i className="fa fa-star" aria-hidden="true" />
@@ -92,7 +101,7 @@ export default function Jugadores() {
               </div>
             ))}
           </div>
-          <div className="btn-box"><a href="#">View All</a></div>
+          <div className="btn-box"><a href="#">Ver Todos</a></div>
         </div>
       </section>
 
@@ -104,26 +113,28 @@ export default function Jugadores() {
               <div className="logo_detail">
                 <div className="logo-box">
                   <a className="navbar-brand" href="/">
-                    <span>Sportpar</span>
+                    <span>BaloncestoTeam</span>
                   </a>
                 </div>
-                <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or</p>
+                <p>
+                  En BaloncestoTeam formamos jugadores con pasión, disciplina y trabajo en equipo. Descubre a los integrantes que hacen grande a nuestro club y conoce sus historias y logros en la cancha.
+                </p>
               </div>
             </div>
             <div className="col-md-4 col-lg-3 mx-auto">
               <div className="address_box">
-                <h5>Adderess</h5>
-                <a href="#"><i className="fa fa-map-marker" aria-hidden="true" />passages of Lorem Ipsum available, but the majority have</a>
-                <a href="#"><i className="fa fa-phone" aria-hidden="true" />(+71) 1234567890</a>
-                <a href="#"><i className="fa fa-envelope" aria-hidden="true" />demo@gmail.com</a>
+                <h5>Dirección</h5>
+                <a href="#"><i className="fa fa-map-marker" aria-hidden="true" />Calle 123, Ciudad Deportiva</a>
+                <a href="#"><i className="fa fa-phone" aria-hidden="true" />(+57) 3001234567</a>
+                <a href="#"><i className="fa fa-envelope" aria-hidden="true" />contacto@baloncestoteam.com</a>
               </div>
             </div>
             <div className="col-md-3">
               <div className="info_form">
                 <h5>Newsletter</h5>
                 <form onSubmit={handleSubmitNoop}>
-                  <input type="text" placeholder="Enter Your Email" />
-                  <button type="submit">Subscribe</button>
+                  <input type="text" placeholder="Ingresa tu correo" />
+                  <button type="submit">Suscribirse</button>
                 </form>
               </div>
               <div className="social_box">
@@ -140,7 +151,7 @@ export default function Jugadores() {
       {/* footer section */}
       <footer className="footer_section">
         <div className="container-fluid">
-          <p>© 2021 All Rights Reserved By <a href="https://html.design/">Free Html Templates</a></p>
+          <p>© 2025 BaloncestoTeam - Todos los derechos reservados</p>
         </div>
       </footer>
     </>

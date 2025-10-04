@@ -62,15 +62,15 @@ export default function Contacto() {
               <div className="col-md-6 mx-auto">
                 <div className="contact_form layout_padding">
                   <div className="heading_container heading_center">
-                    <h2>Get in touch</h2>
+                    <h2>Contáctanos</h2>
                   </div>
                   <form action="#" onSubmit={(e) => e.preventDefault()}>
-                    <input type="text" placeholder="Full name" />
+                    <input type="text" placeholder="Nombre completo" />
                     <div className="top_input">
-                      <input type="email" placeholder="Email" />
-                      <input type="text" placeholder="Phone Number" />
+                      <input type="email" placeholder="Correo electrónico" />
+                      <input type="text" placeholder="Teléfono" />
                     </div>
-                    <input type="text" placeholder="Message" className="message_input" />
+                    <input type="text" placeholder="Mensaje" className="message_input" />
                     <div className="btn-box">
                       <button type="submit">Enviar</button>
                     </div>
@@ -90,37 +90,28 @@ export default function Contacto() {
               <div className="logo_detail">
                 <div className="logo-box">
                   <a className="navbar-brand" href="/">
-                    <span>Sportpar</span>
+                    <span>BaloncestoTeam</span>
                   </a>
                 </div>
                 <p>
-                  There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or
+                  ¿Tienes dudas, sugerencias o quieres unirte a nuestro club? Escríbenos y te responderemos lo antes posible. En BaloncestoTeam estamos para ayudarte y acompañarte en tu camino deportivo.
                 </p>
               </div>
             </div>
             <div className="col-md-4 col-lg-3 mx-auto">
               <div className="address_box">
-                <h5>Address</h5>
-                <a href="#">
-                  <i className="fa fa-map-marker" aria-hidden="true" />
-                  passages of Lorem Ipsum available, but the majority have
-                </a>
-                <a href="#">
-                  <i className="fa fa-phone" aria-hidden="true" />
-                  (+71) 1234567890
-                </a>
-                <a href="#">
-                  <i className="fa fa-envelope" aria-hidden="true" />
-                  demo@gmail.com
-                </a>
+                <h5>Dirección</h5>
+                <a href="#"><i className="fa fa-map-marker" aria-hidden="true" />Calle 123, Ciudad Deportiva</a>
+                <a href="#"><i className="fa fa-phone" aria-hidden="true" />(+57) 3001234567</a>
+                <a href="#"><i className="fa fa-envelope" aria-hidden="true" />contacto@baloncestoteam.com</a>
               </div>
             </div>
             <div className="col-md-3">
               <div className="info_form">
                 <h5>Newsletter</h5>
                 <form action="#" onSubmit={(e) => e.preventDefault()}>
-                  <input type="text" placeholder="Enter Your Email" />
-                  <button type="submit">Subscribe</button>
+                  <input type="text" placeholder="Ingresa tu correo" />
+                  <button type="submit">Suscribirse</button>
                 </form>
               </div>
               <div className="social_box">
@@ -137,10 +128,7 @@ export default function Contacto() {
       {/* footer section */}
       <footer className="footer_section">
         <div className="container-fluid">
-          <p>
-            &copy; 2021 All Rights Reserved By
-            <a href="https://html.design/">Free Html Templates</a>
-          </p>
+          <p>© 2025 BaloncestoTeam - Todos los derechos reservados</p>
         </div>
       </footer>
       {/* end footer section */}
