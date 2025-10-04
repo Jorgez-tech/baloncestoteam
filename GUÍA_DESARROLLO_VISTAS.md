@@ -8,7 +8,7 @@
 - [x] Nosotros (convertida a JSX funcional, integrada en App.js)
 - [x] Login (creado con integración backend, AuthContext, manejo de errores)
 - [x] Registro (creado con validaciones, integración authAPI)
-- [ ] Panel de gestión (AdminDashboard - pendiente restauración)
+- [x] Panel de gestión (AdminDashboard - restaurado con rutas protegidas)
 
 ---
 
@@ -27,8 +27,10 @@ Por cada vista:
 - [x] Identificar componentes interactivos (formularios, botones, listas) en Home, Jugadores y Contacto
 - [x] Conectar Login y Registro con backend (authAPI)
 - [x] Implementar AuthContext para manejo de sesión
-- [ ] Conectar formularios y componentes al backend (API en puerto 5000)
-- [ ] Validar la recepción y envío de datos correctamente
+- [x] Implementar ProtectedRoute para rutas protegidas por autenticación
+- [x] Conectar AdminDashboard con backend (playersAPI, usersAPI)
+- [ ] Conectar formularios de contacto al backend
+- [ ] Validar la recepción y envío de datos correctamente en todas las vistas
 
 ---
 
