@@ -34,8 +34,8 @@ export default function Home() {
                   </h1>
                   <p>Se Parte de Esta Gran Familia.</p>
                   <div className="btn-box">
-                    <a href="#" className="btn-1">Nosotros</a>
-                    <a href="#" className="btn-2">Jugadores</a>
+                    <Link to="/nosotros" className="btn-1">Nosotros</Link>
+                    <Link to="/jugadores" className="btn-2">Jugadores</Link>
                   </div>
                 </div>
               </div>
