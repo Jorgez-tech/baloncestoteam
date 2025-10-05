@@ -1,62 +1,62 @@
-
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import Header from "./Header";
+
 export default function Contacto() {
+  const [form, setForm] = useState({ nombre: "", email: "", telefono: "", mensaje: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setError("");
+    setSuccess("");
+  };
+
+  const validate = () => {
+    if (!form.nombre || !form.email || !form.mensaje) return "Todos los campos obligatorios";
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email)) return "Correo electrónico inválido";
+    return "";
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    const validationError = validate();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch("http://localhost:5000/api/v1/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form)
+      });
+      if (res.ok) {
+        setSuccess("Mensaje enviado correctamente. ¡Gracias por contactarnos!");
+        setForm({ nombre: "", email: "", telefono: "", mensaje: "" });
+      } else {
+        setError("Error al enviar el mensaje. Intenta nuevamente.");
+      }
+    } catch (err) {
+      setError("Error de conexión. Intenta más tarde.");
+    }
+    setLoading(false);
+  };
+
   return (
     <>
       <div className="hero_area">
         {/* header section starts */}
         <header className="header_section">
-          <div className="container-fluid">
-            <nav className="navbar navbar-expand-lg custom_nav-container ">
-              <a className="navbar-brand" href="/">
-                <span>BaloncestoTeam</span>
-              </a>
-              <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon" />
-              </button>
-
-              <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                <div className="d-flex ml-auto flex-column flex-lg-row align-items-center">
-                  <ul className="navbar-nav">
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/">Home <span className="sr-only">(current)</span></Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/nosotros">Nosotros</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/jugadores">Jugadores</Link>
-                    </li>
-                    <li className="nav-item active">
-                      <Link className="nav-link" to="/contacto">Contácto</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/login">Iniciar Sesión</Link>
-                    </li>
-                  </ul>
-                  <div className="quote_btn-container ">
-                    <a href="#" className="cart_link">
-                      <i className="fa fa-cart-arrow-down" aria-hidden="true" />
-                      <span className="cart_number">0</span>
-                    </a>
-                    <form className="form-inline" onSubmit={(e) => e.preventDefault()}>
-                      <button className="btn  nav_search-btn" type="submit">
-                        <i className="fa fa-search" aria-hidden="true" />
-                      </button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </nav>
-          </div>
+          <Header />
         </header>
-        {/* end header section */}
-      </div>
-
-
-      {/* contact section */}
-      <section className="contact_section">
-        <div className="contact_container">
+        {/* contacto section */}
+        <section className="contact_section">
           <div className="container">
             <div className="row">
               <div className="col-md-6 mx-auto">
@@ -64,24 +64,25 @@ export default function Contacto() {
                   <div className="heading_container heading_center">
                     <h2>Contáctanos</h2>
                   </div>
-                  <form action="#" onSubmit={(e) => e.preventDefault()}>
-                    <input type="text" placeholder="Nombre completo" />
+                  <form onSubmit={handleSubmit}>
+                    <input type="text" name="nombre" placeholder="Nombre completo*" value={form.nombre} onChange={handleChange} />
                     <div className="top_input">
-                      <input type="email" placeholder="Correo electrónico" />
-                      <input type="text" placeholder="Teléfono" />
+                      <input type="email" name="email" placeholder="Correo electrónico*" value={form.email} onChange={handleChange} />
+                      <input type="text" name="telefono" placeholder="Teléfono" value={form.telefono} onChange={handleChange} />
                     </div>
-                    <input type="text" placeholder="Mensaje" className="message_input" />
+                    <input type="text" name="mensaje" placeholder="Mensaje*" className="message_input" value={form.mensaje} onChange={handleChange} />
                     <div className="btn-box">
-                      <button type="submit">Enviar</button>
+                      <button type="submit" disabled={loading}>{loading ? "Enviando..." : "Enviar"}</button>
                     </div>
+                    {error && <div style={{ color: "red", marginTop: 10 }}>{error}</div>}
+                    {success && <div style={{ color: "green", marginTop: 10 }}>{success}</div>}
                   </form>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
+        </section>
+      </div>
       {/* info section */}
       <section className="info_section layout_padding2">
         <div className="container">
@@ -124,14 +125,12 @@ export default function Contacto() {
           </div>
         </div>
       </section>
-
       {/* footer section */}
       <footer className="footer_section">
         <div className="container-fluid">
           <p>© 2025 BaloncestoTeam - Todos los derechos reservados</p>
         </div>
       </footer>
-      {/* end footer section */}
     </>
   );
 }
