@@ -1,13 +1,14 @@
+import { playersAPI } from './client';
+
 // Función para obtener jugadores desde el backend
 export async function fetchPlayers() {
     try {
-        const response = await fetch('/api/v1/players');
-        if (!response.ok) throw new Error('Error al obtener jugadores');
-        const result = await response.json();
-        // Si la respuesta tiene formato { success, data }, devolvemos solo data
-        return result.data || [];
+        const response = await playersAPI.getAll();
+        // La respuesta de axios viene en response.data
+        // Si el backend devuelve { success, data }, extraemos data
+        return response.data.data || response.data || [];
     } catch (error) {
-        console.error(error);
+        console.error('Error al obtener jugadores:', error);
         return [];
     }
 }

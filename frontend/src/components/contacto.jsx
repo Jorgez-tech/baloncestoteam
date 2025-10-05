@@ -1,51 +1,58 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from 'react-toastify';
+import { apiClient } from '../api/client';
 import Header from "./Header";
 
 export default function Contacto() {
   const [form, setForm] = useState({ nombre: "", email: "", telefono: "", mensaje: "" });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    setError("");
-    setSuccess("");
   };
 
   const validate = () => {
-    if (!form.nombre || !form.email || !form.mensaje) return "Todos los campos obligatorios";
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email)) return "Correo electrónico inválido";
-    return "";
+    if (!form.nombre || !form.email || !form.mensaje) {
+      toast.error("Todos los campos obligatorios deben completarse");
+      return false;
+    }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email)) {
+      toast.error("Correo electrónico inválido");
+      return false;
+    }
+    return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
-    const validationError = validate();
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
+
+    if (!validate()) return;
+
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/v1/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form)
-      });
-      if (res.ok) {
-        setSuccess("Mensaje enviado correctamente. ¡Gracias por contactarnos!");
+      const response = await apiClient.post("/contact", form);
+
+      if (response.status === 200) {
+        toast.success("Mensaje enviado correctamente. ¡Gracias por contactarnos!");
         setForm({ nombre: "", email: "", telefono: "", mensaje: "" });
-      } else {
-        setError("Error al enviar el mensaje. Intenta nuevamente.");
       }
     } catch (err) {
-      setError("Error de conexión. Intenta más tarde.");
+      console.error('Error al enviar mensaje de contacto:', err);
+
+      if (err.response) {
+        // Error del servidor (4xx, 5xx)
+        toast.error(err.response.data?.msg || "Error al enviar el mensaje. Intenta nuevamente.");
+      } else if (err.request) {
+        // Error de red (sin respuesta del servidor)
+        toast.error("Error de conexión. Verifica tu internet e intenta más tarde.");
+      } else {
+        // Otro tipo de error
+        toast.error("Error inesperado. Intenta más tarde.");
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -74,8 +81,6 @@ export default function Contacto() {
                     <div className="btn-box">
                       <button type="submit" disabled={loading}>{loading ? "Enviando..." : "Enviar"}</button>
                     </div>
-                    {error && <div style={{ color: "red", marginTop: 10 }}>{error}</div>}
-                    {success && <div style={{ color: "green", marginTop: 10 }}>{success}</div>}
                   </form>
                 </div>
               </div>

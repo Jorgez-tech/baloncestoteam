@@ -1,5 +1,7 @@
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Home from "./components/home";
 import Nosotros from "./components/nosotros";
 import Jugadores from "./components/jugadores";
@@ -12,30 +14,44 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
     return (
-        <Router>
-            <div className="hero_area">
-                {/* Header Section - se recomienda migrar a componente si se desea reutilizar */}
-                {/* Aquí podrías importar y usar un componente Header si lo tienes */}
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/nosotros" element={<Nosotros />} />
-                    <Route path="/jugadores" element={<Jugadores />} />
-                    <Route path="/contacto" element={<Contacto />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/registro" element={<Registro />} />
+        <>
+            <Router>
+                <div className="hero_area">
+                    {/* Header Section - se recomienda migrar a componente si se desea reutilizar */}
+                    {/* Aquí podrías importar y usar un componente Header si lo tienes */}
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/nosotros" element={<Nosotros />} />
+                        <Route path="/jugadores" element={<Jugadores />} />
+                        <Route path="/contacto" element={<Contacto />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/registro" element={<Registro />} />
 
-                    {/* Ruta protegida de administración */}
-                    <Route
-                        path="/admin"
-                        element={
-                            <ProtectedRoute requireAdmin={true}>
-                                <AdminDashboard />
-                            </ProtectedRoute>
-                        }
-                    />
-                </Routes>
-            </div>
-        </Router>
+                        {/* Ruta protegida de administración */}
+                        <Route
+                            path="/admin"
+                            element={
+                                <ProtectedRoute requireAdmin={true}>
+                                    <AdminDashboard />
+                                </ProtectedRoute>
+                            }
+                        />
+                    </Routes>
+                </div>
+            </Router>
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
+        </>
     );
 }
 
