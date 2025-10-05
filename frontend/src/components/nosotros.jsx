@@ -65,7 +65,7 @@ export default function Nosotros() {
             </div>
             <div className="col-md-3">
               <div className="info_form">
-                <h5>Newsletter</h5>
+                <h5>Suscríbete</h5>
                 <form onSubmit={handleSubmitNoop}>
                   <input type="text" placeholder="Ingresa tu correo" />
                   <button type="submit">Suscribirse</button>
