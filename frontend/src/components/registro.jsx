@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 
 export default function Registro() {
     const navigate = useNavigate();
@@ -12,22 +13,18 @@ export default function Registro() {
         confirmPassword: ''
     });
     const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
-        setSuccessMessage('');
 
         // Validación de contraseñas
         if (formData.password !== formData.confirmPassword) {
-            setError('Las contraseñas no coinciden');
+            toast.error('Las contraseñas no coinciden');
             return;
         }
 
         if (formData.password.length < 6) {
-            setError('La contraseña debe tener al menos 6 caracteres');
+            toast.error('La contraseña debe tener al menos 6 caracteres');
             return;
         }
 
@@ -38,7 +35,7 @@ export default function Registro() {
         });
 
         if (result.success) {
-            setSuccessMessage(result.message || 'Cuenta creada exitosamente. Por favor inicia sesión.');
+            toast.success(result.message || 'Cuenta creada exitosamente. Por favor inicia sesión.');
             // Limpiar el formulario
             setFormData({
                 email: '',
@@ -46,12 +43,12 @@ export default function Registro() {
                 password: '',
                 confirmPassword: ''
             });
-            // Opcional: redirigir a login después de 2 segundos
+            // Redirigir a login después de 2 segundos
             setTimeout(() => {
                 navigate('/login');
             }, 2000);
         } else {
-            setError(result.error || 'Error al crear la cuenta');
+            toast.error(result.error || 'Error al crear la cuenta');
         }
     };
 
@@ -60,7 +57,6 @@ export default function Registro() {
             ...formData,
             [e.target.name]: e.target.value
         });
-        setError('');
     };
 
     return (
@@ -136,32 +132,6 @@ export default function Registro() {
                                             Únete a la comunidad de BaloncestoTeam
                                         </p>
                                     </div>
-
-                                    {error && (
-                                        <div style={{
-                                            backgroundColor: '#f8d7da',
-                                            color: '#721c24',
-                                            padding: '12px',
-                                            borderRadius: '4px',
-                                            marginBottom: '15px',
-                                            border: '1px solid #f5c6cb'
-                                        }}>
-                                            {error}
-                                        </div>
-                                    )}
-
-                                    {successMessage && (
-                                        <div style={{
-                                            backgroundColor: '#d4edda',
-                                            color: '#155724',
-                                            padding: '12px',
-                                            borderRadius: '4px',
-                                            marginBottom: '15px',
-                                            border: '1px solid #c3e6cb'
-                                        }}>
-                                            {successMessage}
-                                        </div>
-                                    )}
 
                                     <form onSubmit={handleSubmit}>
                                         <input

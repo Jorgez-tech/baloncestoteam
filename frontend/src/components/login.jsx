@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -10,15 +11,14 @@ export default function Login() {
         password: ''
     });
     const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
 
         const result = await login(formData);
 
         if (result.success) {
+            toast.success(`¡Bienvenido${result.user.username ? ' ' + result.user.username : ''}!`);
             // Redirigir según el rol del usuario
             if (result.user.role === 'admin') {
                 navigate('/admin');
@@ -26,7 +26,7 @@ export default function Login() {
                 navigate('/');
             }
         } else {
-            setError(result.error || 'Error al iniciar sesión');
+            toast.error(result.error || 'Error al iniciar sesión');
         }
     };
 
@@ -35,7 +35,6 @@ export default function Login() {
             ...formData,
             [e.target.name]: e.target.value
         });
-        setError(''); // Limpiar error al escribir
     };
 
     return (
@@ -111,19 +110,6 @@ export default function Login() {
                                             Accede a tu cuenta de BaloncestoTeam
                                         </p>
                                     </div>
-
-                                    {error && (
-                                        <div style={{
-                                            backgroundColor: '#f8d7da',
-                                            color: '#721c24',
-                                            padding: '12px',
-                                            borderRadius: '4px',
-                                            marginBottom: '15px',
-                                            border: '1px solid #f5c6cb'
-                                        }}>
-                                            {error}
-                                        </div>
-                                    )}
 
                                     <form onSubmit={handleSubmit}>
                                         <input
