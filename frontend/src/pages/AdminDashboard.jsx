@@ -70,17 +70,24 @@ const AdminDashboard = () => {
     const loadDashboardData = async () => {
         setLoading(true);
         try {
+            console.log('🔍 Cargando datos del dashboard...');
+
             const [playersRes, usersRes] = await Promise.all([
                 playersAPI.getAll(),
                 usersAPI.getAll()
             ]);
 
+            console.log('📊 Respuesta de players:', playersRes);
+            console.log('👥 Respuesta de users:', usersRes);
+
             // Players mantiene formato { success: true, data: [...] }
-            const playersData = playersRes.data.data || [];
+            const playersData = playersRes.data.data || playersRes.data || [];
+            console.log('🏀 Datos de jugadores extraídos:', playersData);
             setPlayers(playersData);
 
             // Users ahora devuelve { success: true, data: [...] }
             const usersData = usersRes.data.data || usersRes.data || [];
+            console.log('👤 Datos de usuarios extraídos:', usersData);
             setUsers(usersData);
 
             // Calcular estadísticas
@@ -91,8 +98,14 @@ const AdminDashboard = () => {
                 totalImages: 0 // Se puede agregar llamada a imagesAPI
             });
 
+            console.log('📈 Estadísticas calculadas:', {
+                totalPlayers: playersData.length,
+                totalUsers: usersData.length
+            });
+
         } catch (error) {
-            console.error('Error loading dashboard data:', error);
+            console.error('❌ Error loading dashboard data:', error);
+            console.error('❌ Error response:', error.response?.data);
             toast.error('Error al cargar datos del dashboard');
         } finally {
             setLoading(false);
@@ -505,29 +518,41 @@ const AdminDashboard = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {players.map(player => (
-                                        <tr key={player._id}>
-                                            <td>{player.name}</td>
-                                            <td>{mapPositionToSpanish(player.position)}</td>
-                                            <td>#{player.jersey_number || 'N/A'}</td>
-                                            <td>{player.height} cm</td>
-                                            <td>{player.weight} kg</td>
-                                            <td>
-                                                <button
-                                                    className="btn-edit"
-                                                    onClick={() => openPlayerModal(player)}
-                                                >
-                                                    ✏️ Editar
-                                                </button>
-                                                <button
-                                                    className="btn-delete"
-                                                    onClick={() => handleDeletePlayer(player)}
-                                                >
-                                                    🗑️ Eliminar
-                                                </button>
+                                    {console.log('🏀 Renderizando jugadores:', players)}
+                                    {players.length === 0 ? (
+                                        <tr>
+                                            <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
+                                                {loading ? 'Cargando jugadores...' : 'No hay jugadores registrados'}
                                             </td>
                                         </tr>
-                                    ))}
+                                    ) : (
+                                        players.map(player => {
+                                            console.log('👤 Renderizando jugador:', player);
+                                            return (
+                                                <tr key={player._id}>
+                                                    <td>{player.name}</td>
+                                                    <td>{mapPositionToSpanish(player.position)}</td>
+                                                    <td>#{player.jersey_number || 'N/A'}</td>
+                                                    <td>{player.height} cm</td>
+                                                    <td>{player.weight} kg</td>
+                                                    <td>
+                                                        <button
+                                                            className="btn-edit"
+                                                            onClick={() => openPlayerModal(player)}
+                                                        >
+                                                            ✏️ Editar
+                                                        </button>
+                                                        <button
+                                                            className="btn-delete"
+                                                            onClick={() => handleDeletePlayer(player)}
+                                                        >
+                                                            🗑️ Eliminar
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })
+                                    )}
                                 </tbody>
                             </table>
                         </div>
