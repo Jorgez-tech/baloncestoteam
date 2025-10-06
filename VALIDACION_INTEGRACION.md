@@ -1,13 +1,14 @@
 # 🔍 Guía de Validación de Integración Backend-Frontend
 
-## 📅 Fecha: 5 de Octubre 2025
-## 🌿 Rama: `integracion-backend-frontend`
+**📅 Fecha:** 5 de Octubre 2025  
+**🌿 Rama:** `integracion-backend-frontend`
 
 ---
 
 ## ✅ Fase 1: Correcciones Críticas (COMPLETADA)
 
-### Cambios Aplicados:
+### Cambios Aplicados
+
 1. ✅ **Unificación de cliente API**
    - Migrado `players.js` de `fetch` a `playersAPI` (axios)
    - Migrado `contacto.jsx` de `fetch` a `apiClient` (axios)
@@ -24,12 +25,23 @@
 
 ## 🧪 Fase 2: Validación Funcional
 
+### 🆕 Actualización 05/10/2025 – AdminDashboard
+
+- 🎯 Se restauró el listado de jugadores en la pestaña "Jugadores" usando el modelo `jersey_number` y mapeos de posiciones.
+- 🧩 La pestaña "Usuarios" ahora maneja respuestas 403/errores parciales sin romper el panel, mostrando un mensaje contextual cuando el endpoint falla.
+- 🧹 Se redujo el ruido de consola dejando trazas de auditoría condicionadas al modo desarrollo.
+- 🧪 Ejecución de `npm run test -- --watchAll=false` (frontend) → ❌ Falló por módulo ausente `./test-utils` referenciado en `src/__tests__/Admin.test.jsx`. Se requiere reconstruir utilidades de pruebas para volver a ejecutar la suite.
+- 🔐 Los tokens JWT ahora incluyen `role` y `email`; los administradores deben cerrar sesión y volver a iniciar para obtener el nuevo permiso.
+
+
 ### 1️⃣ **Flujos de Autenticación**
 
 #### A. Registro de Usuario
+
 **Endpoint:** `POST /api/v1/auth/register`
 
 **Pasos de prueba:**
+
 1. Ir a `/registro`
 2. Completar formulario con datos válidos
 3. Verificar que:
@@ -38,6 +50,7 @@
    - ✅ Usuario se guarde en MongoDB
 
 **Casos de error a validar:**
+
 - ❌ Email duplicado → mensaje "Email already registered"
 - ❌ Contraseña < 6 caracteres → mensaje de validación
 - ❌ Contraseñas no coinciden → mensaje de validación
@@ -45,9 +58,11 @@
 ---
 
 #### B. Login de Usuario
+
 **Endpoint:** `POST /api/v1/auth/login`
 
 **Pasos de prueba:**
+
 1. Ir a `/login`
 2. Ingresar credenciales válidas
 3. Verificar que:
@@ -57,6 +72,7 @@
    - ✅ El header muestre "Cerrar Sesión" en lugar de "Iniciar Sesión"
 
 **Casos de error a validar:**
+
 - ❌ Credenciales incorrectas → mensaje "Invalid credentials"
 - ❌ Usuario no existe → mensaje "Invalid credentials"
 - ❌ Backend apagado → mensaje "Error de conexión"
@@ -64,9 +80,11 @@
 ---
 
 #### C. Logout
+
 **Acción:** Hacer clic en "Cerrar Sesión"
 
 **Pasos de prueba:**
+
 1. Estando logueado, hacer clic en "Cerrar Sesión"
 2. Verificar que:
    - ✅ Se elimine `token` de localStorage
@@ -77,9 +95,11 @@
 ---
 
 #### D. Rutas Protegidas
+
 **Ruta:** `/admin` (requiere rol `admin`)
 
 **Pasos de prueba:**
+
 1. Sin autenticar, intentar acceder a `/admin`
    - ✅ Debe redirigir a `/login`
 
@@ -94,9 +114,11 @@
 ### 2️⃣ **CRUD de Jugadores**
 
 #### A. Listar Jugadores (Vista Pública)
+
 **Endpoint:** `GET /api/v1/players`
 
 **Pasos de prueba:**
+
 1. Ir a `/jugadores`
 2. Verificar que:
    - ✅ Se muestren todos los jugadores
@@ -104,14 +126,17 @@
    - ✅ Se muestre nombre, posición
 
 **Caso de error:**
+
 - ❌ Backend apagado → mostrar array vacío o mensaje de error
 
 ---
 
 #### B. Crear Jugador (Admin)
+
 **Endpoint:** `POST /api/v1/players`
 
 **Pasos de prueba:**
+
 1. Loguearse como admin
 2. Ir a `/admin` → pestaña "Jugadores"
 3. Hacer clic en "➕ Agregar Jugador"
@@ -123,6 +148,7 @@
    - ✅ El modal se cierre
 
 **Casos de error:**
+
 - ❌ Número de jugador duplicado → mensaje de error
 - ❌ Campos obligatorios vacíos → mensaje de validación
 - ❌ Valores fuera de rango → mensaje de validación
@@ -130,9 +156,11 @@
 ---
 
 #### C. Editar Jugador (Admin)
+
 **Endpoint:** `PUT /api/v1/players/:id`
 
 **Pasos de prueba:**
+
 1. En `/admin` → pestaña "Jugadores"
 2. Hacer clic en "✏️ Editar" en un jugador
 3. Modificar datos
@@ -145,9 +173,11 @@
 ---
 
 #### D. Eliminar Jugador (Admin)
+
 **Endpoint:** `DELETE /api/v1/players/:id`
 
 **Pasos de prueba:**
+
 1. En `/admin` → pestaña "Jugadores"
 2. Hacer clic en "🗑️ Eliminar" en un jugador
 3. Confirmar la eliminación
@@ -160,9 +190,11 @@
 ### 3️⃣ **Gestión de Usuarios (Admin)**
 
 #### A. Listar Usuarios
+
 **Endpoint:** `GET /api/v1/users`
 
 **Pasos de prueba:**
+
 1. Loguearse como admin
 2. Ir a `/admin` → pestaña "Usuarios"
 3. Verificar que:
@@ -173,9 +205,11 @@
 ---
 
 #### B. Editar Usuario
+
 **Endpoint:** `PUT /api/v1/users/:id`
 
 **Pasos de prueba:**
+
 1. En `/admin` → pestaña "Usuarios"
 2. Hacer clic en "✏️ Editar" en un usuario
 3. Modificar rol o datos
@@ -187,9 +221,11 @@
 ---
 
 #### C. Eliminar Usuario
+
 **Endpoint:** `DELETE /api/v1/users/:id`
 
 **Pasos de prueba:**
+
 1. En `/admin` → pestaña "Usuarios"
 2. Hacer clic en "🗑️ Eliminar" en un usuario (no el propio)
 3. Confirmar la eliminación
@@ -198,6 +234,7 @@
    - ✅ El usuario desaparezca de la tabla
 
 **Validación:**
+
 - ❌ No se debe poder eliminar el propio usuario → mensaje de error
 
 ---
@@ -207,6 +244,7 @@
 **Endpoint:** `POST /api/v1/contact`
 
 **Pasos de prueba:**
+
 1. Ir a `/contacto`
 2. Completar formulario con datos válidos
 3. Hacer clic en "Enviar"
@@ -216,6 +254,7 @@
    - ✅ El mensaje se registre en el backend (consola)
 
 **Casos de error:**
+
 - ❌ Email inválido → toast de error
 - ❌ Campos obligatorios vacíos → toast de error
 - ❌ Backend apagado → toast "Error de conexión"
@@ -224,7 +263,7 @@
 
 ## 🔧 Manejo de Errores Global
 
-### Casos a Validar:
+### Casos a Validar
 
 1. **Error 401 (No Autorizado)**
    - ✅ Debe eliminar token y redirigir a `/login`
@@ -247,6 +286,7 @@
 ## 📝 Checklist de Validación
 
 ### Autenticación
+
 - [ ] Registro exitoso
 - [ ] Registro con email duplicado (error)
 - [ ] Login exitoso (user)
@@ -257,6 +297,7 @@
 - [ ] Ruta protegida admin sin rol (redirect a home)
 
 ### Jugadores
+
 - [x] Listar jugadores (vista pública) ✅
 - [x] Crear jugador (admin) ✅ CONFIRMADO
 - [x] Editar jugador (admin) ✅ CONFIRMADO
@@ -264,18 +305,21 @@
 - [x] Validaciones de formulario (número duplicado, campos vacíos) ✅
 
 ### Usuarios
+
 - [ ] Listar usuarios (admin)
 - [ ] Editar usuario (admin)
 - [ ] Eliminar usuario (admin)
 - [ ] No eliminar propio usuario (validación)
 
 ### Contacto
+
 - [ ] Enviar mensaje exitoso
 - [ ] Validación de campos obligatorios
 - [ ] Validación de email
 - [ ] Manejo de error de red
 
 ### Errores Globales
+
 - [ ] Error 401 → redirect a login
 - [ ] Error 4xx → toast con mensaje
 - [ ] Error 5xx → toast genérico
@@ -297,20 +341,27 @@
 ## 📊 Estado Actual
 
 **✅ Completado:**
+
 - Unificación de cliente API
 - Configuración de react-toastify
 - Mejora de manejo de errores en formulario de contacto
 - Reparación completa del AdminDashboard
 - **CRUD de jugadores 100% funcional** (crear, editar, eliminar) ✅
+- Ajustes defensivos en pestaña de usuarios del AdminDashboard
+- Limpieza de logs de auditoría en modo producción
 
 **🔄 En Progreso:**
+
 - Validación funcional de flujos de autenticación
+- Reconstrucción del entorno de pruebas unitarias (pendiente restablecer `./test-utils`)
 
 **⏳ Pendiente:**
+
 - Validación de gestión de usuarios
 - Pruebas de formulario de contacto
 - Pruebas de manejo de errores global
 - Documentación final
+- Reparar utilidades de testing para ejecutar suite completa
 
 ---
 

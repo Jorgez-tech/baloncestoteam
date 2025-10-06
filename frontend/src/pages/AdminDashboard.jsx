@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { playersAPI, usersAPI } from '../api/client';
 import { toast } from 'react-toastify';
@@ -15,6 +15,7 @@ import './AdminDashboard.css';
  */
 const AdminDashboard = () => {
     const { user, isAdmin } = useAuth();
+    const isDevMode = process.env.NODE_ENV !== 'production';
     const [activeTab, setActiveTab] = useState('overview');
     const [loading, setLoading] = useState(false);
     const [stats, setStats] = useState({
@@ -27,6 +28,7 @@ const AdminDashboard = () => {
     // Estados para gestión
     const [players, setPlayers] = useState([]);
     const [users, setUsers] = useState([]);
+    const [usersError, setUsersError] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [modalType, setModalType] = useState(''); // 'player', 'user', 'delete'
     const [editingItem, setEditingItem] = useState(null);
@@ -62,7 +64,9 @@ const AdminDashboard = () => {
 
     // Log de auditoría para acceso al panel
     const logAdminAccess = () => {
-        console.log(`[AUDIT] Admin access: ${user?.email} at ${new Date().toISOString()}`);
+        if (isDevMode) {
+            console.info(`[AUDIT] Admin access: ${user?.email} at ${new Date().toISOString()}`);
+        }
         // Aquí podrías enviar al backend para logging persistente
     };
 
@@ -70,42 +74,54 @@ const AdminDashboard = () => {
     const loadDashboardData = async () => {
         setLoading(true);
         try {
-            console.log('🔍 Cargando datos del dashboard...');
+            setUsersError(null);
+            const normalizeCollectionResponse = (response) => {
+                if (!response) return [];
+                if (Array.isArray(response?.data?.data)) return response.data.data;
+                if (Array.isArray(response?.data)) return response.data;
+                return [];
+            };
 
-            const [playersRes, usersRes] = await Promise.all([
+            const [playersResult, usersResult] = await Promise.allSettled([
                 playersAPI.getAll(),
                 usersAPI.getAll()
             ]);
 
-            console.log('📊 Respuesta de players:', playersRes);
-            console.log('👥 Respuesta de users:', usersRes);
+            let playersData = [];
+            if (playersResult.status === 'fulfilled') {
+                playersData = normalizeCollectionResponse(playersResult.value);
+                setPlayers(playersData);
+            } else {
+                console.error('Error al cargar jugadores:', playersResult.reason);
+                toast.error('No se pudieron cargar los jugadores');
+            }
 
-            // Players mantiene formato { success: true, data: [...] }
-            const playersData = playersRes.data.data || playersRes.data || [];
-            console.log('🏀 Datos de jugadores extraídos:', playersData);
-            setPlayers(playersData);
+            let usersData = [];
+            if (usersResult.status === 'fulfilled') {
+                usersData = normalizeCollectionResponse(usersResult.value);
+                setUsers(usersData);
+                setUsersError(null);
+            } else {
+                if (isDevMode) {
+                    console.warn('Gestión de usuarios no disponible:', usersResult.reason);
+                }
+                setUsers([]);
+                if (usersResult.reason?.response?.status === 403) {
+                    setUsersError('Tu sesión no tiene permisos para gestionar usuarios.');
+                } else {
+                    setUsersError('No se pudieron cargar los usuarios. Intenta nuevamente más tarde.');
+                    toast.error('No se pudieron cargar los usuarios');
+                }
+            }
 
-            // Users ahora devuelve { success: true, data: [...] }
-            const usersData = usersRes.data.data || usersRes.data || [];
-            console.log('👤 Datos de usuarios extraídos:', usersData);
-            setUsers(usersData);
-
-            // Calcular estadísticas
             setStats({
-                totalPlayers: playersData.length || 0,
-                totalUsers: usersData.length || 0,
-                activeUsers: usersData.filter(u => u.isActive)?.length || 0,
-                totalImages: 0 // Se puede agregar llamada a imagesAPI
-            });
-
-            console.log('📈 Estadísticas calculadas:', {
                 totalPlayers: playersData.length,
-                totalUsers: usersData.length
+                totalUsers: usersData.length,
+                activeUsers: usersData.filter(u => u.isActive).length,
+                totalImages: 0
             });
-
         } catch (error) {
-            console.error('❌ Error loading dashboard data:', error);
-            console.error('❌ Error response:', error.response?.data);
+            console.error('Error inesperado al cargar el dashboard:', error);
             toast.error('Error al cargar datos del dashboard');
         } finally {
             setLoading(false);
@@ -312,31 +328,6 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleToggleUserStatus = async (userToToggle) => {
-        if (userToToggle._id === user._id) {
-            toast.error('No puedes cambiar tu propio estado');
-            return;
-        }
-
-        const action = userToToggle.isActive ? 'desactivar' : 'activar';
-        if (!window.confirm(`¿Estás seguro de ${action} al usuario ${userToToggle.email}?`)) {
-            return;
-        }
-
-        setLoading(true);
-        try {
-            const response = await usersAPI.toggleActive(userToToggle._id);
-            toast.success(response.data.message || `Usuario ${action}do exitosamente`);
-            logAuditAction('TOGGLE_USER_STATUS', userToToggle.email);
-            loadDashboardData();
-        } catch (error) {
-            console.error('Error toggling user status:', error);
-            toast.error(error.response?.data?.message || 'Error al cambiar estado del usuario');
-        } finally {
-            setLoading(false);
-        }
-    };
-
     // Utilidades
     const logAuditAction = (action, target) => {
         const auditLog = {
@@ -346,7 +337,9 @@ const AdminDashboard = () => {
             timestamp: new Date().toISOString(),
             ip: 'client-side' // En producción, obtener del backend
         };
-        console.log('[AUDIT]', auditLog);
+        if (isDevMode) {
+            console.info('[AUDIT]', auditLog);
+        }
         // Enviar al backend para persistir
     };
 
@@ -518,7 +511,6 @@ const AdminDashboard = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {console.log('🏀 Renderizando jugadores:', players)}
                                     {players.length === 0 ? (
                                         <tr>
                                             <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
@@ -526,32 +518,29 @@ const AdminDashboard = () => {
                                             </td>
                                         </tr>
                                     ) : (
-                                        players.map(player => {
-                                            console.log('👤 Renderizando jugador:', player);
-                                            return (
-                                                <tr key={player._id}>
-                                                    <td>{player.name}</td>
-                                                    <td>{mapPositionToSpanish(player.position)}</td>
-                                                    <td>#{player.jersey_number || 'N/A'}</td>
-                                                    <td>{player.height} cm</td>
-                                                    <td>{player.weight} kg</td>
-                                                    <td>
-                                                        <button
-                                                            className="btn-edit"
-                                                            onClick={() => openPlayerModal(player)}
-                                                        >
-                                                            ✏️ Editar
-                                                        </button>
-                                                        <button
-                                                            className="btn-delete"
-                                                            onClick={() => handleDeletePlayer(player)}
-                                                        >
-                                                            🗑️ Eliminar
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })
+                                        players.map(player => (
+                                            <tr key={player._id}>
+                                                <td>{player.name}</td>
+                                                <td>{mapPositionToSpanish(player.position)}</td>
+                                                <td>#{player.jersey_number ?? 'N/A'}</td>
+                                                <td>{player.height != null ? `${player.height} cm` : 'N/D'}</td>
+                                                <td>{player.weight != null ? `${player.weight} kg` : 'N/D'}</td>
+                                                <td>
+                                                    <button
+                                                        className="btn-edit"
+                                                        onClick={() => openPlayerModal(player)}
+                                                    >
+                                                        ✏️ Editar
+                                                    </button>
+                                                    <button
+                                                        className="btn-delete"
+                                                        onClick={() => handleDeletePlayer(player)}
+                                                    >
+                                                        🗑️ Eliminar
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))
                                     )}
                                 </tbody>
                             </table>
@@ -564,66 +553,71 @@ const AdminDashboard = () => {
                     <div className="users-tab">
                         <h2>👥 Gestión de Usuarios</h2>
 
-                        <div className="users-table">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Email</th>
-                                        <th>Username</th>
-                                        <th>Rol</th>
-                                        <th>Estado</th>
-                                        <th>Registro</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {users.map(userItem => (
-                                        <tr key={userItem._id}>
-                                            <td>{userItem.email}</td>
-                                            <td>{userItem.username}</td>
-                                            <td>
-                                                <span className={`role-badge role-${userItem.role}`}>
-                                                    {userItem.role}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span className={`status-badge ${userItem.isActive ? 'active' : 'inactive'}`}>
-                                                    {userItem.isActive ? 'Activo' : 'Inactivo'}
-                                                </span>
-                                            </td>
-                                            <td>{new Date(userItem.createdAt).toLocaleDateString()}</td>
-                                            <td>
-                                                <button
-                                                    className="btn-edit"
-                                                    onClick={() => openUserModal(userItem)}
-                                                    title="Editar usuario"
-                                                >
-                                                    ✏️ Editar
-                                                </button>
-                                                {userItem._id !== user._id && (
-                                                    <>
-                                                        <button
-                                                            className={userItem.isActive ? 'btn-warning' : 'btn-success'}
-                                                            onClick={() => handleToggleUserStatus(userItem)}
-                                                            title={userItem.isActive ? 'Desactivar usuario' : 'Activar usuario'}
-                                                        >
-                                                            {userItem.isActive ? '🔒 Desactivar' : '✅ Activar'}
-                                                        </button>
-                                                        <button
-                                                            className="btn-delete"
-                                                            onClick={() => handleDeleteUser(userItem)}
-                                                            title="Eliminar usuario"
-                                                        >
-                                                            🗑️ Eliminar
-                                                        </button>
-                                                    </>
-                                                )}
-                                            </td>
+                        {usersError ? (
+                            <div className="users-table users-table--empty">
+                                <p>{usersError}</p>
+                            </div>
+                        ) : (
+                            <div className="users-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Email</th>
+                                            <th>Username</th>
+                                            <th>Rol</th>
+                                            <th>Estado</th>
+                                            <th>Registro</th>
+                                            <th>Acciones</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                                    </thead>
+                                    <tbody>
+                                        {users.length === 0 ? (
+                                            <tr>
+                                                <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
+                                                    {loading ? 'Cargando usuarios...' : 'No hay usuarios disponibles'}
+                                                </td>
+                                            </tr>
+                                        ) : (
+                                            users.map(userItem => (
+                                                <tr key={userItem._id}>
+                                                    <td>{userItem.email}</td>
+                                                    <td>{userItem.username}</td>
+                                                    <td>
+                                                        <span className={`role-badge role-${userItem.role}`}>
+                                                            {userItem.role}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span className={`status-badge ${userItem.isActive ? 'active' : 'inactive'}`}>
+                                                            {userItem.isActive ? 'Activo' : 'Inactivo'}
+                                                        </span>
+                                                    </td>
+                                                    <td>{new Date(userItem.createdAt).toLocaleDateString()}</td>
+                                                    <td>
+                                                        <button
+                                                            className="btn-edit"
+                                                            onClick={() => openUserModal(userItem)}
+                                                            title="Editar usuario"
+                                                        >
+                                                            ✏️ Editar
+                                                        </button>
+                                                        {userItem._id !== user._id && (
+                                                            <button
+                                                                className="btn-delete"
+                                                                onClick={() => handleDeleteUser(userItem)}
+                                                                title="Eliminar usuario"
+                                                            >
+                                                                🗑️ Eliminar
+                                                            </button>
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
                     </div>
                 )}
 
