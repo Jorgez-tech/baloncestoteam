@@ -75,14 +75,19 @@ const AdminDashboard = () => {
                 usersAPI.getAll()
             ]);
 
-            setPlayers(playersRes.data.data || []);
-            setUsers(usersRes.data.data || []);
+            // Players mantiene formato { success: true, data: [...] }
+            const playersData = playersRes.data.data || [];
+            setPlayers(playersData);
+
+            // Users ahora devuelve { success: true, data: [...] }
+            const usersData = usersRes.data.data || usersRes.data || [];
+            setUsers(usersData);
 
             // Calcular estadísticas
             setStats({
-                totalPlayers: playersRes.data.data?.length || 0,
-                totalUsers: usersRes.data.data?.length || 0,
-                activeUsers: usersRes.data.data?.filter(u => u.isActive)?.length || 0,
+                totalPlayers: playersData.length || 0,
+                totalUsers: usersData.length || 0,
+                activeUsers: usersData.filter(u => u.isActive)?.length || 0,
                 totalImages: 0 // Se puede agregar llamada a imagesAPI
             });
 
