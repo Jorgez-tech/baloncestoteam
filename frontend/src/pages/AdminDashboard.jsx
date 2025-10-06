@@ -288,7 +288,32 @@ const AdminDashboard = () => {
             loadDashboardData();
         } catch (error) {
             console.error('Error deleting user:', error);
-            toast.error('Error al eliminar usuario');
+            toast.error(error.response?.data?.message || 'Error al eliminar usuario');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleToggleUserStatus = async (userToToggle) => {
+        if (userToToggle._id === user._id) {
+            toast.error('No puedes cambiar tu propio estado');
+            return;
+        }
+
+        const action = userToToggle.isActive ? 'desactivar' : 'activar';
+        if (!window.confirm(`¿Estás seguro de ${action} al usuario ${userToToggle.email}?`)) {
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const response = await usersAPI.toggleActive(userToToggle._id);
+            toast.success(response.data.message || `Usuario ${action}do exitosamente`);
+            logAuditAction('TOGGLE_USER_STATUS', userToToggle.email);
+            loadDashboardData();
+        } catch (error) {
+            console.error('Error toggling user status:', error);
+            toast.error(error.response?.data?.message || 'Error al cambiar estado del usuario');
         } finally {
             setLoading(false);
         }
@@ -541,16 +566,27 @@ const AdminDashboard = () => {
                                                 <button
                                                     className="btn-edit"
                                                     onClick={() => openUserModal(userItem)}
+                                                    title="Editar usuario"
                                                 >
                                                     ✏️ Editar
                                                 </button>
                                                 {userItem._id !== user._id && (
-                                                    <button
-                                                        className="btn-delete"
-                                                        onClick={() => handleDeleteUser(userItem)}
-                                                    >
-                                                        🗑️ Eliminar
-                                                    </button>
+                                                    <>
+                                                        <button
+                                                            className={userItem.isActive ? 'btn-warning' : 'btn-success'}
+                                                            onClick={() => handleToggleUserStatus(userItem)}
+                                                            title={userItem.isActive ? 'Desactivar usuario' : 'Activar usuario'}
+                                                        >
+                                                            {userItem.isActive ? '🔒 Desactivar' : '✅ Activar'}
+                                                        </button>
+                                                        <button
+                                                            className="btn-delete"
+                                                            onClick={() => handleDeleteUser(userItem)}
+                                                            title="Eliminar usuario"
+                                                        >
+                                                            🗑️ Eliminar
+                                                        </button>
+                                                    </>
                                                 )}
                                             </td>
                                         </tr>

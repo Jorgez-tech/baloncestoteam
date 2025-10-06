@@ -50,6 +50,7 @@ export const usersAPI = {
     getById: (id) => apiClient.get(`/users/${id}`),
     update: (id, userData) => apiClient.put(`/users/${id}`, userData),
     delete: (id) => apiClient.delete(`/users/${id}`),
+    toggleActive: (id) => apiClient.patch(`/users/${id}/toggle-active`),
 };
 
 export const imagesAPI = {
