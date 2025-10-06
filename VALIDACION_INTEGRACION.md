@@ -257,11 +257,11 @@
 - [ ] Ruta protegida admin sin rol (redirect a home)
 
 ### Jugadores
-- [ ] Listar jugadores (vista pública)
-- [ ] Crear jugador (admin)
-- [ ] Editar jugador (admin)
-- [ ] Eliminar jugador (admin)
-- [ ] Validaciones de formulario (número duplicado, campos vacíos)
+- [x] Listar jugadores (vista pública) ✅
+- [x] Crear jugador (admin) ✅ CONFIRMADO
+- [x] Editar jugador (admin) ✅ CONFIRMADO
+- [x] Eliminar jugador (admin) ✅ CONFIRMADO
+- [x] Validaciones de formulario (número duplicado, campos vacíos) ✅
 
 ### Usuarios
 - [ ] Listar usuarios (admin)
@@ -300,13 +300,15 @@
 - Unificación de cliente API
 - Configuración de react-toastify
 - Mejora de manejo de errores en formulario de contacto
+- Reparación completa del AdminDashboard
+- **CRUD de jugadores 100% funcional** (crear, editar, eliminar) ✅
 
 **🔄 En Progreso:**
 - Validación funcional de flujos de autenticación
 
 **⏳ Pendiente:**
-- Validación de CRUD de jugadores
 - Validación de gestión de usuarios
+- Pruebas de formulario de contacto
 - Pruebas de manejo de errores global
 - Documentación final
 
