@@ -118,9 +118,9 @@ const AdminDashboard = () => {
             return false;
         }
 
-        // Verificar número único
+        // Verificar número único (usar jersey_number del modelo)
         const numberExists = players.some(p =>
-            p.number === parseInt(number) && p._id !== editingItem?._id
+            p.jersey_number === parseInt(number) && p._id !== editingItem?._id
         );
         if (numberExists) {
             toast.error('Ya existe un jugador con ese número');
@@ -153,19 +153,36 @@ const AdminDashboard = () => {
         return true;
     };
 
+    // Mapeo de posiciones español -> inglés
+    const mapPositionToEnglish = (position) => {
+        const mapping = {
+            'Base': 'Point Guard',
+            'Escolta': 'Shooting Guard',
+            'Alero': 'Small Forward',
+            'Ala-Pívot': 'Power Forward',
+            'Pívot': 'Center'
+        };
+        return mapping[position] || position;
+    };
+
     // Handlers para jugadores
     const handleCreatePlayer = async () => {
         if (!validatePlayerForm()) return;
 
         setLoading(true);
         try {
-            const response = await playersAPI.create({
-                ...playerForm,
-                number: parseInt(playerForm.number),
+            const playerData = {
+                name: playerForm.name,
+                position: mapPositionToEnglish(playerForm.position),
+                jersey_number: parseInt(playerForm.number), // Cambiar 'number' a 'jersey_number'
                 height: parseFloat(playerForm.height),
                 weight: parseFloat(playerForm.weight),
-                age: playerForm.age ? parseInt(playerForm.age) : undefined
-            });
+                age: playerForm.age ? parseInt(playerForm.age) : undefined,
+                user_id: user._id, // Agregar user_id requerido
+                team: playerForm.team || undefined
+            };
+
+            const response = await playersAPI.create(playerData);
 
             if (response.data.success) {
                 toast.success('Jugador creado exitosamente');
@@ -187,13 +204,17 @@ const AdminDashboard = () => {
 
         setLoading(true);
         try {
-            const response = await playersAPI.update(editingItem._id, {
-                ...playerForm,
-                number: parseInt(playerForm.number),
+            const playerData = {
+                name: playerForm.name,
+                position: mapPositionToEnglish(playerForm.position),
+                jersey_number: parseInt(playerForm.number), // Cambiar 'number' a 'jersey_number'
                 height: parseFloat(playerForm.height),
                 weight: parseFloat(playerForm.weight),
-                age: playerForm.age ? parseInt(playerForm.age) : undefined
-            });
+                age: playerForm.age ? parseInt(playerForm.age) : undefined,
+                team: playerForm.team || undefined
+            };
+
+            const response = await playersAPI.update(editingItem._id, playerData);
 
             if (response.data.success) {
                 toast.success('Jugador actualizado exitosamente');
@@ -310,12 +331,24 @@ const AdminDashboard = () => {
         setEditingItem(null);
     };
 
+    // Mapeo de posiciones inglés -> español
+    const mapPositionToSpanish = (position) => {
+        const mapping = {
+            'Point Guard': 'Base',
+            'Shooting Guard': 'Escolta',
+            'Small Forward': 'Alero',
+            'Power Forward': 'Ala-Pívot',
+            'Center': 'Pívot'
+        };
+        return mapping[position] || position;
+    };
+
     const openPlayerModal = (player = null) => {
         if (player) {
             setPlayerForm({
                 name: player.name || '',
-                position: player.position || '',
-                number: player.number?.toString() || '',
+                position: mapPositionToSpanish(player.position) || '', // Convertir a español
+                number: player.jersey_number?.toString() || '', // Usar jersey_number
                 height: player.height?.toString() || '',
                 weight: player.weight?.toString() || '',
                 age: player.age?.toString() || '',
@@ -445,8 +478,8 @@ const AdminDashboard = () => {
                                     {players.map(player => (
                                         <tr key={player._id}>
                                             <td>{player.name}</td>
-                                            <td>{player.position}</td>
-                                            <td>#{player.number}</td>
+                                            <td>{mapPositionToSpanish(player.position)}</td>
+                                            <td>#{player.jersey_number || 'N/A'}</td>
                                             <td>{player.height} cm</td>
                                             <td>{player.weight} kg</td>
                                             <td>
