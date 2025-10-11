@@ -1,15 +1,22 @@
-import React from 'react';
-import { customRender, screen } from './test-utils';
+/* eslint-disable no-unused-vars */
+import '@testing-library/jest-dom/extend-expect';
+import { customRender, screen, createAuthUser } from '../test-utils';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import AdminDashboard from '../components/AdminDashboard';
-import { AuthProvider } from '../context/AuthContext';
+import AdminDashboard from '../pages/AdminDashboard';
 
 function renderWithAuth(ui, { user = null, route = '/admin' } = {}) {
-    window.localStorage.setItem('user', user ? JSON.stringify(user) : 'null');
+    if (user) {
+        window.localStorage.setItem('user', JSON.stringify(user));
+        window.localStorage.setItem('token', 'test-token');
+    } else {
+        window.localStorage.removeItem('user');
+        window.localStorage.removeItem('token');
+    }
+
     return customRender(
         <MemoryRouter initialEntries={[route]}>
             <Routes>
-                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin" element={ui} />
                 <Route path="/login" element={<div>Login Page</div>} />
             </Routes>
         </MemoryRouter>
@@ -17,9 +24,33 @@ function renderWithAuth(ui, { user = null, route = '/admin' } = {}) {
 }
 
 describe('Admin route protection', () => {
-    test('redirects to login if not authenticated', () => {
-        renderWithAuth(<AdminDashboard />, { user: null });
-        expect(screen.getByText(/login page/i)).toBeInTheDocument();
+    let warnSpy;
+    let infoSpy;
+
+    beforeAll(() => {
+        warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => { });
+        infoSpy = jest.spyOn(console, 'info').mockImplementation(() => { });
     });
-    // Puedes agregar más tests para usuarios con rol admin
+
+    afterEach(() => {
+        window.localStorage.clear();
+        warnSpy.mockClear();
+        infoSpy.mockClear();
+    });
+
+    afterAll(() => {
+        warnSpy.mockRestore();
+        infoSpy.mockRestore();
+    });
+
+    test('muestra acceso denegado para usuarios sin rol admin', () => {
+        renderWithAuth(<AdminDashboard />, { user: null });
+        expect(screen.getByText(/Acceso Denegado/i)).toBeInTheDocument();
+    });
+
+    test('renderiza el dashboard para administradores', () => {
+        const adminUser = createAuthUser({ role: 'admin', email: 'admin@test.com' });
+        renderWithAuth(<AdminDashboard />, { user: adminUser });
+        expect(screen.getByText(/Panel de Administración/i)).toBeInTheDocument();
+    });
 });
