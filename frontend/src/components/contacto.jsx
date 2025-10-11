@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { apiClient } from '../api/client';
-import Header from "./Header";
+import Header from "./Header"; // eslint-disable-line no-unused-vars
 
 export default function Contacto() {
   const [form, setForm] = useState({ nombre: "", email: "", telefono: "", mensaje: "" });
@@ -41,8 +40,16 @@ export default function Contacto() {
       console.error('Error al enviar mensaje de contacto:', err);
 
       if (err.response) {
-        // Error del servidor (4xx, 5xx)
-        toast.error(err.response.data?.msg || "Error al enviar el mensaje. Intenta nuevamente.");
+        const responseData = err.response.data || {};
+        const validationErrors = Array.isArray(responseData.errors)
+          ? responseData.errors.map(item => item.msg || item.message).filter(Boolean)
+          : [];
+
+        const message = validationErrors.length
+          ? validationErrors.join('\n')
+          : (responseData.msg || "Error al enviar el mensaje. Intenta nuevamente.");
+
+        toast.error(message);
       } else if (err.request) {
         // Error de red (sin respuesta del servidor)
         toast.error("Error de conexión. Verifica tu internet e intenta más tarde.");
