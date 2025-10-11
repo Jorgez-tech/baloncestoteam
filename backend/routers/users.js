@@ -8,8 +8,9 @@ const router = express.Router();
 // GET /api/v1/users - Listar todos los usuarios (solo admin)
 router.get('/', authMiddleware, async (req, res) => {
     try {
-        // Verificar que el usuario sea admin
-        if (req.user.role !== 'admin') {
+        const requester = req.user;
+
+        if (!requester || requester.role !== 'admin') {
             return res.status(403).json({
                 success: false,
                 message: 'Acceso denegado. Se requieren permisos de administrador.'
@@ -28,6 +29,7 @@ router.get('/', authMiddleware, async (req, res) => {
             }
         });
     } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching users:', error);
         res.status(500).json({
             success: false,
@@ -40,8 +42,16 @@ router.get('/', authMiddleware, async (req, res) => {
 // GET /api/v1/users/:id - Obtener usuario específico (solo admin)
 router.get('/:id', authMiddleware, async (req, res) => {
     try {
-        // Verificar que el usuario sea admin o esté consultando su propio perfil
-        if (req.user.role !== 'admin' && req.user._id.toString() !== req.params.id) {
+        const requester = req.user;
+
+        if (!requester) {
+            return res.status(401).json({
+                success: false,
+                message: 'No se pudo validar la sesión del usuario.'
+            });
+        }
+
+        if (requester.role !== 'admin' && requester.id?.toString() !== req.params.id) {
             return res.status(403).json({
                 success: false,
                 message: 'Acceso denegado.'
@@ -71,6 +81,7 @@ router.get('/:id', authMiddleware, async (req, res) => {
             data: user
         });
     } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching user:', error);
         res.status(500).json({
             success: false,
@@ -83,8 +94,9 @@ router.get('/:id', authMiddleware, async (req, res) => {
 // PUT /api/v1/users/:id - Actualizar usuario (solo admin)
 router.put('/:id', authMiddleware, async (req, res) => {
     try {
-        // Verificar que el usuario sea admin
-        if (req.user.role !== 'admin') {
+        const requester = req.user;
+
+        if (!requester || requester.role !== 'admin') {
             return res.status(403).json({
                 success: false,
                 message: 'Acceso denegado. Se requieren permisos de administrador.'
@@ -124,7 +136,8 @@ router.put('/:id', authMiddleware, async (req, res) => {
         }
 
         // Log de auditoría
-        console.log(`[AUDIT] User ${req.user.email} updated user ${user.email}`);
+        // eslint-disable-next-line no-console
+        console.log(`[AUDIT] User ${requester.email} updated user ${user.email}`);
 
         res.json({
             success: true,
@@ -132,6 +145,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
             data: user
         });
     } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error updating user:', error);
         res.status(400).json({
             success: false,
@@ -144,8 +158,9 @@ router.put('/:id', authMiddleware, async (req, res) => {
 // DELETE /api/v1/users/:id - Eliminar usuario (solo admin)
 router.delete('/:id', authMiddleware, async (req, res) => {
     try {
-        // Verificar que el usuario sea admin
-        if (req.user.role !== 'admin') {
+        const requester = req.user;
+
+        if (!requester || requester.role !== 'admin') {
             return res.status(403).json({
                 success: false,
                 message: 'Acceso denegado. Se requieren permisos de administrador.'
@@ -162,7 +177,7 @@ router.delete('/:id', authMiddleware, async (req, res) => {
         }
 
         // Evitar que el admin se elimine a sí mismo
-        if (req.user._id.toString() === id) {
+        if (requester.id?.toString() === id) {
             return res.status(400).json({
                 success: false,
                 message: 'No puedes eliminar tu propia cuenta'
@@ -179,13 +194,15 @@ router.delete('/:id', authMiddleware, async (req, res) => {
         }
 
         // Log de auditoría
-        console.log(`[AUDIT] User ${req.user.email} deleted user ${user.email}`);
+        // eslint-disable-next-line no-console
+        console.log(`[AUDIT] User ${requester.email} deleted user ${user.email}`);
 
         res.json({
             success: true,
             message: 'Usuario eliminado exitosamente'
         });
     } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error deleting user:', error);
         res.status(500).json({
             success: false,
@@ -198,8 +215,9 @@ router.delete('/:id', authMiddleware, async (req, res) => {
 // PATCH /api/v1/users/:id/toggle-active - Activar/Desactivar usuario (solo admin)
 router.patch('/:id/toggle-active', authMiddleware, async (req, res) => {
     try {
-        // Verificar que el usuario sea admin
-        if (req.user.role !== 'admin') {
+        const requester = req.user;
+
+        if (!requester || requester.role !== 'admin') {
             return res.status(403).json({
                 success: false,
                 message: 'Acceso denegado. Se requieren permisos de administrador.'
@@ -216,7 +234,7 @@ router.patch('/:id/toggle-active', authMiddleware, async (req, res) => {
         }
 
         // Evitar que el admin se desactive a sí mismo
-        if (req.user._id.toString() === id) {
+        if (requester.id?.toString() === id) {
             return res.status(400).json({
                 success: false,
                 message: 'No puedes cambiar tu propio estado'
@@ -236,7 +254,8 @@ router.patch('/:id/toggle-active', authMiddleware, async (req, res) => {
         await user.save();
 
         // Log de auditoría
-        console.log(`[AUDIT] User ${req.user.email} ${user.isActive ? 'activated' : 'deactivated'} user ${user.email}`);
+        // eslint-disable-next-line no-console
+        console.log(`[AUDIT] User ${requester.email} ${user.isActive ? 'activated' : 'deactivated'} user ${user.email}`);
 
         res.json({
             success: true,
@@ -248,6 +267,7 @@ router.patch('/:id/toggle-active', authMiddleware, async (req, res) => {
             }
         });
     } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error toggling user status:', error);
         res.status(500).json({
             success: false,
