@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const Player = require('../models/player');
 const mongoose = require('mongoose');
+const { validatePlayer, validatePlayerUpdate } = require('../middleware/validation');
 
 // GET /api/v1/players
 // Query: page, limit, position, minHeight, maxWeight, sortBy, order, search
@@ -91,11 +92,11 @@ router.get('/:id', async (req, res) => {
             efficiency:
                 stats.games_played > 0
                     ? Math.round(
-                          ((stats.points_per_game || 0) +
-                              (stats.rebounds_per_game || 0) +
-                              (stats.assists_per_game || 0)) *
-                              10
-                      ) / 10
+                        ((stats.points_per_game || 0) +
+                            (stats.rebounds_per_game || 0) +
+                            (stats.assists_per_game || 0)) *
+                        10
+                    ) / 10
                     : 0,
         };
 
@@ -113,7 +114,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST /api/v1/players
-router.post('/', auth, async (req, res) => {
+router.post('/', auth, validatePlayer, async (req, res) => {
     try {
         const player = new Player(req.body);
         await player.save();
@@ -136,17 +137,9 @@ router.post('/', auth, async (req, res) => {
 });
 
 // PUT /api/v1/players/:id
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', auth, validatePlayerUpdate, async (req, res) => {
     try {
         const { id } = req.params;
-
-        // Validar ID
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({
-                success: false,
-                message: 'ID de jugador inválido',
-            });
-        }
 
         const player = await Player.findByIdAndUpdate(id, req.body, {
             new: true,
