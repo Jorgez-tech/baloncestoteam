@@ -556,6 +556,14 @@ const AdminDashboard = () => {
                         {usersError ? (
                             <div className="users-table users-table--empty">
                                 <p>{usersError}</p>
+                                <button
+                                    className="btn-secondary"
+                                    type="button"
+                                    onClick={loadDashboardData}
+                                    style={{ marginTop: '12px' }}
+                                >
+                                    Reintentar carga
+                                </button>
                             </div>
                         ) : (
                             <div className="users-table">
