@@ -1,7 +1,17 @@
 # 🔍 Guía de Validación de Integración Backend-Frontend
 
-**📅 Fecha:** 5 de Octubre 2025  
-**🌿 Rama:** `integracion-backend-frontend`
+**📅 Fecha:** 11 de Octubre 2025  
+**🌿 Rama:** `main`  
+**🧪 Último resultado automático:** `backend/npm test` ✅ · `frontend/npm test -- --watchAll=false` ✅
+
+---
+
+## 🧾 Resumen 11/10/2025
+
+- 🔄 La rama `integracion-backend-frontend` fue fusionada en `main` sin conflictos; todas las ramas accesorias se eliminaron.
+- 🧪 Se ejecutaron y superaron las suites automatizadas de backend y frontend. Persisten avisos conocidos (React Router v7, timers de Jest) sin impacto funcional.
+- 🧹 Se limpiaron artefactos generados (`build/`, `coverage/`, logs) y se actualizó la documentación general (README).
+- 📌 Pendiente: validación manual final de vistas completas antes del despliegue.
 
 ---
 
@@ -24,6 +34,13 @@
 ---
 
 ## 🧪 Fase 2: Validación Funcional
+
+### 🆕 Actualización 11/10/2025 – Consolidación final
+
+- ✅ `frontend/src/__tests__/AdminUsers.test.jsx` cubre escenarios de error/reintento en la pestaña de usuarios y bloqueo de autodestrucción.
+- ✅ `frontend/src/__tests__/Admin.test.jsx` verifica acceso protegido y renderizado del panel admin.
+- ✅ Se documentó la ejecución de `npm test` (backend) y `npm test -- --watchAll=false` (frontend) con resultado exitoso.
+- 📝 Manual: queda pendiente confirmar visualmente los flujos descritos abajo, especialmente gestión de usuarios y contacto.
 
 ### 🆕 Actualización 05/10/2025 – AdminDashboard
 
@@ -306,17 +323,17 @@
 
 ### Usuarios
 
-- [ ] Listar usuarios (admin)
-- [ ] Editar usuario (admin)
-- [ ] Eliminar usuario (admin)
-- [ ] No eliminar propio usuario (validación)
+- [ ] Listar usuarios (admin) — *Cobertura automática: `AdminUsers.test.jsx`.*
+- [ ] Editar usuario (admin) — *Realizar prueba manual (ver sección correspondiente).* 
+- [ ] Eliminar usuario (admin) — *Realizar prueba manual.*
+- [ ] No eliminar propio usuario (validación) — *Cobertura automática; confirmar manualmente.*
 
 ### Contacto
 
-- [ ] Enviar mensaje exitoso
-- [ ] Validación de campos obligatorios
-- [ ] Validación de email
-- [ ] Manejo de error de red
+- [ ] Enviar mensaje exitoso (manual)
+- [ ] Validación de campos obligatorios (manual)
+- [ ] Validación de email (manual)
+- [ ] Manejo de error de red (manual)
 
 ### Errores Globales
 
@@ -342,29 +359,24 @@
 
 **✅ Completado:**
 
-- Unificación de cliente API
-- Configuración de react-toastify
-- Mejora de manejo de errores en formulario de contacto
-- Reparación completa del AdminDashboard
-- **CRUD de jugadores 100% funcional** (crear, editar, eliminar) ✅
-- Ajustes defensivos en pestaña de usuarios del AdminDashboard
-- Limpieza de logs de auditoría en modo producción
+- Unificación de cliente API (Axios centralizado) y react-toastify en frontend.
+- Validaciones de jugadores en backend (`middleware/validation.js`).
+- Manejo de errores del formulario de contacto con mensajes detallados.
+- Panel de administración estabilizado (jugadores + usuarios) con pruebas unitarias asociadas.
+- Limpieza de artefactos (`build/`, `coverage/`, logs) y actualización de README.
 
 **🔄 En Progreso:**
 
-- Validación funcional de flujos de autenticación
-- Reconstrucción del entorno de pruebas unitarias (pendiente restablecer `./test-utils`)
+- Validación manual de flujos de autenticación y panel admin posterior a merge.
+- Documentación de resultados manuales (este documento se actualizará tras dicha verificación).
 
 **⏳ Pendiente:**
 
-- Validación de gestión de usuarios
-- Pruebas de formulario de contacto
-- Pruebas de manejo de errores global
-- Documentación final
-- Reparar utilidades de testing para ejecutar suite completa
+- Ejecutar smoke test (`node backend/scripts/smoke.js`) contra entorno representativo.
+- Preparación del plan de despliegue (infraestructura y CI/CD).
 
 ---
 
-**Última actualización:** 5 de Octubre 2025  
+**Última actualización:** 11 de Octubre 2025  
 **Responsable:** GitHub Copilot + Jorge  
-**Rama:** `integracion-backend-frontend`
+**Rama:** `main`
