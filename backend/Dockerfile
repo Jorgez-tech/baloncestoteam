@@ -16,6 +16,9 @@ COPY . .
 # Install PM2 for process management
 RUN npm install -g pm2
 
+# Install wget for the healthcheck
+RUN apk add --no-cache wget
+
 # Expose the port the app runs on
 EXPOSE 5000
 
