@@ -9,7 +9,7 @@ node_modules
 npm-debug.log
 
 # Ignore test files and other development-related artifacts
-__test__
+__test__/
 jest.config.js
 mongodb-memory-server
 
