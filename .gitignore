@@ -52,8 +52,7 @@ coverage
 .npm
 .eslintcache
 
-# Docker
-docker-compose.yml
+# Docker (keep docker-compose.yml in repo, only ignore overrides)
 docker-compose.override.yml
 
 # Database files
