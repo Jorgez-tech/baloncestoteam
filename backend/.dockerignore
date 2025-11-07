@@ -1,0 +1,18 @@
+# Ignore node_modules, as they will be installed inside the container
+node_modules
+
+# Ignore local environment files
+.env
+.env.test
+
+# Ignore log files
+npm-debug.log
+
+# Ignore test files and other development-related artifacts
+__test__
+jest.config.js
+mongodb-memory-server
+
+# Ignore git files
+.git
+.gitignore
