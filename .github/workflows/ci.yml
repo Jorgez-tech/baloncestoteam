@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, chore/limpieza-rutas-estructura, backup/antes-recuperacion]
+    branches: [main, chore/limpieza-rutas-estructura, backup/antes-recuperacion, feat-dockerize-app]
   pull_request:
     branches: [main]
 
@@ -73,3 +73,26 @@ jobs:
 
       # - name: Coverage
       #   run: npm run test:coverage --prefix frontend
+
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Create dummy .env for docker-compose validation
+        run: |
+          cp backend/.env.example backend/.env
+          echo "JWT_SECRET=test_secret_for_ci" >> backend/.env
+      
+      - name: Build backend Docker image
+        run: docker build -t basketball-backend ./backend
+        
+      - name: Build frontend Docker image
+        run: docker build -t basketball-frontend ./frontend
+        
+      - name: Verify docker-compose configuration
+        run: docker compose config
