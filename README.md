@@ -53,3 +53,63 @@ This application is containerized using Docker and can be run easily with Docker
     ```bash
     docker-compose down
     ```
+
+## Development Without Docker
+
+If you prefer to run the services individually without Docker:
+
+### Backend Setup
+
+```bash
+cd backend
+npm install
+cp .env.example .env
+# Edit .env with your MongoDB URI and JWT_SECRET
+npm run dev
+```
+
+### Frontend Setup
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+**Note:** You'll need MongoDB and optionally Redis running locally.
+
+## Architecture
+
+- **Backend**: Node.js/Express with JWT authentication, MongoDB, Redis cache
+- **Frontend**: React 17 with React Router 6, Axios, React Toastify
+- **Database**: MongoDB for data persistence
+- **Cache**: Redis for sessions and rate limiting
+- **Deployment**: Docker Compose orchestration with healthchecks
+
+## Key Features
+
+✅ User authentication with roles (admin/user)  
+✅ Player management (CRUD operations)  
+✅ Admin dashboard with protected routes  
+✅ Image upload for players  
+✅ Security: CORS, Helmet, rate limiting, input validation  
+✅ API documentation with Swagger  
+✅ Containerized deployment ready  
+✅ CI/CD validation with GitHub Actions
+
+## Project Status
+
+🎉 **Production Ready** - The project is fully containerized and ready for deployment in any Docker-compatible environment.
+
+**Last Major Update**: November 9, 2025 - Complete Docker implementation
+
+## Documentation
+
+- `DESARROLLO-GUIA.md` - Development guide and sprint tracking
+- `VALIDACION_INTEGRACION.md` - Integration validation checklist
+- Backend API docs: `http://localhost:5000/api/v1/docs` (when running)
+
+---
+
+**Repository**: [GitHub - Basketball Team](https://github.com/Jorgez-tech/baloncestoteam)  
+**Author**: Jorge Zuta

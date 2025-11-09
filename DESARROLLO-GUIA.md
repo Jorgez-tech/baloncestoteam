@@ -9,16 +9,19 @@
 ### Estado por Sprint
 
 #### Sprint 1 – Funcionalidades base
+
 - Backend API: [x] Hecho
   - [x] CRUD jugadores, JWT con roles, CORS/Helmet/Rate limiting, validaciones básicas (Mongoose/type checks), Swagger (openapi.yaml), health y 404 handler.
   - [x] Validaciones reforzadas con `express-validator` en rutas sensibles (players/users).
 - Frontend React: [x] Hecho
   - [x] Vistas Home, Login, Signup, PlayerList, PlayerProfile, Gallery; React Router v6; AuthContext; 404 (“Página no encontrada”).
-  - [x] Nota: Hay logs en Header (“HEADER user: null…”); conviene removerlos o proteger con NODE_ENV. (Ya realizado)
+  - [x] Nota: Hay logs en Header ("HEADER user: null…"); conviene removerlos o proteger con NODE_ENV. (Ya realizado)
+
 - Landing Page: [x] Hecho
   - [x] Hero, galería, formulario, conexión al backend desde assets/script.js.
 
 #### Sprint 2 – Testing y automatización
+
 - Pruebas: [~] Parcial
   - [x] Frontend: tests de rutas con RTL y Jest funcionando (Login, Admin, PlayerList, AdminUsers).
   - [x] Backend: Suite Jest (players/docs) documentada y en uso.
@@ -29,6 +32,7 @@
   - [x] Convencional Commits validados vía commitlint + husky.
 
 #### Sprint 3 – Limpieza y buenas prácticas
+
 - Código: [x] Realizado
   - [x] Logs innecesarios: hay logs en Header; limpiar o usar logger nivel DEBUG. (Ya realizado)
   - [x] Modularización/nombres: En general bien; ojo con duplicado/case de Header (Header.jsx vs header.js) por FS de Windows. (Ya realizado)
@@ -36,6 +40,10 @@
 - Documentación: [x] Actualizada
   - [x] README raíz y `VALIDACION_INTEGRACION.md` sincronizados.
   - [x] CONTRIBUTING.md y documentación de apoyo vigentes.
+
+#### Sprint 4 – Seguridad y rendimiento
+
+- Seguridad: [x] Hecho
 
 #### Sprint 4 – Seguridad y rendimiento
 
@@ -48,12 +56,25 @@
 
 #### Sprint 5 – Despliegue y demo
 
-- Backend: [~] Parcial
-  - [x] Instrucciones y .env.example OK; falta pipeline o definición de entorno productivo (.env.production).
-- Frontend: [~] Parcial
-  - [x] Build con CRA listo; faltan pasos automatizados de deploy (Vercel/Netlify).
-- Monitoreo: [~] Parcial
-  - [x] /health OK, error handler global backend OK; faltan logs estructurados y policy de observabilidad.
+- Backend: [x] Completo
+  - [x] Instrucciones y .env.example OK
+  - [x] Dockerfile optimizado con Node.js 20 Alpine y PM2
+  - [x] Healthcheck configurado en contenedor
+  - [x] Usuario no-root para seguridad
+- Frontend: [x] Completo
+  - [x] Build multi-stage con React y Nginx
+  - [x] Variables de entorno REACT_APP_* configuradas
+  - [x] Nginx con headers de seguridad y compresión gzip
+  - [x] Cache optimizado para assets estáticos
+- Infraestructura: [x] Completo
+  - [x] docker-compose.yml con servicios MongoDB, Redis, Backend, Frontend
+  - [x] Healthchecks para todos los servicios
+  - [x] Networks y volumes persistentes configurados
+  - [x] CI/CD validando builds de Docker en GitHub Actions
+- Monitoreo: [x] Hecho
+  - [x] /health endpoint funcional
+  - [x] Error handler global backend
+  - [x] Healthchecks de Docker para auto-recuperación
 
 ---
 
@@ -120,11 +141,38 @@ Asegurar que todas las funcionalidades implementadas cumplen con los requisitos 
 
 ---
 
-## Notas finales (11/10/2025)
+## Notas finales
+
+### Actualización 11/10/2025 - Sprint Final QA
 
 - **Meta del sprint final:** dejar la plataforma preparada para QA y despliegue, con panel admin estable y flujos clave cubiertos.
 - **Desafíos resueltos:** inconsistencias de `jersey_number`, restricciones de usuarios admin, manejo de errores en contacto y saneamiento de artefactos.
 - **Aprendizajes:** la centralización de clientes Axios simplifica el control de errores; coordinar pruebas unitarias de frontend/backend ayuda a detectar regresiones; mantener documentación viva acelera la preparación del release.
+
+### Actualización 09/11/2025 - Dockerización Completa
+
+- **Logros principales:**
+  - ✅ Implementación completa de Docker con docker-compose
+  - ✅ Imágenes optimizadas: Backend (Node.js + PM2), Frontend (multi-stage con Nginx)
+  - ✅ Stack completo: MongoDB + Redis + Backend + Frontend
+  - ✅ CI/CD actualizado con validación de builds Docker
+  - ✅ Fix crítico: react-scripts 0.0.0 → 5.0.1
+  - ✅ Configuración de variables de entorno para Docker builds
+
+- **Arquitectura de deployment:**
+  - MongoDB con healthcheck y volumen persistente
+  - Redis para cache/sesiones con auto-recuperación
+  - Backend con PM2 para alta disponibilidad
+  - Frontend con Nginx optimizado (gzip, headers seguridad, cache)
+  - Networks aisladas para comunicación entre servicios
+
+- **Desafíos superados:**
+  - Compatibilidad Docker Compose v1 vs v2 en CI
+  - Variables de entorno en build-time para React
+  - Healthchecks y dependencias entre servicios
+  - Optimización de imágenes con .dockerignore
+
+- **Resultado:** Proyecto 100% listo para despliegue en cualquier entorno con Docker. Un simple `docker compose up` levanta toda la infraestructura.
 
 ---
 
