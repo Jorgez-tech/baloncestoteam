@@ -13,6 +13,12 @@ RUN npm install
 # Copy the rest of the application files
 COPY . .
 
+# Set build-time environment variables for React
+ARG REACT_APP_API_URL=http://localhost:5000/api/v1
+ARG REACT_APP_BACKEND_URL=http://localhost:5000
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
+ENV REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL
+
 # Build the application
 RUN npm run build
 
