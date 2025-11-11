@@ -2,6 +2,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { AuthProvider } from "./context/AuthContext";
 import Home from "./components/home";
 import Nosotros from "./components/nosotros";
 import Jugadores from "./components/jugadores";
@@ -14,7 +15,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
     return (
-        <>
+        <AuthProvider>
             <Router>
                 <div className="hero_area">
                     {/* Header Section - se recomienda migrar a componente si se desea reutilizar */}
@@ -38,20 +39,20 @@ function App() {
                         />
                     </Routes>
                 </div>
+                <ToastContainer
+                    position="top-right"
+                    autoClose={3000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                />
             </Router>
-            <ToastContainer
-                position="top-right"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
-        </>
+        </AuthProvider>
     );
 }
 
