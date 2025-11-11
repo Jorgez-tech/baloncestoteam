@@ -11,7 +11,19 @@ const path = require('path');
 
 // Cargar variables de entorno desde .env solo si no estamos en producción
 if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config({ path: path.join(__dirname, '.env') });
+    require('dotenv').config({ path: path.join(__dirname, '.env') });
+}
+
+// Validar variables de entorno críticas
+if (!process.env.JWT_SECRET) {
+    console.error('❌ ERROR: JWT_SECRET is not defined!');
+    console.error('📝 For Docker deployment:');
+    console.error('   1. Copy .env.docker to .env in the root directory');
+    console.error('   2. Generate a secure JWT_SECRET: openssl rand -base64 32');
+    console.error('   3. Add JWT_SECRET to .env file');
+    console.error('   4. Restart services: docker compose up');
+    console.error('\n📚 See DEPLOYMENT.md for complete instructions');
+    process.exit(1);
 }
 
 const app = express();

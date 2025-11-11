@@ -11,7 +11,7 @@ This application is containerized using Docker and can be run easily with Docker
 - [Docker](https://www.docker.com/get-started) installed on your machine.
 - [Docker Compose](https://docs.docker.com/compose/install/) installed on your machine.
 
-### Instructions
+### Quick Start
 
 1.  **Clone the repository:**
 
@@ -20,35 +20,42 @@ This application is containerized using Docker and can be run easily with Docker
     cd <repository-directory>
     ```
 
-2.  **Create environment files:**
-
-    You'll need to create a `.env` file in the `backend` directory. You can copy the example file:
+2.  **Configure environment variables:**
 
     ```bash
-    cp backend/.env.example backend/.env
+    # Copy the Docker environment template
+    cp .env.docker .env
+    
+    # Generate a secure JWT secret
+    openssl rand -base64 32
+    
+    # Edit .env and paste the JWT_SECRET (REQUIRED)
+    # You can use any text editor
     ```
-
-    Make sure to fill in the required environment variables in `backend/.env`, especially the `JWT_SECRET`.
+    
+    **Important:** The `JWT_SECRET` is required. The backend will not start without it.
 
 3.  **Run the application:**
 
-    From the root directory of the project, run the following command:
-
     ```bash
-    docker-compose up --build
+    docker compose up --build
     ```
 
-    This will build the Docker images for the frontend and backend and start the containers.
+4.  **Populate the database (first time only):**
 
-4.  **Access the application:**
+    ```bash
+    docker compose exec backend node seed-db.js seed
+    ```
+
+5.  **Access the application:**
 
     - **Frontend:** Open your browser and navigate to `http://localhost:3000`
     - **Backend API:** The API will be available at `http://localhost:5000`
     - **API Documentation:** `http://localhost:5000/api/v1/docs`
 
-5.  **Stopping the application:**
+6.  **Stopping the application:**
 
-    To stop the application, press `Ctrl+C` in the terminal where `docker-compose` is running, and then run:
+    To stop the application, press `Ctrl+C` in the terminal where `docker compose` is running, and then run:
 
     ```bash
     docker-compose down
