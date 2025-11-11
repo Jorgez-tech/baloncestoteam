@@ -51,7 +51,11 @@ services:
       - MONGO_URI=mongodb://mongo:27017/basketball-team
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - FRONTEND_URL=http://localhost:3000
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRE=${JWT_EXPIRE:-7d}
+      - MAX_FILE_SIZE=${MAX_FILE_SIZE:-5242880}
+      - UPLOAD_PATH=./uploads
     volumes:
       - ./backend/uploads:/usr/src/app/uploads
     depends_on:
