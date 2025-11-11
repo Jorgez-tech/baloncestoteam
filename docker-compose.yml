@@ -52,8 +52,6 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - FRONTEND_URL=http://localhost:3000
-    env_file:
-      - ./backend/.env
     volumes:
       - ./backend/uploads:/usr/src/app/uploads
     depends_on:

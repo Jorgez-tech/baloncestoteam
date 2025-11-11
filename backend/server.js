@@ -8,8 +8,11 @@ const { connectRedis } = require('./config/redis');
 const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
 const path = require('path');
-// Cargar .env siempre desde la carpeta backend (independiente del cwd)
-require('dotenv').config({ path: path.join(__dirname, '.env') });
+
+// Cargar variables de entorno desde .env solo si no estamos en producción
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config({ path: path.join(__dirname, '.env') });
+}
 
 const app = express();
 
