@@ -1,8 +1,8 @@
-# 🤝 Guía de Contribución - Basketball Team
+# Guía de Contribución - Basketball Team
 
 ¡Gracias por tu interés en contribuir al proyecto Basketball Team! Esta guía te ayudará a participar de manera efectiva.
 
-## 📋 Tabla de Contenidos
+## Tabla de Contenidos
 
 - [Código de Conducta](#código-de-conducta)
 - [Cómo Contribuir](#cómo-contribuir)
@@ -12,7 +12,7 @@
 - [Testing](#testing)
 - [Documentación](#documentación)
 
-## 📜 Código de Conducta
+## Código de Conducta
 
 Este proyecto se adhiere a un código de conducta. Al participar, se espera que mantengas este código.
 
@@ -20,7 +20,7 @@ Este proyecto se adhiere a un código de conducta. Al participar, se espera que 
 - Acepta críticas constructivas
 - Ayuda a crear un ambiente acogedor para todos
 
-## 🚀 Cómo Contribuir
+## Cómo Contribuir
 
 ### Reportar Bugs
 
@@ -47,7 +47,7 @@ Este proyecto se adhiere a un código de conducta. Al participar, se espera que 
 4. Ejecuta tests y linting
 5. Crea un Pull Request
 
-## 🔄 Flujo de Trabajo
+## Flujo de Trabajo
 
 ### 1. Configuración Inicial
 
@@ -128,7 +128,10 @@ git push origin --delete feature/nombre-descriptivo
 
 **Para administradores**: Consulta [docs/BRANCH-MANAGEMENT.md](docs/BRANCH-MANAGEMENT.md) para tareas de limpieza de ramas.
 
-## 📝 Estándares de Código
+## Estándares de Código
+
+### Reglas Generales
+- **NO EMOJIS**: Está prohibido el uso de emojis en el código, comentarios, commits y documentación. Mantener un estilo formal y profesional.
 
 ### JavaScript/JSX
 
@@ -180,7 +183,7 @@ frontend/src/
 - **Componentes**: PascalCase
 - **CSS Classes**: kebab-case
 
-## 📨 Mensajes de Commit
+## Mensajes de Commit
 
 Usamos [Conventional Commits](https://www.conventionalcommits.org/):
 
@@ -220,7 +223,7 @@ style(header): ajustar espaciado en componente
 - `docs`: Documentación
 - `config`: Configuración
 
-## 🧪 Testing
+## Testing
 
 ### Requisitos de Testing
 
@@ -258,7 +261,7 @@ npm test -- --coverage    # Coverage report
 - Hooks personalizados
 - Integración con API
 
-## 📚 Documentación
+## Documentación
 
 ### README Updates
 
@@ -278,7 +281,7 @@ npm test -- --coverage    # Coverage report
 - Incluye ejemplos de request/response
 - Documenta códigos de error
 
-## 🔍 Code Review
+## Code Review
 
 ### Como Autor
 - Haz self-review antes de solicitar review
@@ -290,7 +293,7 @@ npm test -- --coverage    # Coverage report
 - Enfócate en el código, no en la persona
 - Aprueba solo si estás satisfecho con la calidad
 
-## 🏷️ Issues y Labels
+## Issues y Labels
 
 ### Labels de Issues
 - `bug`: Reporte de bug
@@ -302,7 +305,7 @@ npm test -- --coverage    # Coverage report
 ### Templates
 Usa las plantillas de issues para reportes consistentes.
 
-## ❓ Preguntas
+## Preguntas
 
 Si tienes preguntas:
 
@@ -310,7 +313,7 @@ Si tienes preguntas:
 2. Busca en issues existentes
 3. Abre un issue con la etiqueta `question`
 
-## 🎉 Reconocimiento
+## Reconocimiento
 
 Todos los contribuyentes serán reconocidos en:
 - README.md
@@ -319,7 +322,7 @@ Todos los contribuyentes serán reconocidos en:
 
 ---
 
-**¡Gracias por contribuir al proyecto Basketball Team! 🏀**
+**¡Gracias por contribuir al proyecto Basketball Team!**
 
 Para más información, consulta:
 - [DESARROLLO-GUIA.md](./DESARROLLO-GUIA.md) - Estado y checklist del proyecto

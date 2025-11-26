@@ -10,6 +10,16 @@ jobs:
   backend:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    services:
+      mongodb:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd mongosh
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
@@ -37,8 +47,10 @@ jobs:
         continue-on-error: true
 
       - name: Test backend
-        run: npm test --prefix backend || echo "Backend tests fail due to MongoDB Memory Server network restrictions - this is expected in CI environment"
-        continue-on-error: true
+        run: npm test --prefix backend
+        env:
+          MONGO_URI: mongodb://localhost:27017/test_db
+          JWT_SECRET: test_secret_for_ci
 
       # - name: Coverage
       #   run: npm run test:coverage --prefix backend

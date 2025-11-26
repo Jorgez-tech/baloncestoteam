@@ -95,18 +95,18 @@ npm start
 
 ## Key Features
 
-✅ User authentication with roles (admin/user)  
-✅ Player management (CRUD operations)  
-✅ Admin dashboard with protected routes  
-✅ Image upload for players  
-✅ Security: CORS, Helmet, rate limiting, input validation  
-✅ API documentation with Swagger  
-✅ Containerized deployment ready  
-✅ CI/CD validation with GitHub Actions
+- User authentication with roles (admin/user)  
+- Player management (CRUD operations)  
+- Admin dashboard with protected routes  
+- Image upload for players  
+- Security: CORS, Helmet, rate limiting, input validation  
+- API documentation with Swagger  
+- Containerized deployment ready  
+- CI/CD validation with GitHub Actions
 
 ## Project Status
 
-🎉 **Production Ready** - The project is fully containerized and ready for deployment in any Docker-compatible environment.
+**Production Ready** - The project is fully containerized and ready for deployment in any Docker-compatible environment.
 
 **Last Major Update**: November 9, 2025 - Complete Docker implementation
 

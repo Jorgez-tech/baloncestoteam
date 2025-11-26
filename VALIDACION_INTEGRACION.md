@@ -1,57 +1,57 @@
-# 🔍 Guía de Validación de Integración Backend-Frontend
+#  Guía de Validación de Integración Backend-Frontend
 
-**📅 Fecha:** 11 de Octubre 2025  
-**🌿 Rama:** `main`  
-**🧪 Último resultado automático:** `backend/npm test` ✅ · `frontend/npm test -- --watchAll=false` ✅
-
----
-
-## 🧾 Resumen 11/10/2025
-
-- 🔄 La rama `integracion-backend-frontend` fue fusionada en `main` sin conflictos; todas las ramas accesorias se eliminaron.
-- 🧪 Se ejecutaron y superaron las suites automatizadas de backend y frontend. Persisten avisos conocidos (React Router v7, timers de Jest) sin impacto funcional.
-- 🧹 Se limpiaron artefactos generados (`build/`, `coverage/`, logs) y se actualizó la documentación general (README).
-- 📌 Pendiente: validación manual final de vistas completas antes del despliegue.
+** Fecha:** 11 de Octubre 2025  
+** Rama:** `main`  
+** Último resultado automático:** `backend/npm test`  · `frontend/npm test -- --watchAll=false` 
 
 ---
 
-## ✅ Fase 1: Correcciones Críticas (COMPLETADA)
+##  Resumen 11/10/2025
+
+-  La rama `integracion-backend-frontend` fue fusionada en `main` sin conflictos; todas las ramas accesorias se eliminaron.
+-  Se ejecutaron y superaron las suites automatizadas de backend y frontend. Persisten avisos conocidos (React Router v7, timers de Jest) sin impacto funcional.
+-  Se limpiaron artefactos generados (`build/`, `coverage/`, logs) y se actualizó la documentación general (README).
+-  Pendiente: validación manual final de vistas completas antes del despliegue.
+
+---
+
+##  Fase 1: Correcciones Críticas (COMPLETADA)
 
 ### Cambios Aplicados
 
-1. ✅ **Unificación de cliente API**
+1.  **Unificación de cliente API**
    - Migrado `players.js` de `fetch` a `playersAPI` (axios)
    - Migrado `contacto.jsx` de `fetch` a `apiClient` (axios)
    
-2. ✅ **Configuración de react-toastify**
+2.  **Configuración de react-toastify**
    - `ToastContainer` añadido en `App.js`
    - Todas las notificaciones ahora usan `toast`
    
-3. ✅ **Mejora de manejo de errores**
+3.  **Mejora de manejo de errores**
    - Diferenciación entre errores de red, servidor y validación
    - Mensajes de error claros y específicos
 
 ---
 
-## 🧪 Fase 2: Validación Funcional
+##  Fase 2: Validación Funcional
 
-### 🆕 Actualización 11/10/2025 – Consolidación final
+###  Actualización 11/10/2025 – Consolidación final
 
-- ✅ `frontend/src/__tests__/AdminUsers.test.jsx` cubre escenarios de error/reintento en la pestaña de usuarios y bloqueo de autodestrucción.
-- ✅ `frontend/src/__tests__/Admin.test.jsx` verifica acceso protegido y renderizado del panel admin.
-- ✅ Se documentó la ejecución de `npm test` (backend) y `npm test -- --watchAll=false` (frontend) con resultado exitoso.
-- 📝 Manual: queda pendiente confirmar visualmente los flujos descritos abajo, especialmente gestión de usuarios y contacto.
+-  `frontend/src/__tests__/AdminUsers.test.jsx` cubre escenarios de error/reintento en la pestaña de usuarios y bloqueo de autodestrucción.
+-  `frontend/src/__tests__/Admin.test.jsx` verifica acceso protegido y renderizado del panel admin.
+-  Se documentó la ejecución de `npm test` (backend) y `npm test -- --watchAll=false` (frontend) con resultado exitoso.
+-  Manual: queda pendiente confirmar visualmente los flujos descritos abajo, especialmente gestión de usuarios y contacto.
 
-### 🆕 Actualización 05/10/2025 – AdminDashboard
+###  Actualización 05/10/2025 – AdminDashboard
 
-- 🎯 Se restauró el listado de jugadores en la pestaña "Jugadores" usando el modelo `jersey_number` y mapeos de posiciones.
-- 🧩 La pestaña "Usuarios" ahora maneja respuestas 403/errores parciales sin romper el panel, mostrando un mensaje contextual cuando el endpoint falla.
-- 🧹 Se redujo el ruido de consola dejando trazas de auditoría condicionadas al modo desarrollo.
-- 🧪 Ejecución de `npm run test -- --watchAll=false` (frontend) → ❌ Falló por módulo ausente `./test-utils` referenciado en `src/__tests__/Admin.test.jsx`. Se requiere reconstruir utilidades de pruebas para volver a ejecutar la suite.
-- 🔐 Los tokens JWT ahora incluyen `role` y `email`; los administradores deben cerrar sesión y volver a iniciar para obtener el nuevo permiso.
+-  Se restauró el listado de jugadores en la pestaña "Jugadores" usando el modelo `jersey_number` y mapeos de posiciones.
+-  La pestaña "Usuarios" ahora maneja respuestas 403/errores parciales sin romper el panel, mostrando un mensaje contextual cuando el endpoint falla.
+-  Se redujo el ruido de consola dejando trazas de auditoría condicionadas al modo desarrollo.
+-  Ejecución de `npm run test -- --watchAll=false` (frontend) →  Falló por módulo ausente `./test-utils` referenciado en `src/__tests__/Admin.test.jsx`. Se requiere reconstruir utilidades de pruebas para volver a ejecutar la suite.
+-  Los tokens JWT ahora incluyen `role` y `email`; los administradores deben cerrar sesión y volver a iniciar para obtener el nuevo permiso.
 
 
-### 1️⃣ **Flujos de Autenticación**
+###  **Flujos de Autenticación**
 
 #### A. Registro de Usuario
 
@@ -62,15 +62,15 @@
 1. Ir a `/registro`
 2. Completar formulario con datos válidos
 3. Verificar que:
-   - ✅ Se muestre mensaje de éxito
-   - ✅ Se redirija a `/login` después de 2 segundos
-   - ✅ Usuario se guarde en MongoDB
+   -  Se muestre mensaje de éxito
+   -  Se redirija a `/login` después de 2 segundos
+   -  Usuario se guarde en MongoDB
 
 **Casos de error a validar:**
 
-- ❌ Email duplicado → mensaje "Email already registered"
-- ❌ Contraseña < 6 caracteres → mensaje de validación
-- ❌ Contraseñas no coinciden → mensaje de validación
+-  Email duplicado → mensaje "Email already registered"
+-  Contraseña < 6 caracteres → mensaje de validación
+-  Contraseñas no coinciden → mensaje de validación
 
 ---
 
@@ -83,16 +83,16 @@
 1. Ir a `/login`
 2. Ingresar credenciales válidas
 3. Verificar que:
-   - ✅ Se guarde `token` en localStorage
-   - ✅ Se guarde `user` en localStorage
-   - ✅ Se redirija a `/` (usuario normal) o `/admin` (admin)
-   - ✅ El header muestre "Cerrar Sesión" en lugar de "Iniciar Sesión"
+   -  Se guarde `token` en localStorage
+   -  Se guarde `user` en localStorage
+   -  Se redirija a `/` (usuario normal) o `/admin` (admin)
+   -  El header muestre "Cerrar Sesión" en lugar de "Iniciar Sesión"
 
 **Casos de error a validar:**
 
-- ❌ Credenciales incorrectas → mensaje "Invalid credentials"
-- ❌ Usuario no existe → mensaje "Invalid credentials"
-- ❌ Backend apagado → mensaje "Error de conexión"
+-  Credenciales incorrectas → mensaje "Invalid credentials"
+-  Usuario no existe → mensaje "Invalid credentials"
+-  Backend apagado → mensaje "Error de conexión"
 
 ---
 
@@ -104,10 +104,10 @@
 
 1. Estando logueado, hacer clic en "Cerrar Sesión"
 2. Verificar que:
-   - ✅ Se elimine `token` de localStorage
-   - ✅ Se elimine `user` de localStorage
-   - ✅ Se redirija a `/login`
-   - ✅ El header muestre "Iniciar Sesión"
+   -  Se elimine `token` de localStorage
+   -  Se elimine `user` de localStorage
+   -  Se redirija a `/login`
+   -  El header muestre "Iniciar Sesión"
 
 ---
 
@@ -118,17 +118,17 @@
 **Pasos de prueba:**
 
 1. Sin autenticar, intentar acceder a `/admin`
-   - ✅ Debe redirigir a `/login`
+   -  Debe redirigir a `/login`
 
 2. Logueado como `user`, intentar acceder a `/admin`
-   - ✅ Debe redirigir a `/`
+   -  Debe redirigir a `/`
 
 3. Logueado como `admin`, acceder a `/admin`
-   - ✅ Debe mostrar el AdminDashboard
+   -  Debe mostrar el AdminDashboard
 
 ---
 
-### 2️⃣ **CRUD de Jugadores**
+###  **CRUD de Jugadores**
 
 #### A. Listar Jugadores (Vista Pública)
 
@@ -138,13 +138,13 @@
 
 1. Ir a `/jugadores`
 2. Verificar que:
-   - ✅ Se muestren todos los jugadores
-   - ✅ Se muestren avatares correctamente
-   - ✅ Se muestre nombre, posición
+   -  Se muestren todos los jugadores
+   -  Se muestren avatares correctamente
+   -  Se muestre nombre, posición
 
 **Caso de error:**
 
-- ❌ Backend apagado → mostrar array vacío o mensaje de error
+-  Backend apagado → mostrar array vacío o mensaje de error
 
 ---
 
@@ -160,15 +160,15 @@
 4. Completar formulario con datos válidos
 5. Hacer clic en "Crear"
 6. Verificar que:
-   - ✅ Se muestre toast de éxito
-   - ✅ El jugador aparezca en la tabla
-   - ✅ El modal se cierre
+   -  Se muestre toast de éxito
+   -  El jugador aparezca en la tabla
+   -  El modal se cierre
 
 **Casos de error:**
 
-- ❌ Número de jugador duplicado → mensaje de error
-- ❌ Campos obligatorios vacíos → mensaje de validación
-- ❌ Valores fuera de rango → mensaje de validación
+-  Número de jugador duplicado → mensaje de error
+-  Campos obligatorios vacíos → mensaje de validación
+-  Valores fuera de rango → mensaje de validación
 
 ---
 
@@ -183,9 +183,9 @@
 3. Modificar datos
 4. Hacer clic en "Actualizar"
 5. Verificar que:
-   - ✅ Se muestre toast de éxito
-   - ✅ Los cambios se reflejen en la tabla
-   - ✅ El modal se cierre
+   -  Se muestre toast de éxito
+   -  Los cambios se reflejen en la tabla
+   -  El modal se cierre
 
 ---
 
@@ -199,12 +199,12 @@
 2. Hacer clic en "🗑️ Eliminar" en un jugador
 3. Confirmar la eliminación
 4. Verificar que:
-   - ✅ Se muestre toast de éxito
-   - ✅ El jugador desaparezca de la tabla
+   -  Se muestre toast de éxito
+   -  El jugador desaparezca de la tabla
 
 ---
 
-### 3️⃣ **Gestión de Usuarios (Admin)**
+###  **Gestión de Usuarios (Admin)**
 
 #### A. Listar Usuarios
 
@@ -215,9 +215,9 @@
 1. Loguearse como admin
 2. Ir a `/admin` → pestaña "Usuarios"
 3. Verificar que:
-   - ✅ Se muestren todos los usuarios
-   - ✅ Se muestren roles (admin/user)
-   - ✅ Se muestren estados (activo/inactivo)
+   -  Se muestren todos los usuarios
+   -  Se muestren roles (admin/user)
+   -  Se muestren estados (activo/inactivo)
 
 ---
 
@@ -232,8 +232,8 @@
 3. Modificar rol o datos
 4. Hacer clic en "Actualizar"
 5. Verificar que:
-   - ✅ Se muestre toast de éxito
-   - ✅ Los cambios se reflejen en la tabla
+   -  Se muestre toast de éxito
+   -  Los cambios se reflejen en la tabla
 
 ---
 
@@ -247,16 +247,16 @@
 2. Hacer clic en "🗑️ Eliminar" en un usuario (no el propio)
 3. Confirmar la eliminación
 4. Verificar que:
-   - ✅ Se muestre toast de éxito
-   - ✅ El usuario desaparezca de la tabla
+   -  Se muestre toast de éxito
+   -  El usuario desaparezca de la tabla
 
 **Validación:**
 
-- ❌ No se debe poder eliminar el propio usuario → mensaje de error
+-  No se debe poder eliminar el propio usuario → mensaje de error
 
 ---
 
-### 4️⃣ **Formulario de Contacto**
+###  **Formulario de Contacto**
 
 **Endpoint:** `POST /api/v1/contact`
 
@@ -266,41 +266,41 @@
 2. Completar formulario con datos válidos
 3. Hacer clic en "Enviar"
 4. Verificar que:
-   - ✅ Se muestre toast de éxito
-   - ✅ El formulario se limpie
-   - ✅ El mensaje se registre en el backend (consola)
+   -  Se muestre toast de éxito
+   -  El formulario se limpie
+   -  El mensaje se registre en el backend (consola)
 
 **Casos de error:**
 
-- ❌ Email inválido → toast de error
-- ❌ Campos obligatorios vacíos → toast de error
-- ❌ Backend apagado → toast "Error de conexión"
+-  Email inválido → toast de error
+-  Campos obligatorios vacíos → toast de error
+-  Backend apagado → toast "Error de conexión"
 
 ---
 
-## 🔧 Manejo de Errores Global
+##  Manejo de Errores Global
 
 ### Casos a Validar
 
 1. **Error 401 (No Autorizado)**
-   - ✅ Debe eliminar token y redirigir a `/login`
-   - ✅ Se dispara automáticamente por el interceptor
+   -  Debe eliminar token y redirigir a `/login`
+   -  Se dispara automáticamente por el interceptor
 
 2. **Error 4xx (Cliente)**
-   - ✅ Debe mostrar toast con mensaje del servidor
-   - ✅ Ejemplo: "Email already registered"
+   -  Debe mostrar toast con mensaje del servidor
+   -  Ejemplo: "Email already registered"
 
 3. **Error 5xx (Servidor)**
-   - ✅ Debe mostrar toast genérico
-   - ✅ Ejemplo: "Error del servidor. Intenta más tarde"
+   -  Debe mostrar toast genérico
+   -  Ejemplo: "Error del servidor. Intenta más tarde"
 
 4. **Error de Red**
-   - ✅ Debe mostrar toast de conexión
-   - ✅ Ejemplo: "Error de conexión. Verifica tu internet"
+   -  Debe mostrar toast de conexión
+   -  Ejemplo: "Error de conexión. Verifica tu internet"
 
 ---
 
-## 📝 Checklist de Validación
+##  Checklist de Validación
 
 ### Autenticación
 
@@ -315,11 +315,11 @@
 
 ### Jugadores
 
-- [x] Listar jugadores (vista pública) ✅
-- [x] Crear jugador (admin) ✅ CONFIRMADO
-- [x] Editar jugador (admin) ✅ CONFIRMADO
-- [x] Eliminar jugador (admin) ✅ CONFIRMADO
-- [x] Validaciones de formulario (número duplicado, campos vacíos) ✅
+- [x] Listar jugadores (vista pública) 
+- [x] Crear jugador (admin)  CONFIRMADO
+- [x] Editar jugador (admin)  CONFIRMADO
+- [x] Eliminar jugador (admin)  CONFIRMADO
+- [x] Validaciones de formulario (número duplicado, campos vacíos) 
 
 ### Usuarios
 
@@ -344,7 +344,7 @@
 
 ---
 
-## 🚀 Recomendaciones Post-Validación
+##  Recomendaciones Post-Validación
 
 1. **Agregar tests automatizados** (Jest, React Testing Library)
 2. **Implementar rate limiting en frontend** (evitar spam de requests)
@@ -355,9 +355,9 @@
 
 ---
 
-## 📊 Estado Actual
+##  Estado Actual
 
-**✅ Completado:**
+** Completado:**
 
 - Unificación de cliente API (Axios centralizado) y react-toastify en frontend.
 - Validaciones de jugadores en backend (`middleware/validation.js`).
@@ -365,12 +365,12 @@
 - Panel de administración estabilizado (jugadores + usuarios) con pruebas unitarias asociadas.
 - Limpieza de artefactos (`build/`, `coverage/`, logs) y actualización de README.
 
-**🔄 En Progreso:**
+** En Progreso:**
 
 - Validación manual de flujos de autenticación y panel admin posterior a merge.
 - Documentación de resultados manuales (este documento se actualizará tras dicha verificación).
 
-**⏳ Pendiente:**
+** Pendiente:**
 
 - Ejecutar smoke test (`node backend/scripts/smoke.js`) contra entorno representativo.
 - Preparación del plan de despliegue (infraestructura y CI/CD).

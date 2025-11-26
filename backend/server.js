@@ -16,13 +16,13 @@ if (process.env.NODE_ENV !== 'production') {
 
 // Validar variables de entorno críticas
 if (!process.env.JWT_SECRET) {
-    console.error('❌ ERROR: JWT_SECRET is not defined!');
-    console.error('📝 For Docker deployment:');
+    console.error('ERROR: JWT_SECRET is not defined!');
+    console.error('For Docker deployment:');
     console.error('   1. Copy .env.docker to .env in the root directory');
     console.error('   2. Generate a secure JWT_SECRET: openssl rand -base64 32');
     console.error('   3. Add JWT_SECRET to .env file');
     console.error('   4. Restart services: docker compose up');
-    console.error('\n📚 See DEPLOYMENT.md for complete instructions');
+    console.error('\nSee DEPLOYMENT.md for complete instructions');
     process.exit(1);
 }
 
@@ -39,9 +39,9 @@ if (process.env.NODE_ENV !== 'test') {
 // Conectar a Redis (opcional)
 try {
     connectRedis();
-    console.log('🔄 Intentando conexión a Redis...');
+    console.log('Intentando conexión a Redis...');
 } catch (error) {
-    console.warn('⚠️  Redis no disponible, continuando sin cache:', error.message);
+    console.warn('Redis no disponible, continuando sin cache:', error.message);
 }
 
 // Configurar CORS
@@ -137,9 +137,9 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📚 API Documentation: http://localhost:${PORT}/api/v1/docs`);
-    console.log(`🏥 Health Check: http://localhost:${PORT}/health`);
+    console.log(`Server running on port ${PORT}`);
+    console.log(`API Documentation: http://localhost:${PORT}/api/v1/docs`);
+    console.log(`Health Check: http://localhost:${PORT}/health`);
 });
 
 module.exports = app;

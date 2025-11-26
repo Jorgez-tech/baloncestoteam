@@ -70,32 +70,32 @@ const samplePlayers = [
 
 const seedDatabase = async () => {
     try {
-        console.log('🔗 Conectando a MongoDB...');
+        console.log('Conectando a MongoDB...');
         await mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        console.log('✅ Conectado a MongoDB');
+        console.log('Conectado a MongoDB');
 
         // Limpiar colecciones existentes
-        console.log('🧹 Limpiando colecciones existentes...');
+        console.log('Limpiando colecciones existentes...');
         await User.deleteMany({});
         await Player.deleteMany({});
-        console.log('✅ Colecciones limpiadas');
+        console.log('Colecciones limpiadas');
 
         // Crear usuarios
-        console.log('👥 Creando usuarios...');
+        console.log('Creando usuarios...');
         const createdUsers = [];
 
         for (const userData of sampleUsers) {
             const user = new User(userData);
             await user.save();
             createdUsers.push(user);
-            console.log(`✅ Usuario creado: ${user.email}`);
+            console.log(`Usuario creado: ${user.email}`);
         }
 
         // Crear jugadores (asociar con usuarios)
-        console.log('🏀 Creando jugadores...');
+        console.log('Creando jugadores...');
         for (let i = 0; i < samplePlayers.length; i++) {
             const playerData = {
                 ...samplePlayers[i],
@@ -104,25 +104,25 @@ const seedDatabase = async () => {
 
             const player = new Player(playerData);
             await player.save();
-            console.log(`✅ Jugador creado: ${playerData.name} - ${playerData.position}`);
+            console.log(`Jugador creado: ${playerData.name} - ${playerData.position}`);
         }
 
-        console.log('\n🎉 ¡Base de datos poblada exitosamente!');
-        console.log('\n📊 Resumen:');
-        console.log(`👥 Usuarios creados: ${await User.countDocuments()}`);
-        console.log(`🏀 Jugadores creados: ${await Player.countDocuments()}`);
+        console.log('\nBase de datos poblada exitosamente!');
+        console.log('\nResumen:');
+        console.log(`Usuarios creados: ${await User.countDocuments()}`);
+        console.log(`Jugadores creados: ${await Player.countDocuments()}`);
 
-        console.log('\n🔐 Credenciales de prueba:');
+        console.log('\nCredenciales de prueba:');
         console.log('Admin: admin@basketballteam.com / admin123');
         console.log('Player1: player1@basketballteam.com / player123');
         console.log('Player2: player2@basketballteam.com / player123');
         console.log('Player3: player3@basketballteam.com / player123');
 
         await mongoose.connection.close();
-        console.log('\n✅ Conexión cerrada');
+        console.log('\nConexión cerrada');
         process.exit(0);
     } catch (error) {
-        console.error('❌ Error al poblar la base de datos:', error);
+        console.error('Error al poblar la base de datos:', error);
         await mongoose.connection.close();
         process.exit(1);
     }
@@ -131,20 +131,20 @@ const seedDatabase = async () => {
 // Función para verificar conexión
 const testConnection = async () => {
     try {
-        console.log('🔗 Probando conexión a MongoDB...');
+        console.log('Probando conexión a MongoDB...');
         await mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
 
-        console.log('✅ Conexión exitosa a MongoDB');
-        console.log(`📋 Base de datos: ${mongoose.connection.name}`);
-        console.log(`🌐 Host: ${mongoose.connection.host}`);
-        console.log(`🔌 Puerto: ${mongoose.connection.port}`);
+        console.log('Conexión exitosa a MongoDB');
+        console.log(`Base de datos: ${mongoose.connection.name}`);
+        console.log(`Host: ${mongoose.connection.host}`);
+        console.log(`Puerto: ${mongoose.connection.port}`);
 
         // Verificar colecciones
         const collections = await mongoose.connection.db.listCollections().toArray();
-        console.log('\n📂 Colecciones encontradas:');
+        console.log('\nColecciones encontradas:');
         collections.forEach((col) => {
             console.log(`  - ${col.name}`);
         });
@@ -153,14 +153,14 @@ const testConnection = async () => {
         const userCount = await User.countDocuments();
         const playerCount = await Player.countDocuments();
 
-        console.log('\n📊 Documentos en la base de datos:');
-        console.log(`👥 Usuarios: ${userCount}`);
-        console.log(`🏀 Jugadores: ${playerCount}`);
+        console.log('\nDocumentos en la base de datos:');
+        console.log(`Usuarios: ${userCount}`);
+        console.log(`Jugadores: ${playerCount}`);
 
         await mongoose.connection.close();
-        console.log('\n✅ Prueba de conexión completada');
+        console.log('\nPrueba de conexión completada');
     } catch (error) {
-        console.error('❌ Error de conexión:', error.message);
+        console.error('Error de conexión:', error.message);
         process.exit(1);
     }
 };
@@ -169,14 +169,14 @@ const testConnection = async () => {
 const action = process.argv[2];
 
 if (action === 'seed') {
-    console.log('🌱 Iniciando población de la base de datos...\n');
+    console.log('Iniciando población de la base de datos...\n');
     seedDatabase();
 } else if (action === 'test') {
-    console.log('🧪 Iniciando prueba de conexión...\n');
+    console.log('Iniciando prueba de conexión...\n');
     testConnection();
 } else {
     console.log(`
-🏀 Basketball Team - Utilidad de Base de Datos
+Basketball Team - Utilidad de Base de Datos
 
 Uso: node seed-db.js [comando]
 

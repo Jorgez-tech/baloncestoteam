@@ -1,4 +1,4 @@
-# 🧭 Guía de Desarrollo Estándar – Proyecto Basketball Team 🏀
+#  Guía de Desarrollo Estándar – Proyecto Basketball Team 
 
 > Esta guía sirve como referencia para mantener orden, calidad y consistencia en el desarrollo del proyecto. Está organizada por sprints, buenas prácticas, automatizaciones y criterios de finalización. Se puede marcar el progreso con `[x]` y consultar en cualquier momento.
 
@@ -152,12 +152,12 @@ Asegurar que todas las funcionalidades implementadas cumplen con los requisitos 
 ### Actualización 09/11/2025 - Dockerización Completa
 
 - **Logros principales:**
-  - ✅ Implementación completa de Docker con docker-compose
-  - ✅ Imágenes optimizadas: Backend (Node.js + PM2), Frontend (multi-stage con Nginx)
-  - ✅ Stack completo: MongoDB + Redis + Backend + Frontend
-  - ✅ CI/CD actualizado con validación de builds Docker
-  - ✅ Fix crítico: react-scripts 0.0.0 → 5.0.1
-  - ✅ Configuración de variables de entorno para Docker builds
+  -  Implementación completa de Docker con docker-compose
+  -  Imágenes optimizadas: Backend (Node.js + PM2), Frontend (multi-stage con Nginx)
+  -  Stack completo: MongoDB + Redis + Backend + Frontend
+  -  CI/CD actualizado con validación de builds Docker
+  -  Fix crítico: react-scripts 0.0.0 → 5.0.1
+  -  Configuración de variables de entorno para Docker builds
 
 - **Arquitectura de deployment:**
   - MongoDB con healthcheck y volumen persistente
