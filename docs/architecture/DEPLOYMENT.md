@@ -51,7 +51,15 @@ docker compose up -d --build
 docker compose ps
 ```
 
+You should see 4 services running:
+- `basketball-frontend`
+- `basketball-backend`
+- `basketball-redis`
+- `basketball-mongo` (Isolated Database)
+
 ### 3. Populate Database (First Time Only)
+
+Since the MongoDB container starts empty, you need to seed it:
 
 ```bash
 # Run database seed
@@ -97,8 +105,8 @@ docker compose logs -f frontend
 ### Backup Database
 
 ```bash
-# Backup MongoDB data
-docker compose exec mongo mongodump --db basketball-team --out /dump
+# Backup MongoDB data from the isolated container
+docker compose exec mongo mongodump --db basketball_team --out /dump
 
 # Copy backup to host
 docker cp basketball-mongo:/dump ./mongodb-backup-$(date +%Y%m%d)
@@ -108,7 +116,7 @@ docker cp basketball-mongo:/dump ./mongodb-backup-$(date +%Y%m%d)
 
 - [ ] JWT_SECRET is set to a secure random value
 - [ ] FRONTEND_URL points to your production domain
-- [ ] MongoDB data is persisted in Docker volume
+- [ ] MongoDB data is persisted in Docker volume (`mongo_data`)
 - [ ] Firewall rules are configured (only expose ports 80/443)
 - [ ] SSL/TLS certificates are configured (use reverse proxy like Nginx)
 - [ ] Backup strategy is in place for MongoDB volume
@@ -169,10 +177,10 @@ docker compose exec backend node -e "require('./config/db')()"
 ## 📞 Support
 
 For issues or questions, check:
-- `DESARROLLO-GUIA.md` - Development guide
+- `docs/guides/DEVELOPMENT.md` - Development guide
 - `README.md` - Project overview
 - GitHub Issues
 
 ---
 
-**Last Updated**: November 11, 2025
+**Last Updated**: November 26, 2025
