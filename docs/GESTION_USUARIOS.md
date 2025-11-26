@@ -1,13 +1,13 @@
-# 👥 Funcionalidades de Gestión de Usuarios - AdminDashboard
+# Funcionalidades de Gestión de Usuarios - AdminDashboard
 
-## 📅 Fecha: 5 de Octubre 2025
-## 🌿 Rama: `integracion-backend-frontend`
+## Fecha: 5 de Octubre 2025
+## Rama: `integracion-backend-frontend`
 
 ---
 
-## 🎯 Funcionalidades Básicas Implementadas
+## Funcionalidades Básicas Implementadas
 
-### **1. Listar Usuarios** 📋
+### **1. Listar Usuarios**
 
 **Descripción:** Muestra todos los usuarios registrados en el sistema.
 
@@ -25,7 +25,7 @@
 
 ---
 
-### **2. Editar Usuario** ✏️
+### **2. Editar Usuario**
 
 **Descripción:** Permite modificar los datos de un usuario existente.
 
@@ -51,7 +51,7 @@
 - No se puede cambiar contraseña desde este formulario
 
 **Flujo:**
-1. Clic en "✏️ Editar"
+1. Clic en " Editar"
 2. Modal se abre con datos pre-cargados
 3. Modificar campos deseados
 4. Clic en "Actualizar"
@@ -60,24 +60,24 @@
 
 ---
 
-### **3. Activar/Desactivar Usuario** 🔒✅
+### **3. Activar/Desactivar Usuario**
 
 **Descripción:** Permite cambiar el estado activo/inactivo de un usuario.
 
 **Estados:**
-- **Activo (✅)**: Usuario puede iniciar sesión
-- **Inactivo (🔒)**: Usuario NO puede iniciar sesión
+- **Activo**: Usuario puede iniciar sesión
+- **Inactivo**: Usuario NO puede iniciar sesión
 
 **Endpoint:** `PATCH /api/v1/users/:id/toggle-active`
 
 **Permisos:** Solo administradores
 
 **Restricciones:**
-- ❌ El admin NO puede desactivarse a sí mismo
-- ✅ Se requiere confirmación antes de cambiar estado
+- El admin NO puede desactivarse a sí mismo
+- Se requiere confirmación antes de cambiar estado
 
 **Flujo:**
-1. Clic en "🔒 Desactivar" o "✅ Activar"
+1. Clic en "Desactivar" o "Activar"
 2. Confirmación del diálogo
 3. Estado cambia automáticamente
 4. Toast de confirmación
@@ -90,7 +90,7 @@
 
 ---
 
-### **4. Eliminar Usuario** 🗑️
+### **4. Eliminar Usuario**
 
 **Descripción:** Elimina permanentemente un usuario del sistema.
 
@@ -99,12 +99,12 @@
 **Permisos:** Solo administradores
 
 **Restricciones:**
-- ❌ El admin NO puede eliminarse a sí mismo
-- ✅ Se requiere confirmación antes de eliminar
-- ⚠️ Acción irreversible
+- El admin NO puede eliminarse a sí mismo
+- Se requiere confirmación antes de eliminar
+- Acción irreversible
 
 **Flujo:**
-1. Clic en "🗑️ Eliminar"
+1. Clic en "Eliminar"
 2. Confirmación del diálogo: "¿Estás seguro de eliminar al usuario [email]?"
 3. Usuario desaparece de la tabla
 4. Toast de confirmación
@@ -116,7 +116,7 @@
 
 ---
 
-## 🔐 Seguridad Implementada
+## Seguridad Implementada
 
 ### **Backend**
 
@@ -167,21 +167,21 @@
 
 ---
 
-## 📊 Tabla de Funcionalidades
+## Tabla de Funcionalidades
 
 | Funcionalidad | Endpoint | Método | Requiere Auth | Solo Admin | Confirmación |
 |---------------|----------|--------|---------------|------------|--------------|
-| Listar usuarios | `/api/v1/users` | GET | ✅ | ✅ | ❌ |
-| Ver usuario específico | `/api/v1/users/:id` | GET | ✅ | ✅* | ❌ |
-| Editar usuario | `/api/v1/users/:id` | PUT | ✅ | ✅ | ❌ |
-| Eliminar usuario | `/api/v1/users/:id` | DELETE | ✅ | ✅ | ✅ |
-| Activar/Desactivar | `/api/v1/users/:id/toggle-active` | PATCH | ✅ | ✅ | ✅ |
+| Listar usuarios | `/api/v1/users` | GET | Si | Si | No |
+| Ver usuario específico | `/api/v1/users/:id` | GET | Si | Si* | No |
+| Editar usuario | `/api/v1/users/:id` | PUT | Si | Si | No |
+| Eliminar usuario | `/api/v1/users/:id` | DELETE | Si | Si | Si |
+| Activar/Desactivar | `/api/v1/users/:id/toggle-active` | PATCH | Si | Si | Si |
 
 *\* O el usuario consultando su propio perfil*
 
 ---
 
-## 🎨 Estilos de Botones
+## Estilos de Botones
 
 ### **Editar (Azul)**
 ```css
@@ -221,7 +221,7 @@
 
 ---
 
-## 🧪 Casos de Uso
+## Casos de Uso
 
 ### **Caso 1: Moderador Suspende Usuario**
 ```
@@ -230,7 +230,7 @@ Escenario: Un usuario ha violado las normas del sitio
 Acción:
 1. Admin ve la lista de usuarios
 2. Identifica al usuario infractor
-3. Clic en "🔒 Desactivar"
+3. Clic en "Desactivar"
 4. Confirma la acción
 
 Resultado:
@@ -245,7 +245,7 @@ Escenario: Un usuario de confianza será promovido a administrador
 
 Acción:
 1. Admin ve la lista de usuarios
-2. Clic en "✏️ Editar" en el usuario
+2. Clic en "Editar" en el usuario
 3. Cambia Rol de "user" a "admin"
 4. Clic en "Actualizar"
 
@@ -262,7 +262,7 @@ Escenario: Se detecta una cuenta de spam que debe eliminarse
 Acción:
 1. Admin ve la lista de usuarios
 2. Identifica la cuenta spam
-3. Clic en "🗑️ Eliminar"
+3. Clic en "Eliminar"
 4. Confirma la eliminación
 
 Resultado:
@@ -273,7 +273,7 @@ Resultado:
 
 ---
 
-## 🔍 Validaciones Frontend
+## Validaciones Frontend
 
 ### **Email**
 ```javascript
@@ -295,7 +295,7 @@ if (!usernameRegex.test(username)) {
 
 ---
 
-## 📝 Logs de Auditoría
+## Logs de Auditoría
 
 Todas las acciones de gestión de usuarios se registran en el backend:
 
@@ -318,7 +318,7 @@ Todas las acciones de gestión de usuarios se registran en el backend:
 
 ---
 
-## 🚀 Próximas Mejoras (Opcional)
+## Próximas Mejoras (Opcional)
 
 1. **Búsqueda y Filtros:**
    - Buscar por email/username
@@ -344,9 +344,9 @@ Todas las acciones de gestión de usuarios se registran en el backend:
 
 ---
 
-## 📊 Resumen de Funcionalidades
+## Resumen de Funcionalidades
 
-### ✅ **Implementadas**
+### Implementadas
 - Listar todos los usuarios
 - Editar usuario (email, username, nombre, apellido, rol)
 - Activar/Desactivar usuario
@@ -356,7 +356,7 @@ Todas las acciones de gestión de usuarios se registran en el backend:
 - Confirmaciones de acciones
 - Manejo de errores con toast
 
-### ⏳ **Pendientes**
+### Pendientes
 - Búsqueda y filtros
 - Paginación
 - Cambio de contraseña

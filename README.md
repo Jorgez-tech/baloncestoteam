@@ -6,26 +6,26 @@
 
 Sistema de gestión integral para equipos de baloncesto, construido con el stack MERN (MongoDB, Express, React, Node.js) y totalmente dockerizado.
 
-## 📚 Documentación
+## Documentación
 
 La documentación completa del proyecto se encuentra en la carpeta `docs/`.
 
-### 🏗️ Arquitectura y Despliegue
+### Arquitectura y Despliegue
 *   [Guía de Despliegue (Docker)](docs/architecture/DEPLOYMENT.md)
 *   [Base de Datos](docs/architecture/DATABASE.md)
 *   [Historial de Cambios](docs/HISTORY.md)
 
-### 👩‍💻 Desarrollo
+### Desarrollo
 *   [Guía de Desarrollo](docs/guides/DEVELOPMENT.md)
 *   [Guía de Vistas Frontend](docs/guides/FRONTEND_VIEWS.md)
 *   [Guía de Contribución](docs/guides/CONTRIBUTING.md)
 
-### 📊 Reportes y API
+### Reportes y API
 *   [Rutas de API](docs/api/ROUTES.md)
 *   [Resolución de Problemas](docs/reports/TROUBLESHOOTING.md)
 *   [Informe de Incidentes](docs/reports/INCIDENT_DB_NOV2025.md)
 
-## 🚀 Inicio Rápido
+## Inicio Rápido
 
 ### Prerrequisitos
 *   Docker Desktop instalado
@@ -51,7 +51,7 @@ Visita:
 *   **Backend API**: http://localhost:5000
 *   **API Docs**: http://localhost:5000/api/v1/docs
 
-## 🛠️ Tecnologías
+## Tecnologías
 
 *   **Frontend**: React 17, React Router 6, Context API.
 *   **Backend**: Node.js, Express, JWT Auth.
@@ -59,6 +59,6 @@ Visita:
 *   **Cache**: Redis 7.
 *   **DevOps**: Docker Compose, GitHub Actions.
 
-## 📄 Licencia
+## Licencia
 
 Este proyecto está bajo la licencia MIT.

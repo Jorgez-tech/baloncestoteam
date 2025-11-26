@@ -2,7 +2,7 @@
 
 Este documento recopila problemas comunes y sus soluciones encontrados durante el desarrollo y despliegue.
 
-## 🔍 Problemas de Docker
+## Problemas de Docker
 
 ### Base de datos no conecta
 **Síntoma**: El backend falla al iniciar con "MongoTimeoutError".
@@ -15,7 +15,7 @@ Este documento recopila problemas comunes y sus soluciones encontrados durante e
 **Causa**: No se estaba usando un volumen persistente.
 **Solución**: Se configuró el volumen `mongo_data` en `docker-compose.yml`.
 
-## 🔍 Problemas de Frontend
+## Problemas de Frontend
 
 ### Error "useAuth must be used within an AuthProvider"
 **Causa**: El componente no estaba envuelto en `<AuthProvider>`.
@@ -27,7 +27,7 @@ Este documento recopila problemas comunes y sus soluciones encontrados durante e
 1. Verificar configuración CORS en backend (`server.js`).
 2. Si usas Nginx, verificar headers de proxy.
 
-## 🔍 Problemas de CI/CD
+## Problemas de CI/CD
 
 ### Tests fallan en GitHub Actions
 **Causa**: Falta de base de datos en el entorno de CI.

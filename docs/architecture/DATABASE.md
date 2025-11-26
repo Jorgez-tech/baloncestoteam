@@ -1,10 +1,10 @@
 # Gestión de Base de Datos - Basketball Team
 
-## 📊 Resumen
+## Resumen
 
 La base de datos del proyecto **Basketball Team** utiliza **MongoDB 6.0** ejecutándose en un **contenedor Docker aislado**. Esto garantiza que el entorno de desarrollo sea idéntico para todos los desarrolladores y no interfiera con bases de datos locales.
 
-## 🏗️ Arquitectura Actual
+## Arquitectura Actual
 
 ### Tipo de Base de Datos
 - **Tecnología:** MongoDB 6.0
@@ -34,7 +34,7 @@ La base de datos del proyecto **Basketball Team** utiliza **MongoDB 6.0** ejecut
 └─────────────────────────────────────────┘
 ```
 
-## 🔧 Configuración en Docker Compose
+## Configuración en Docker Compose
 
 ```yaml
 mongo:
@@ -48,7 +48,7 @@ mongo:
     - basketball-network
 ```
 
-## 📝 Conexión
+## Conexión
 
 ### Desde el Backend (Docker)
 El backend se conecta usando el nombre del servicio `mongo`:
@@ -58,7 +58,7 @@ El backend se conecta usando el nombre del servicio `mongo`:
 Puedes conectar herramientas como **MongoDB Compass** o **Studio 3T** usando:
 `mongodb://localhost:27017/basketball_team`
 
-## 🌱 Población de Datos (Seeding)
+## Población de Datos (Seeding)
 
 Para poblar la base de datos con datos de prueba (Admin, Jugadores, etc.):
 
@@ -67,9 +67,9 @@ Para poblar la base de datos con datos de prueba (Admin, Jugadores, etc.):
 docker compose exec backend node seed-db.js seed
 ```
 
-⚠️ **Nota:** Este comando borrará los datos existentes en el contenedor `basketball-mongo` y los recreará. Es seguro ejecutarlo ya que no afecta a tu máquina local.
+**Nota:** Este comando borrará los datos existentes en el contenedor `basketball-mongo` y los recreará. Es seguro ejecutarlo ya que no afecta a tu máquina local.
 
-## 📦 Backups y Restauración
+## Backups y Restauración
 
 ### Crear Backup
 ```bash
@@ -83,6 +83,6 @@ docker cp ./backup_folder basketball-mongo:/dump
 docker compose exec mongo mongorestore --db basketball_team /dump/basketball_team
 ```
 
-## 🔐 Seguridad
+## Seguridad
 
 Actualmente, la base de datos está configurada para desarrollo (sin autenticación estricta dentro de la red Docker). Para producción, se recomienda habilitar autenticación con usuario y contraseña en `docker-compose.yml`.

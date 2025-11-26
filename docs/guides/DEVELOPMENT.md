@@ -2,7 +2,7 @@
 
 Esta guía detalla el flujo de trabajo, estándares y procesos para el desarrollo del proyecto.
 
-## 🚀 Inicio Rápido
+## Inicio Rápido
 
 1.  **Clonar repositorio**
 2.  **Configurar variables de entorno**
@@ -17,11 +17,11 @@ Esta guía detalla el flujo de trabajo, estándares y procesos para el desarroll
     docker compose exec backend node seed-db.js seed
     ```
 
-## 🛠️ Estructura del Proyecto
+## Estructura del Proyecto
 
 Ver `README.md` para la estructura detallada de directorios.
 
-## 🔄 Flujo de Trabajo (Git Flow)
+## Flujo de Trabajo (Git Flow)
 
 1.  **Main Branch**: `main` (Producción)
 2.  **Feature Branches**: `feat/nombre-feature`
@@ -36,7 +36,7 @@ Usamos **Conventional Commits**:
 *   `style: format code with prettier`
 *   `refactor: simplify auth middleware`
 
-## 🧪 Testing
+## Testing
 
 ### Backend
 ```bash
@@ -51,7 +51,7 @@ cd frontend
 npm test
 ```
 
-## 📝 Documentación
+## Documentación
 
 Toda la documentación se encuentra en la carpeta `docs/`:
 *   **Arquitectura**: `docs/architecture/`
@@ -59,7 +59,7 @@ Toda la documentación se encuentra en la carpeta `docs/`:
 *   **Reportes**: `docs/reports/`
 *   **API**: `docs/api/`
 
-## 🐳 Docker
+## Docker
 
 El proyecto está completamente dockerizado.
 *   **Backend**: Node.js 18
@@ -69,7 +69,7 @@ El proyecto está completamente dockerizado.
 
 Para más detalles de despliegue, ver `docs/architecture/DEPLOYMENT.md`.
 
-## 🔍 Validación y Calidad
+## Validación y Calidad
 
 *   **Linting**: `npm run lint`
 *   **Formatting**: `npm run format`

@@ -1,4 +1,4 @@
-# 🚀 Deployment Guide - Basketball Team Application
+# Deployment Guide - Basketball Team Application
 
 ## Prerequisites for Production Deployment
 
@@ -6,7 +6,7 @@
 - Docker Compose V2
 - A secure JWT secret key
 
-## 🔐 Security Configuration (REQUIRED)
+## Security Configuration (REQUIRED)
 
 ### 1. Generate a Secure JWT Secret
 
@@ -28,9 +28,9 @@ Edit `.env` and set:
 - `FRONTEND_URL` - Your production domain (e.g., https://yourdomain.com)
 - Other optional values as needed
 
-⚠️ **IMPORTANT**: Never commit the `.env` file to version control. It's already in `.gitignore`.
+**IMPORTANT**: Never commit the `.env` file to version control. It's already in `.gitignore`.
 
-## 🐳 Deployment Steps
+## Deployment Steps
 
 ### 1. Ensure `.env` is configured
 
@@ -78,7 +78,7 @@ This creates:
 - API Docs: http://localhost:5000/api/v1/docs
 - Health Check: http://localhost:5000/health
 
-## 🔄 Production Updates
+## Production Updates
 
 ### Update Application Code
 
@@ -112,7 +112,7 @@ docker compose exec mongo mongodump --db basketball_team --out /dump
 docker cp basketball-mongo:/dump ./mongodb-backup-$(date +%Y%m%d)
 ```
 
-## 🛡️ Production Checklist
+## Production Checklist
 
 - [ ] JWT_SECRET is set to a secure random value
 - [ ] FRONTEND_URL points to your production domain
@@ -123,7 +123,7 @@ docker cp basketball-mongo:/dump ./mongodb-backup-$(date +%Y%m%d)
 - [ ] Log monitoring is configured
 - [ ] Health checks are passing
 
-## 🌐 Reverse Proxy Configuration (Recommended)
+## Reverse Proxy Configuration (Recommended)
 
 For production, use Nginx or Traefik as reverse proxy:
 
@@ -147,7 +147,7 @@ server {
 }
 ```
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Backend unhealthy
 
@@ -174,7 +174,7 @@ docker compose ps mongo
 docker compose exec backend node -e "require('./config/db')()"
 ```
 
-## 📞 Support
+## Support
 
 For issues or questions, check:
 - `docs/guides/DEVELOPMENT.md` - Development guide

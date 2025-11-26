@@ -1,4 +1,4 @@
-# 🌿 Branch Management - Basketball Team
+# Branch Management - Basketball Team
 
 ## Current Branch Status
 
@@ -8,7 +8,7 @@
 - **chore/limpieza-rutas-estructura** (e18b4284) - Code cleanup and structure improvements
 
 ### Branches to be Deleted
-- **backup/antes-recuperacion** (d5a48464) - ⚠️ **SCHEDULED FOR DELETION**
+- **backup/antes-recuperacion** (d5a48464) - **SCHEDULED FOR DELETION**
 
 ## Branch Deletion Instructions
 

@@ -2,7 +2,7 @@
 
 Este documento registra las pruebas de integración realizadas entre Frontend y Backend.
 
-## ✅ Estado Actual: Integrado
+## Estado Actual: Integrado
 
 ### 1. Autenticación
 - [x] Login exitoso (Token JWT recibido y guardado).
@@ -24,6 +24,6 @@ Este documento registra las pruebas de integración realizadas entre Frontend y 
 - [x] Contenedores se comunican correctamente en la red `basketball-network`.
 - [x] Base de datos aislada y persistente.
 
-## 🧪 Cómo validar manualmente
+## Cómo validar manualmente
 
 Ver `docs/architecture/DEPLOYMENT.md` para pasos de validación post-despliegue.
