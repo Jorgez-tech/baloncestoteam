@@ -21,13 +21,15 @@ npm run build   # Construir para producción
 npm test        # Ejecutar tests
 ```
 
-## Autenticación
+## Autenticacion
 
-La autenticación se maneja mediante JWT Tokens almacenados en localStorage y gestionados por `AuthContext`.
+La autenticacion se maneja mediante JWT Tokens almacenados en localStorage y gestionados por `AuthContext` (`src/context/AuthContext.js`).
 
-## Documentación
+El cliente HTTP (`src/api/client.js`) anexa automaticamente el token JWT en cada peticion y redirige a `/login` ante respuestas 401.
 
-Para detalles de desarrollo y vistas, ver `../docs/guides/FRONTEND_VIEWS.md`.
+## Documentacion
+
+Para detalles de rutas y endpoints, ver [`../docs/ROUTES_AND_SERVICES.md`](../docs/ROUTES_AND_SERVICES.md).
 
 ## Estilos
 

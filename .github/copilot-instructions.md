@@ -18,7 +18,7 @@
 
 ---
 
-## ESTADO ACTUAL DEL PROYECTO (Noviembre 2025)
+## ESTADO ACTUAL DEL PROYECTO (Actualizado Febrero 2026)
 
 ### 🏗️ Arquitectura
 - **Inicio del proyecto**: ~1 año atrás (aproximadamente enero 2025)
@@ -188,10 +188,10 @@ docker cp basketball-mongo:/backup ./backup-$(date +%Y%m%d)
 
 ### 📞 Referencias Importantes
 
-- **Documentación DB**: `docs/DATABASE_MANAGEMENT.md`
-- **Troubleshooting**: `RESOLUCION_PROBLEMAS.md`
-- **Deployment**: `DEPLOYMENT.md`
-- **Guía desarrollo**: `DESARROLLO-GUIA.md`
+- **Documentacion DB y Deployment**: `docs/ARCHITECTURE.md`
+- **Troubleshooting**: `docs/TROUBLESHOOTING.md`
+- **Guia desarrollo**: `docs/DEVELOPMENT.md`
+- **Historia e incidentes**: `docs/HISTORY_AND_LEARNINGS.md`
 
 ---
 

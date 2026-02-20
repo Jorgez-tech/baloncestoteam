@@ -29,7 +29,8 @@ API profesional para la gestión de equipos de baloncesto.
 Para detalles de arquitectura y despliegue, ver la documentación principal en `../docs/`.
 
 - **API Docs**: `http://localhost:5000/api/v1/docs`
-- **Troubleshooting**: Ver `../docs/reports/TROUBLESHOOTING.md`
+- **Rutas completas**: Ver `../docs/ROUTES_AND_SERVICES.md`
+- **Troubleshooting**: Ver `../docs/TROUBLESHOOTING.md`
 
 ## 4. Endpoints principales
 

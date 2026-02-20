@@ -4,61 +4,70 @@
 ![Docker](https://img.shields.io/badge/docker-supported-blue)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
-Sistema de gestión integral para equipos de baloncesto, construido con el stack MERN (MongoDB, Express, React, Node.js) y totalmente dockerizado.
+Sistema de gestion integral para equipos de baloncesto, construido con el stack MERN (MongoDB, Express, React, Node.js) y totalmente dockerizado.
 
-## Documentación
+> **Validacion local (Febrero 2026):** La solucion fue probada satisfactoriamente en entorno local — frontend (http://localhost:3000), backend (http://localhost:5000) y base de datos MongoDB en Docker, todos funcionales con datos reales persistentes.
 
-La documentación completa del proyecto se encuentra en la carpeta `docs/`.
+---
 
-### Arquitectura y Despliegue
-*   [Guía de Despliegue (Docker)](docs/architecture/DEPLOYMENT.md)
-*   [Base de Datos](docs/architecture/DATABASE.md)
-*   [Historial de Cambios](docs/HISTORY.md)
-
-### Desarrollo
-*   [Guía de Desarrollo](docs/guides/DEVELOPMENT.md)
-*   [Guía de Vistas Frontend](docs/guides/FRONTEND_VIEWS.md)
-*   [Guía de Contribución](docs/guides/CONTRIBUTING.md)
-
-### Reportes y API
-*   [Rutas de API](docs/api/ROUTES.md)
-*   [Resolución de Problemas](docs/reports/TROUBLESHOOTING.md)
-*   [Informe de Incidentes](docs/reports/INCIDENT_DB_NOV2025.md)
-
-## Inicio Rápido
+## Inicio Rapido
 
 ### Prerrequisitos
-*   Docker Desktop instalado
+- Docker Desktop instalado y en ejecucion
 
-### Ejecución
+### Ejecucion
+
 ```bash
 # 1. Clonar repositorio
 git clone <repo-url>
 
 # 2. Configurar variables de entorno
 cp backend/.env.example backend/.env
-# (Ajustar JWT_SECRET en .env)
+# Editar backend/.env y establecer un JWT_SECRET seguro
 
-# 3. Iniciar servicios
-docker compose up --build
+# 3. Iniciar todos los servicios
+docker compose up -d --build
 
-# 4. Poblar base de datos (Primera vez)
-docker compose exec backend node seed-db.js seed
+# 4. Verificar que los 4 contenedores esten activos
+docker compose ps
 ```
 
-Visita:
-*   **Frontend**: http://localhost:3000
-*   **Backend API**: http://localhost:5000
-*   **API Docs**: http://localhost:5000/api/v1/docs
+> **ADVERTENCIA:** Si el proyecto ya tiene datos reales en la base de datos, NO ejecutar `seed-db.js`. Ese script elimina todos los datos existentes antes de insertar los de prueba.
 
-## Tecnologías
+### URLs de acceso
 
-*   **Frontend**: React 17, React Router 6, Context API.
-*   **Backend**: Node.js, Express, JWT Auth.
-*   **Database**: MongoDB 6.0 (Dockerizado).
-*   **Cache**: Redis 7.
-*   **DevOps**: Docker Compose, GitHub Actions.
+| Servicio | URL |
+|---|---|
+| Frontend | http://localhost:3000 |
+| Backend API | http://localhost:5000/api/v1 |
+| API Docs | http://localhost:5000/api/v1/docs |
+| Health Check | http://localhost:5000/health |
+
+---
+
+## Tecnologias
+
+- **Frontend**: React 17, React Router 6, Context API
+- **Backend**: Node.js 18, Express, JWT Auth
+- **Base de datos**: MongoDB 6.0 (Dockerizado)
+- **Cache**: Redis 7
+- **DevOps**: Docker Compose, GitHub Actions
+
+---
+
+## Documentacion
+
+| Archivo | Contenido |
+|---|---|
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Infraestructura, Docker, base de datos, despliegue, checklist de produccion |
+| [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Flujo de trabajo, Git flow, Conventional Commits, testing |
+| [docs/ROUTES_AND_SERVICES.md](docs/ROUTES_AND_SERVICES.md) | Rutas del frontend + todos los endpoints del backend |
+| [docs/ADMIN_DASHBOARD.md](docs/ADMIN_DASHBOARD.md) | Panel de administracion: funcionalidades, seguridad, tests |
+| [docs/HISTORY_AND_LEARNINGS.md](docs/HISTORY_AND_LEARNINGS.md) | Historia del proyecto, incidentes resueltos y lecciones aprendidas |
+| [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Problemas comunes y sus soluciones |
+
+---
 
 ## Licencia
 
-Este proyecto está bajo la licencia MIT.
+Este proyecto esta bajo la licencia MIT.
