@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "./Header";
+
 
 export default function Home() {
   // This component is a JSX conversion of the original home HTML page.
@@ -9,7 +11,13 @@ export default function Home() {
   const handleSubmitNoop = (e) => {
     e.preventDefault();
   };
-
+  const [currentSlide, setCurrentSlide] = useState(0);
+  useEffect(() => {
+    const intervelid = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % 3);
+    }, 4000);
+    return () => clearInterval(intervelid);
+  }, []);
   return (
     <>
       <div className="hero_area">
@@ -40,25 +48,25 @@ export default function Home() {
                 </div>
               </div>
               <div className="col-md-7 px-0 h-100">
-                <div className="img_container h-100">
+                <div className="img_container">
                   <div id="carouselExampleIndicators" className="carousel slide carousel-fade" data-ride="carousel">
                     <ol className="carousel-indicators indicator-1">
-                      <li data-target="#carouselExampleIndicators" data-slide-to="0" className="active indicator-li-1" />
-                      <li data-target="#carouselExampleIndicators" data-slide-to="1" />
-                      <li data-target="#carouselExampleIndicators" data-slide-to="2" />
+                      <li data-target="#carouselExampleIndicators" data-slide-to="0" className={currentSlide === 0 ? "active indicator-li-1" : ""} />
+                      <li data-target="#carouselExampleIndicators" data-slide-to="1" className={currentSlide === 1 ? "active" : ""} />
+                      <li data-target="#carouselExampleIndicators" data-slide-to="2" className={currentSlide === 2 ? "active" : ""} />
                     </ol>
                     <div className="carousel-inner">
-                      <div className="carousel-item active">
+                      <div className={`carousel-item ${currentSlide === 0 ? "active" : ""}`}>
                         <div className="img-box">
-                          <img src="/images/slider-img2.jpg" alt="imagen principal." />
+                          <img src="/images/slider-img1.jpg" alt="imagen principal." />
                         </div>
                       </div>
-                      <div className="carousel-item">
+                      <div className={`carousel-item ${currentSlide === 1 ? "active" : ""}`}>
                         <div className="img-box">
                           <img src="/images/slider-img2.jpg" alt="slide 2" />
                         </div>
                       </div>
-                      <div className="carousel-item">
+                      <div className={`carousel-item ${currentSlide === 2 ? "active" : ""}`}>
                         <div className="img-box">
                           <img src="/images/slider-img3.jpg" alt="slide 3" />
                         </div>

@@ -32,7 +32,7 @@ export default function Nosotros() {
             </div>
             <div className="col-lg-7 col-md-5">
               <div className="img-box">
-                <img src="/images/about-img.jpg" alt="about" />
+                <img src="/images/baloncestoteam.png" alt="about" />
               </div>
             </div>
           </div>
