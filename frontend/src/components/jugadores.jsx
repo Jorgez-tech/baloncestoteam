@@ -25,7 +25,7 @@ export default function Jugadores() {
           <div className="container">
             <div className="row">
               {jugadores.map((jugador, idx) => (
-                <div className="col-sm-6 col-lg-4" key={idx}>
+                <div className="col-12 col-sm-6 col-lg-4" key={idx}>
                   <div className="box">
                     <div className="img-box" style={{ width: '100%', height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                       <img
@@ -62,7 +62,7 @@ export default function Jugadores() {
       <section className="info_section layout_padding2">
         <div className="container">
           <div className="row">
-            <div className="col-md-4">
+            <div className="col-12 col-md-4">
               <div className="logo_detail">
                 <div className="logo-box">
                   <a className="navbar-brand" href="/">
@@ -74,7 +74,7 @@ export default function Jugadores() {
                 </p>
               </div>
             </div>
-            <div className="col-md-4 col-lg-3 mx-auto">
+            <div className="col-12 col-md-4 col-lg-3 mx-auto">
               <div className="address_box">
                 <h5>Dirección</h5>
                 <a href="#"><i className="fa fa-map-marker" aria-hidden="true" />Calle 123, Ciudad Deportiva</a>
@@ -82,7 +82,7 @@ export default function Jugadores() {
                 <a href="#"><i className="fa fa-envelope" aria-hidden="true" />contacto@baloncestoteam.com</a>
               </div>
             </div>
-            <div className="col-md-3">
+            <div className="col-12 col-md-3">
               <div className="info_form">
                 <h5>Suscríbete</h5>
                 <form onSubmit={handleSubmitNoop}>

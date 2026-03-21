@@ -19,7 +19,7 @@ export default function Nosotros() {
       <section className="about_section">
         <div className="container-fluid">
           <div className="row">
-            <div className="col-lg-4 col-md-5 offset-md-1">
+            <div className="col-12 col-lg-4 col-md-5 offset-md-1">
               <div className="detail-box">
                 <h2>Nosotros</h2>
                 <p>
@@ -30,9 +30,9 @@ export default function Nosotros() {
                 </div>
               </div>
             </div>
-            <div className="col-lg-7 col-md-5">
+            <div className="col-12 col-lg-7 col-md-5">
               <div className="img-box">
-                <img src="/images/baloncestoteam.png" alt="about" />
+                <img src="/images/baloncestoteam1.jpg" alt="about" />
               </div>
             </div>
           </div>
@@ -43,7 +43,7 @@ export default function Nosotros() {
       <section className="info_section layout_padding2" style={{ padding: '30px 0', margin: '0' }}>
         <div className="container">
           <div className="row">
-            <div className="col-md-4">
+            <div className="col-12 col-md-4">
               <div className="logo_detail">
                 <div className="logo-box">
                   <a className="navbar-brand" href="/">
@@ -55,7 +55,7 @@ export default function Nosotros() {
                 </p>
               </div>
             </div>
-            <div className="col-md-4 col-lg-3 mx-auto">
+            <div className="col-12 col-md-4 col-lg-3 mx-auto">
               <div className="address_box">
                 <h5>Dirección</h5>
                 <a href="#"><i className="fa fa-map-marker" aria-hidden="true" />Calle 123, Ciudad Deportiva</a>
@@ -63,7 +63,7 @@ export default function Nosotros() {
                 <a href="#"><i className="fa fa-envelope" aria-hidden="true" />contacto@baloncestoteam.com</a>
               </div>
             </div>
-            <div className="col-md-3">
+            <div className="col-12 col-md-3">
               <div className="info_form">
                 <h5>Suscríbete</h5>
                 <form onSubmit={handleSubmitNoop}>

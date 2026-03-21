@@ -34,7 +34,7 @@ export default function Home() {
           </ol>
           <div className="container-fluid h-100">
             <div className="row">
-              <div className="col-md-5 col-xl-4 offset-xl-1">
+              <div className="col-12 col-md-5 col-xl-4 offset-xl-1">
                 <div className="detail-box">
                   <h1>
                     Baloncesto Team <br />
@@ -47,7 +47,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <div className="col-md-7 px-0 h-100">
+              <div className="col-12 col-md-7 px-0 h-100">
                 <div className="img_container">
                   <div id="carouselExampleIndicators" className="carousel slide carousel-fade" data-ride="carousel">
                     <ol className="carousel-indicators indicator-1">

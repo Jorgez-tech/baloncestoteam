@@ -102,7 +102,7 @@ export default function Login() {
                 <div className="contact_container">
                     <div className="container">
                         <div className="row">
-                            <div className="col-md-6 mx-auto">
+                            <div className="col-12 col-md-6 mx-auto">
                                 <div className="contact_form layout_padding">
                                     <div className="heading_container heading_center">
                                         <h2>Iniciar Sesión</h2>
@@ -172,7 +172,7 @@ export default function Login() {
             <section className="info_section layout_padding2">
                 <div className="container">
                     <div className="row">
-                        <div className="col-md-4">
+                        <div className="col-12 col-md-4">
                             <div className="logo_detail">
                                 <div className="logo-box">
                                     <a className="navbar-brand" href="/">
@@ -184,7 +184,7 @@ export default function Login() {
                                 </p>
                             </div>
                         </div>
-                        <div className="col-md-4 col-lg-3 mx-auto">
+                        <div className="col-12 col-md-4 col-lg-3 mx-auto">
                             <div className="address_box">
                                 <h5>Dirección</h5>
                                 <a href="#"><i className="fa fa-map-marker" aria-hidden="true" />Calle 123, Ciudad Deportiva</a>
@@ -192,7 +192,7 @@ export default function Login() {
                                 <a href="#"><i className="fa fa-envelope" aria-hidden="true" />contacto@baloncestoteam.com</a>
                             </div>
                         </div>
-                        <div className="col-md-3">
+                        <div className="col-12 col-md-3">
                             <div className="info_form">
                                 <h5>Suscríbete</h5>
                                 <form onSubmit={(e) => e.preventDefault()}>
