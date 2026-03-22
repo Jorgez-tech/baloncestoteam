@@ -21,8 +21,8 @@
     font-size: 2.2rem;
   }
 
-  .slider_section .carousel-indicators.indicator-2 {
-    left: 45%;
+  .custom_nav-container.navbar-expand-lg .navbar-nav .nav-item .nav-link {
+    padding: 10px 16px;
   }
 }
 
@@ -49,9 +49,16 @@
     display: none;
   }
 
+  .slider_section .img_container {
+    height: 420px;
+  }
+
   .slider_section .carousel-indicators.indicator-2 {
-    top: 345px;
-    left: 47%;
+    top: auto;
+    bottom: 20px;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
   }
 
 
@@ -73,23 +80,88 @@
 }
 
 @media (max-width: 576px) {
-  .slider_section .carousel-indicators.indicator-2 {
-    top: 365px;
+  .header_section .container-fluid {
+    padding-right: 12px;
+    padding-left: 12px;
   }
-}
 
-@media (max-width: 480px) {}
+  .navbar-brand span {
+    font-size: 17px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-@media (max-width: 420px) {}
+  .custom_nav-container .navbar-toggler .navbar-toggler-icon {
+    background-size: 34px;
+  }
 
-@media (max-width: 375px) {
   .slider_section .detail-box h1 {
     font-size: 2rem;
   }
 
+  .slider_section .img_container {
+    height: 320px;
+  }
+
+  .contact_section .contact_form .top_input {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+
+  .contact_section .contact_form .top_input button {
+    width: 100%;
+  }
+
+  .contact_section .contact_form .btn-box button,
+  .info_section .info_form button {
+    width: 100%;
+    max-width: 320px;
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .slider_section .img_container {
+    height: 290px;
+  }
+}
+
+@media (max-width: 420px) {
+  .slider_section .img_container {
+    height: 270px;
+  }
+}
+
+@media (max-width: 375px) {
+  .header_section .container-fluid {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .navbar-brand span {
+    font-size: 15px;
+    max-width: 180px;
+  }
+
+  .slider_section .img_container {
+    height: 250px;
+  }
+
   .slider_section .carousel-indicators.indicator-2 {
-    top: 395px;
-    left: 45%;
+    bottom: 12px;
+    width: 42px;
+    height: 42px;
+  }
+}
+
+@media (max-width: 414px) {
+  .contact_section .contact_form {
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 

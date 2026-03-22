@@ -216,7 +216,7 @@ export default function Home() {
       */}
 
       <footer className="footer_section">
-        <div className="container">
+        <div className="container-fluid">
           <p>© 2025 BaloncestoTeam - All Rights Reserved</p>
         </div>
       </footer>

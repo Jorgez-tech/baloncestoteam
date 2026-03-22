@@ -196,6 +196,9 @@ a:focus {
 
 .custom_nav-container .navbar-toggler {
   outline: none;
+  margin-left: 10px;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
 }
 
 .custom_nav-container .navbar-toggler .navbar-toggler-icon {
@@ -353,10 +356,10 @@ a:focus {
   width: 50px;
   height: 50px;
   top: 50%;
-  left: 46%;
+  left: 50%;
   margin: 0;
-  -webkit-transform: translateY(-50%);
-          transform: translateY(-50%);
+  -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
   background-color: #d33d33;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
@@ -613,13 +616,24 @@ a:focus {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  gap: 10px;
 }
 
 .contact_section .contact_form .top_input input {
-  width: 48%;
+  width: 100%;
+}
+
+.contact_section .contact_form .top_input > * {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 0px;
+          flex: 1 1 0;
+  min-width: 0;
+}
+
+.contact_section .contact_form .top_input button {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
 }
 
 .contact_section .contact_form input {
@@ -788,7 +802,11 @@ a:focus {
 }
 
 .info_section .address_box a {
+  display: block;
   margin-bottom: 15px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .info_section .info_form input {
@@ -866,4 +884,13 @@ a:focus {
   height: 100%;
   object-fit: cover;
   object-position: center;
+}
+
+.navbar-brand {
+  min-width: 0;
+}
+
+.navbar-brand span {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
