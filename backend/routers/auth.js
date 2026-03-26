@@ -48,7 +48,7 @@ router.post('/login', async (req, res) => {
             expiresIn: process.env.JWT_EXPIRE || '1h',
         });
 
-        // Usar el m�todo toJSON para devolver el usuario sin contrase�a
+        // Usar el metodo toJSON para devolver el usuario sin contraseña
         res.json({
             user: user.toJSON(),
             token,
@@ -71,7 +71,7 @@ router.get('/profile', authMiddleware, async (req, res) => {
 
 // POST /auth/logout - Idempotente
 router.post('/logout', authMiddleware, async (req, res) => {
-    // Si usas blacklist de tokens, aqu� podr�as invalidar el token
+    // Si usas blacklist de tokens, aquí podrías invalidar el token
     // Por ahora, solo responde OK
     res.json({ msg: 'Logout successful' });
 });
