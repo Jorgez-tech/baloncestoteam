@@ -22,8 +22,8 @@ Sistema de gestion integral para equipos de baloncesto, construido con el stack 
 git clone <repo-url>
 
 # 2. Configurar variables de entorno
-cp backend/.env.example backend/.env
-# Editar backend/.env y establecer un JWT_SECRET seguro
+cp .env.docker .env
+# Editar .env y establecer un JWT_SECRET seguro
 
 # 3. Iniciar todos los servicios
 docker compose up -d --build

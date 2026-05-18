@@ -25,11 +25,13 @@ RUN npm run build
 # Stage 2: Serve the application with Nginx
 FROM nginx:stable-alpine
 
+ENV NGINX_API_ORIGIN=http://localhost:5000
+
 # Copy the build output from the builder stage
 COPY --from=builder /usr/src/app/build /usr/share/nginx/html
 
-# Add a custom Nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Add a custom Nginx configuration template
+COPY nginx.conf /etc/nginx/templates/default.conf.template
 
 # Expose port 80
 EXPOSE 80

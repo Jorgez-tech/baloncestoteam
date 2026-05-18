@@ -37,11 +37,13 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 // Conectar a Redis (opcional)
-try {
-    connectRedis();
-    console.log('Intentando conexión a Redis...');
-} catch (error) {
-    console.warn('Redis no disponible, continuando sin cache:', error.message);
+if (process.env.NODE_ENV !== 'test') {
+    try {
+        connectRedis();
+        console.log('Intentando conexión a Redis...');
+    } catch (error) {
+        console.warn('Redis no disponible, continuando sin cache:', error.message);
+    }
 }
 
 // Configurar CORS
@@ -135,11 +137,13 @@ app.use((err, req, res, next) => {
     });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    console.log(`API Documentation: http://localhost:${PORT}/api/v1/docs`);
-    console.log(`Health Check: http://localhost:${PORT}/health`);
-});
+if (require.main === module) {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+        console.log(`API Documentation: http://localhost:${PORT}/api/v1/docs`);
+        console.log(`Health Check: http://localhost:${PORT}/health`);
+    });
+}
 
 module.exports = app;

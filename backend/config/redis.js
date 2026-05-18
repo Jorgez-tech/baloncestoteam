@@ -51,5 +51,7 @@ const getRedisClient = () => {
 module.exports = {
     connectRedis,
     getRedisClient,
-    redisClient: getRedisClient(),
+    get redisClient() {
+        return redisClient;
+    },
 };

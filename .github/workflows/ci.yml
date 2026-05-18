@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, chore/limpieza-rutas-estructura, backup/antes-recuperacion, feat-dockerize-app]
+    branches: [main, deploy, chore/limpieza-rutas-estructura, backup/antes-recuperacion, feat-dockerize-app]
   pull_request:
-    branches: [main]
+    branches: [main, deploy]
 
 jobs:
   backend:
@@ -97,8 +97,8 @@ jobs:
       
       - name: Create dummy .env for docker-compose validation
         run: |
-          cp backend/.env.example backend/.env
-          echo "JWT_SECRET=test_secret_for_ci" >> backend/.env
+          cp .env.docker .env
+          sed -i 's/^JWT_SECRET=.*/JWT_SECRET=test_secret_for_ci/' .env
       
       - name: Build backend Docker image
         run: docker build -t basketball-backend ./backend
