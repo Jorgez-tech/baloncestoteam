@@ -22,7 +22,7 @@
 | Refresh token rotation | Pendiente |
 | Cookies HttpOnly | Pendiente |
 | OTP | Pendiente |
-| Recuperacion de contrasena segura | Pendiente |
+| Recuperacion de contrasena con codigo de verificacion | Disenado (ver seccion 2b) |
 | ABAC | Pendiente |
 | IP blacklist | Pendiente |
 | Idempotency keys | Pendiente |
@@ -74,6 +74,98 @@ El sistema usa JWT con expiracion de 1 hora. El token se envia en el header `Aut
 | Access Token de vida corta | Limita la ventana de exposicion si es comprometido |
 | Refresh Token rotation | Un token robado solo puede usarse una vez |
 | Refresh Token en DB hasheado | Permite invalidacion real y auditoria |
+
+---
+
+## 2b. Recuperacion de Contrasena con Codigo de Verificacion
+
+### Flujo completo
+
+```
+1. POST /auth/forgot-password  { email }
+   - Verificar que el email existe en el sistema
+   - Si no existe: responder identico al caso exitoso (evitar enumeracion de usuarios)
+   - Si existe:
+     - Generar codigo de verificacion numerico de 6 digitos (criptograficamente aleatorio)
+     - Hashear el codigo con bcrypt antes de persistirlo
+     - Guardar en coleccion password_reset_tokens:
+         { userId, codeHash, expiresAt (15 min), usedAt: null, createdAt }
+     - Invalidar tokens de reset anteriores del mismo usuario
+     - Enviar email al usuario con el codigo en texto plano
+     - Registrar en AuthAuditLog: { action: 'PASSWORD_RESET_REQUESTED', userId, ip }
+
+2. POST /auth/verify-reset-code  { email, code }
+   - Buscar token activo para el email (no expirado, no usado)
+   - Verificar el codigo contra el hash almacenado (bcrypt.compare)
+   - Si falla:
+     - Incrementar contador de intentos fallidos
+     - Bloquear despues de 5 intentos fallidos (mismo token se invalida)
+   - Si pasa:
+     - Marcar el token como verificado (no borrar aun)
+     - Emitir un reset_session_token de un solo uso (UUID v4, vida: 10 min)
+     - Registrar en AuthAuditLog: { action: 'PASSWORD_RESET_CODE_VERIFIED', userId, ip }
+
+3. POST /auth/reset-password  { resetSessionToken, newPassword }
+   - Verificar que el resetSessionToken existe y no ha expirado
+   - Verificar que no fue ya utilizado
+   - Validar la nueva contrasena contra las reglas de seguridad:
+     - Minimo 8 caracteres
+     - Al menos una mayuscula, una minuscula, un numero
+     - No puede ser igual a la contrasena actual
+   - Hashear la nueva contrasena con bcrypt (cost factor >= 12)
+   - Actualizar contrasena del usuario
+   - Marcar el resetSessionToken como usado (no borrar: permite auditoria)
+   - Invalidar todos los Refresh Tokens activos del usuario (forzar re-login)
+   - Invalidar Access Tokens activos en blacklist
+   - Registrar en AuthAuditLog: { action: 'PASSWORD_RESET_COMPLETED', userId, ip }
+   - Enviar email de confirmacion de cambio de contrasena
+```
+
+### Estructura de la coleccion `password_reset_tokens`
+
+```js
+{
+  userId:              ObjectId,   // referencia al usuario
+  codeHash:            String,     // bcrypt hash del codigo de 6 digitos
+  resetSessionToken:   String,     // UUID v4 emitido tras verificacion exitosa (null hasta paso 2)
+  failedAttempts:      Number,     // contador de intentos fallidos en paso 2
+  expiresAt:           Date,       // expiracion del codigo (15 min desde emision)
+  sessionExpiresAt:    Date,       // expiracion del resetSessionToken (10 min desde verificacion)
+  usedAt:              Date,       // fecha de uso (null si no fue utilizado)
+  createdAt:           Date,
+  ip:                  String,     // IP desde la que se solicito el reset
+}
+```
+
+### Invariantes de seguridad del flujo
+
+| Invariante | Razon |
+|---|---|
+| Respuesta identica para email existente y no existente | Previene enumeracion de usuarios |
+| Codigo generado con `crypto.randomInt(100000, 999999)` | Garantiza aleatoriedad criptografica |
+| Codigo hasheado antes de persistir | Si la DB es comprometida, los codigos no son utiles |
+| Maximo 5 intentos de verificacion | Previene fuerza bruta sobre el codigo de 6 digitos |
+| resetSessionToken de un solo uso | Previene reuso si es interceptado |
+| Invalida todos los tokens de sesion al completar el reset | Expulsa sesiones comprometidas |
+| No borrar tokens usados | Permite auditoria forense |
+
+### Ejemplo de email (contenido en español)
+
+```
+Asunto: Codigo de verificacion para restablecer tu contrasena
+
+Hola [nombre],
+
+Recibimos una solicitud para restablecer la contrasena de tu cuenta.
+
+Tu codigo de verificacion es: 847 293
+
+Este codigo expira en 15 minutos.
+
+Si no solicitaste este cambio, ignora este mensaje. Tu contrasena no sera modificada.
+
+Equipo [Club]
+```
 
 ---
 

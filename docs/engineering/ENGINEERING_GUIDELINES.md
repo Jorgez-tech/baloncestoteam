@@ -19,6 +19,79 @@ Estos principios gobiernan todas las decisiones de implementacion:
 
 ---
 
+## 1b. Reglas de Codigo Obligatorias
+
+Estas reglas se aplican a **todo archivo de codigo del proyecto** sin excepciones.
+
+### Idioma del codigo
+
+- **Todo el codigo debe escribirse en ingles**: nombres de variables, funciones, clases, metodos, comentarios de codigo, constantes, enums, mensajes de error internos, nombres de archivos.
+- Los mensajes destinados al usuario final (respuestas de API, emails, notificaciones) se escriben en **español**.
+
+```js
+// CORRECTO
+const MAX_LOGIN_ATTEMPTS = 5;
+function validatePlayerAge(age) { ... }
+throw new DomainError('PLAYER_NOT_FOUND');   // codigo interno en ingles
+
+// INCORRECTO
+const MAX_INTENTOS_LOGIN = 5;
+function validarEdadJugador(edad) { ... }
+```
+
+### Prohibicion de bypass
+
+No se permite ningun mecanismo que evite las validaciones, autorizaciones o invariantes del sistema:
+
+```js
+// PROHIBIDO
+if (process.env.NODE_ENV === 'test') return true;  // bypass de autorizacion
+if (user.role === 'admin') skipValidation();        // bypass de invariante
+```
+
+Los tests no deben modificar el comportamiento de produccion. Usar mocks de puertos en su lugar.
+
+### Prohibicion de hardcoding
+
+Ningun valor de configuracion, credencial, URL, secreto o parametro de negocio variable puede estar escrito directamente en el codigo:
+
+```js
+// PROHIBIDO
+const token = jwt.sign(payload, 'my-secret-key');          // secreto hardcodeado
+const dbUrl = 'mongodb://localhost:27017/basketball_team';  // URL hardcodeada
+const maxPlayers = 15;                                      // parametro de negocio hardcodeado
+
+// CORRECTO
+const token = jwt.sign(payload, process.env.JWT_SECRET);
+const dbUrl = process.env.MONGO_URI;
+const maxPlayers = config.sports.maxPlayersPerTeam;
+```
+
+Toda variable de entorno debe estar documentada en `.env.example` con un valor ficticio y un comentario descriptivo.
+
+### Prohibicion de `any` implicito
+
+En codigo JavaScript, no usar patrones que anulen el contrato de tipos implicito del sistema:
+
+- No pasar `req.body` directamente a una funcion de dominio o repositorio sin validacion y mapeo previo a DTO
+- No usar `Object.assign(entity, req.body)` ni `{ ...req.body }` sin whitelisting explicito de campos
+- Los DTOs deben declarar explicitamente cada campo aceptado
+
+```js
+// PROHIBIDO: spread de req.body sin filtrar
+await createPlayerUseCase.execute({ ...req.body });
+
+// CORRECTO: DTO con campos explicitamente declarados
+const dto = {
+  name: req.body.name,
+  position: req.body.position,
+  jerseyNumber: req.body.jerseyNumber,
+};
+await createPlayerUseCase.execute(dto);
+```
+
+---
+
 ## 2. Estructura de Modulos
 
 Cada modulo del sistema sigue la misma estructura interna:
@@ -268,13 +341,21 @@ Cualquier `require('mongoose')`, `require('jsonwebtoken')`, `require('nodemailer
 
 ### Audit log como `console.log`
 
-```
+```js
 // PROHIBIDO en produccion
 console.log(`[AUDIT] User deleted: ${userId}`);
 
 // CORRECTO: evento de auditoria persistido
 await auditService.log({ action: 'USER_DELETED', actorId, targetId: userId });
 ```
+
+### Hardcoding de configuracion o secretos
+
+Ver seccion 1b. Todo valor que pueda cambiar entre ambientes o que sea sensible debe venir de variables de entorno o configuracion externa. Nunca escrito directamente en el codigo.
+
+### Bypass de validaciones con flags de ambiente
+
+Ver seccion 1b. `if (process.env.NODE_ENV === 'test') { skipAuth(); }` es un anti-patron critico que introduce codigo de produccion con comportamiento diferente en tests.
 
 ### Dependencias circulares entre modulos
 

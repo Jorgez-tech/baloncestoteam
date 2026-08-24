@@ -75,7 +75,7 @@ Convertir el monolito actual en un **monolito modular**: misma base de codigo, p
 - Implementar refresh token rotation
 - Migrar de `localStorage` a cookies HttpOnly en el frontend
 - Agregar endpoint `POST /auth/refresh`
-- Agregar endpoint `POST /auth/forgot-password` (basico)
+- Agregar endpoint `POST /auth/forgot-password` + `POST /auth/verify-reset-code` + `POST /auth/reset-password` (flujo completo con codigo de verificacion de 6 digitos — ver `SECURITY_STRATEGY.md` seccion 2b)
 
 **1.8 Tests de regresion**
 
