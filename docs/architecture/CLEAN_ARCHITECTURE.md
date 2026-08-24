@@ -266,18 +266,18 @@ La logica ABAC requiere datos del dominio para evaluarse. Por eso no puede resol
 Cada modulo del sistema (Auth, Sports, Members, etc.) replica internamente esta estructura de capas:
 
 ```
-modulo/
-  dominio/
-    entidades/
-    valueObjects/
-    interfaces/       <- contratos de repositorios y servicios
-  aplicacion/
-    casos-de-uso/
+module/
+  domain/
+    entities/
+    value-objects/
+    interfaces/       <- repository and service contracts
+  application/
+    use-cases/
     dtos/
-  infraestructura/
-    repositorios/     <- implementaciones Mongoose
-    servicios/        <- JWT, email, pagos
-  presentacion/
+  infrastructure/
+    repositories/     <- Mongoose implementations
+    services/         <- JWT, email, payments
+  presentation/
     routers/
     controllers/
     middleware/

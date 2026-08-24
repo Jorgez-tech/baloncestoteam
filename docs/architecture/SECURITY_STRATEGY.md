@@ -128,9 +128,11 @@ RBAC dice "los entrenadores pueden leer jugadores". ABAC dice "este entrenador p
 
 ### Inyeccion
 
-- Mongoose sanitiza automaticamente consultas de MongoDB
+- **Mongoose NO sanitiza automaticamente consultas**: un objeto `{ $gt: "" }` pasado directamente como filtro es un vector de NoSQL injection valido
+- Whitelistear siempre los campos permitidos en filtros antes de pasarlos a Mongoose (e.g. `{ email: req.body.email }` en lugar de `{ ...req.body }`)
+- Usar `express-mongo-sanitize` para eliminar claves que empiezan por `$` o contienen `.` en el cuerpo, params y query de cada request
 - No usar `eval()` ni construccion dinamica de queries sin sanitizacion
-- Validar y sanitizar toda entrada en la capa de presentacion
+- Validar y sanitizar toda entrada en la capa de presentacion con una libreria de esquemas (Joi / Zod)
 
 ### XSS
 

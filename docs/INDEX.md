@@ -16,6 +16,7 @@ Ubicacion: `docs/architecture/`
 | [CLEAN_ARCHITECTURE.md](architecture/CLEAN_ARCHITECTURE.md) | Capas del sistema (Dominio, Aplicacion, Infraestructura, Presentacion), direccion de dependencias, ports and adapters | Todos los desarrolladores |
 | [MODULES.md](architecture/MODULES.md) | Definicion de cada modulo, responsabilidades, limites y mapa de dependencias | Todos los desarrolladores |
 | [SECURITY_STRATEGY.md](architecture/SECURITY_STRATEGY.md) | Estrategia de autenticacion, autorizacion (RBAC/ABAC), auditoria y seguridad en capas | Security, Backend |
+| [BRANCHING_STRATEGY.md](architecture/BRANCHING_STRATEGY.md) | Modelo de ramas (GitFlow adaptado), flujos de trabajo por tipo de cambio, convenciones de commits, relacion con fases | Todos los desarrolladores |
 
 ## Documentacion de Ingenieria
 
