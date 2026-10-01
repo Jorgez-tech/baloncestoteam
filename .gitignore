@@ -85,10 +85,5 @@ Thumbs.db
 .cache
 .parcel-cache
 
-# Python virtual envs
-venv/
-.venv/
-
-# Optional: Package lock files (uncomment if you don't want to commit them)
-# package-lock.json
-# yarn.lock
+# AI Agent operational center
+.agents/
