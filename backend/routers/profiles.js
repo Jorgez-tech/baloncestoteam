@@ -8,7 +8,7 @@ const router = express.Router();
 // GET /api/v1/profiles/me - Obtener perfil del usuario autenticado
 router.get('/me', auth, async (req, res) => {
     try {
-        const user = await User.findById(req.user.userId).select('-password');
+        const user = await User.findById(req.user.id).select('-password');
 
         if (!user) {
             return res.status(404).json({ error: 'Usuario no encontrado' });
@@ -36,7 +36,7 @@ router.put('/me', auth, async (req, res) => {
         const { name, email } = req.body;
 
         const user = await User.findByIdAndUpdate(
-            req.user.userId,
+            req.user.id,
             { name, email },
             { new: true, runValidators: true }
         ).select('-password');
@@ -57,7 +57,7 @@ router.put('/me', auth, async (req, res) => {
 // PUT /api/v1/profiles/player - Actualizar datos del jugador (solo para usuarios tipo jugador)
 router.put('/player', auth, async (req, res) => {
     try {
-        const user = await User.findById(req.user.userId);
+        const user = await User.findById(req.user.id);
 
         if (!user || user.role !== 'user') {
             return res
@@ -65,7 +65,7 @@ router.put('/player', auth, async (req, res) => {
                 .json({ error: 'Solo los jugadores pueden actualizar estos datos' });
         }
 
-        const player = await Player.findOneAndUpdate({ user_id: req.user.userId }, req.body, {
+        const player = await Player.findOneAndUpdate({ user_id: req.user.id }, req.body, {
             new: true,
             runValidators: true,
         });
