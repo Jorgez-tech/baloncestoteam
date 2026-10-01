@@ -8,10 +8,7 @@
         "test": "jest",
         "lint": "eslint . --ext .js,.jsx",
         "format": "prettier --write .",
-        "lint:fix": "eslint . --ext .js,.jsx --fix",
-        "db:test": "node seed-db.js test",
-        "db:seed": "node seed-db.js seed",
-        "db:reset": "node seed-db.js seed"
+        "lint:fix": "eslint . --ext .js,.jsx --fix"
     },
     "keywords": [
         "basketball",
