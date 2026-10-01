@@ -1,4 +1,5 @@
 const playerService = require('../services/player.service');
+const auditService = require('../../audit/services/audit.service');
 
 class PlayerController {
     async listPlayers(req, res) {
@@ -43,6 +44,17 @@ class PlayerController {
     async createPlayer(req, res) {
         try {
             const player = await playerService.createPlayer(req.body);
+
+            auditService.logAction({
+                actorId: req.user?.id || req.user?._id,
+                actorEmail: req.user?.email,
+                action: 'PLAYER_CREATED',
+                targetEntity: 'Player',
+                targetId: player._id.toString(),
+                ip: req.ip,
+                userAgent: req.headers['user-agent']
+            });
+
             res.status(201).json({
                 success: true,
                 message: 'Jugador creado exitosamente',
@@ -66,6 +78,17 @@ class PlayerController {
                     message: 'Jugador no encontrado',
                 });
             }
+
+            auditService.logAction({
+                actorId: req.user?.id || req.user?._id,
+                actorEmail: req.user?.email,
+                action: 'PLAYER_UPDATED',
+                targetEntity: 'Player',
+                targetId: player._id.toString(),
+                ip: req.ip,
+                userAgent: req.headers['user-agent']
+            });
+
             res.json({
                 success: true,
                 message: 'Jugador actualizado exitosamente',
@@ -89,6 +112,17 @@ class PlayerController {
                     message: 'Jugador no encontrado',
                 });
             }
+
+            auditService.logAction({
+                actorId: req.user?.id || req.user?._id,
+                actorEmail: req.user?.email,
+                action: 'PLAYER_DELETED',
+                targetEntity: 'Player',
+                targetId: req.params.id,
+                ip: req.ip,
+                userAgent: req.headers['user-agent']
+            });
+
             res.json({
                 success: true,
                 message: 'Jugador eliminado exitosamente',

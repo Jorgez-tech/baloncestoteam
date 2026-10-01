@@ -1,4 +1,5 @@
 const userService = require('../services/user.service');
+const auditService = require('../../audit/services/audit.service');
 
 class UserController {
     async listUsers(req, res) {
@@ -83,7 +84,15 @@ class UserController {
                 });
             }
 
-            console.log(`[AUDIT] User ${requester.email} updated user ${user.email}`);
+            auditService.logAction({
+                actorId: requester.id,
+                actorEmail: requester.email,
+                action: 'USER_UPDATED',
+                targetEntity: 'User',
+                targetId: user._id.toString(),
+                ip: req.ip,
+                userAgent: req.headers['user-agent']
+            });
 
             res.json({
                 success: true,
@@ -126,7 +135,15 @@ class UserController {
                 });
             }
 
-            console.log(`[AUDIT] User ${requester.email} deleted user ${user.email}`);
+            auditService.logAction({
+                actorId: requester.id,
+                actorEmail: requester.email,
+                action: 'USER_DELETED',
+                targetEntity: 'User',
+                targetId: user._id.toString(),
+                ip: req.ip,
+                userAgent: req.headers['user-agent']
+            });
 
             res.json({
                 success: true,
@@ -168,9 +185,16 @@ class UserController {
                 });
             }
 
-            console.log(
-                `[AUDIT] User ${requester.email} ${user.isActive ? 'activated' : 'deactivated'} user ${user.email}`
-            );
+            auditService.logAction({
+                actorId: requester.id,
+                actorEmail: requester.email,
+                action: 'USER_STATUS_TOGGLED',
+                targetEntity: 'User',
+                targetId: user._id.toString(),
+                metadata: { isActive: user.isActive },
+                ip: req.ip,
+                userAgent: req.headers['user-agent']
+            });
 
             res.json({
                 success: true,
