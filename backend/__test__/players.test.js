@@ -3,10 +3,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 // Mock del modelo Player con métodos de Mongoose
-jest.mock('../models/player');
-jest.mock('../models/user');
+jest.mock('../models/player.model');
+jest.mock('../models/user.model');
 
-const Player = require('../models/player');
+const Player = require('../models/player.model');
 // User model imported but not used in current tests
 
 // Mock del middleware de autenticación
