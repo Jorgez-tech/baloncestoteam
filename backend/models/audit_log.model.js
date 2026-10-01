@@ -14,10 +14,11 @@ const auditLogSchema = new mongoose.Schema({
       'CLUB_CREATED', 'CLUB_UPDATED', 'CLUB_DELETED',
       'CATEGORY_CREATED', 'CATEGORY_UPDATED', 'CATEGORY_DELETED',
       'TEAM_CREATED', 'TEAM_UPDATED', 'TEAM_DELETED',
-      'ROSTER_ADDED', 'ROSTER_UPDATED', 'ROSTER_REMOVED'
+      'ROSTER_ADDED', 'ROSTER_UPDATED', 'ROSTER_REMOVED',
+      'MEMBERSHIP_ASSIGNED', 'MEMBERSHIP_REVOKED'
     ]
   },
-  targetEntity: { type: String, required: true }, // 'User', 'Player', 'Auth', 'Club', 'Category', 'Team', 'TeamPlayer'
+  targetEntity: { type: String, required: true },
   targetId: { type: String, default: null },
   metadata: { type: Object, default: {} },
   ip: { type: String, default: '0.0.0.0' },
