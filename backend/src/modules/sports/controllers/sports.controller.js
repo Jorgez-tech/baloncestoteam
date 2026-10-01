@@ -88,6 +88,49 @@ class SportsController {
             res.status(400).json({ success: false, message: e.message });
         }
     }
+
+    // --- ROSTER (TeamPlayer) ---
+    async addPlayerToTeam(req, res) {
+        try {
+            const { teamId } = req.params;
+            const rosterEntry = await sportsService.addPlayerToTeam(teamId, req.body);
+            auditService.logAction({ actorId: req.user?.id, action: 'ROSTER_ADDED', targetEntity: 'TeamPlayer', targetId: rosterEntry._id, metadata: { teamId, playerId: req.body.playerId } });
+            res.status(201).json({ success: true, data: rosterEntry });
+        } catch (e) {
+            res.status(400).json({ success: false, message: e.message });
+        }
+    }
+
+    async getTeamRoster(req, res) {
+        try {
+            const roster = await sportsService.getTeamRoster(req.params.teamId);
+            res.json({ success: true, data: roster });
+        } catch (e) {
+            res.status(500).json({ success: false, message: e.message });
+        }
+    }
+
+    async updateTeamPlayer(req, res) {
+        try {
+            const { teamId, playerId } = req.params;
+            const rosterEntry = await sportsService.updateTeamPlayer(teamId, playerId, req.body);
+            auditService.logAction({ actorId: req.user?.id, action: 'ROSTER_UPDATED', targetEntity: 'TeamPlayer', targetId: rosterEntry._id, metadata: { teamId, playerId } });
+            res.json({ success: true, data: rosterEntry });
+        } catch (e) {
+            res.status(400).json({ success: false, message: e.message });
+        }
+    }
+
+    async removePlayerFromTeam(req, res) {
+        try {
+            const { teamId, playerId } = req.params;
+            const rosterEntry = await sportsService.removePlayerFromTeam(teamId, playerId);
+            auditService.logAction({ actorId: req.user?.id, action: 'ROSTER_REMOVED', targetEntity: 'TeamPlayer', targetId: rosterEntry._id, metadata: { teamId, playerId } });
+            res.json({ success: true, message: 'Jugador dado de baja del equipo exitosamente', data: rosterEntry });
+        } catch (e) {
+            res.status(500).json({ success: false, message: e.message });
+        }
+    }
 }
 
 module.exports = new SportsController();

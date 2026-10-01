@@ -53,9 +53,29 @@ const updateTeamDto = withValidation([
     body('isActive').optional().isBoolean().toBoolean()
 ]);
 
+// === ROSTER DTOs ===
+const addPlayerToTeamDto = withValidation([
+    validateObjectIdParam('teamId'),
+    body('playerId').notEmpty().isMongoId().withMessage('playerId inválido'),
+    body('jerseyNumber').optional({ nullable: true }).isInt({ min: 0, max: 99 }).withMessage('El número debe estar entre 0 y 99'),
+    body('position').optional().isIn(['Point Guard', 'Shooting Guard', 'Small Forward', 'Power Forward', 'Center', 'Unknown']),
+    body('status').optional().isIn(['Active', 'Injured', 'Suspended', 'Inactive']),
+    body('joinedAt').optional().isISO8601().toDate()
+]);
+
+const updateTeamPlayerDto = withValidation([
+    validateObjectIdParam('teamId'),
+    validateObjectIdParam('playerId'),
+    body('jerseyNumber').optional({ nullable: true }).isInt({ min: 0, max: 99 }),
+    body('position').optional().isIn(['Point Guard', 'Shooting Guard', 'Small Forward', 'Power Forward', 'Center', 'Unknown']),
+    body('status').optional().isIn(['Active', 'Injured', 'Suspended', 'Inactive']),
+    body('leftAt').optional({ nullable: true }).isISO8601().toDate()
+]);
+
 module.exports = {
     createClubDto, updateClubDto,
     createCategoryDto, updateCategoryDto,
     createTeamDto, updateTeamDto,
+    addPlayerToTeamDto, updateTeamPlayerDto,
     validateObjectIdParam: (field) => withValidation([validateObjectIdParam(field)])
 };

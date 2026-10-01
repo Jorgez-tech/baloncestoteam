@@ -25,4 +25,11 @@ router.post('/teams', createTeamDto, sportsController.createTeam);
 router.get('/teams', sportsController.getTeams);
 router.put('/teams/:id', updateTeamDto, sportsController.updateTeam);
 
+// Roster
+const { addPlayerToTeamDto, updateTeamPlayerDto, validateObjectIdParam } = require('../src/modules/sports/dtos/sports.dto');
+router.post('/teams/:teamId/roster', addPlayerToTeamDto, sportsController.addPlayerToTeam);
+router.get('/teams/:teamId/roster', validateObjectIdParam('teamId'), sportsController.getTeamRoster);
+router.put('/teams/:teamId/roster/:playerId', updateTeamPlayerDto, sportsController.updateTeamPlayer);
+router.delete('/teams/:teamId/roster/:playerId', validateObjectIdParam('teamId'), validateObjectIdParam('playerId'), sportsController.removePlayerFromTeam);
+
 module.exports = router;
