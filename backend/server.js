@@ -118,6 +118,7 @@ app.use('/api/v1/users', require('./routers/users'));
 app.use('/api/v1/players', require('./routers/players'));
 app.use('/api/v1/sports', require('./routers/sports'));
 app.use('/api/v1/members', require('./routers/members'));
+app.use('/api/v1/obligations', require('./routers/obligations'));
 app.use('/api/v1/images', require('./routers/images'));
 app.use('/api/v1/profiles', require('./routers/profiles'));
 app.use('/api/v1/contact', require('./routers/contact'));
