@@ -1,7 +1,11 @@
 const paymentService = require('../services/payment.service');
+const mercadopagoService = require('../services/mercadopago.service');
 const auditService = require('../../audit/services/audit.service');
+const Member = require('../../../../models/member.model');
+const PaymentObligation = require('../../../../models/payment_obligation.model');
 
 class PaymentController {
+    // ... métodos anteriores (createObligation, getMemberObligations, etc)
     async createObligation(req, res) {
         try {
             const obligation = await paymentService.createObligation(req.body);
@@ -69,6 +73,73 @@ class PaymentController {
             });
         } catch (e) {
             res.status(500).json({ success: false, message: e.message });
+        }
+    }
+
+    // --- INTEGRACIÓN MERCADO PAGO ---
+
+    async createCheckout(req, res) {
+        try {
+            const obligation = await PaymentObligation.findById(req.params.id);
+            if (!obligation) return res.status(404).json({ success: false, message: 'Cuota no encontrada' });
+            if (obligation.status === 'paid') return res.status(400).json({ success: false, message: 'La cuota ya está pagada' });
+
+            const member = await Member.findById(obligation.memberId).populate('userId');
+            if (!member) return res.status(404).json({ success: false, message: 'Socio no encontrado' });
+
+            // Solo el socio dueño de la deuda o el admin pueden generar el link
+            if (req.user.role !== 'admin' && member.userId._id.toString() !== req.user.id) {
+                return res.status(403).json({ success: false, message: 'Acceso denegado' });
+            }
+
+            const preferenceData = await mercadopagoService.createCheckoutPreference(
+                obligation, 
+                member, 
+                member.userId.email
+            );
+
+            res.json({ success: true, data: preferenceData });
+        } catch (e) {
+            res.status(500).json({ success: false, message: e.message });
+        }
+    }
+
+    async webhookMercadoPago(req, res) {
+        try {
+            // MercadoPago envía 'payment' y su 'id' en los query params o body
+            const { type, 'data.id': dataId } = req.query;
+            const actionType = req.body?.action || type;
+            const paymentId = req.body?.data?.id || dataId;
+
+            // Retornamos 200 OK inmediatamente para evitar que MP reintente
+            res.status(200).send('OK');
+
+            if (actionType === 'payment.created' || actionType === 'payment.updated') {
+                // Consultamos a MP la info real (seguridad contra spoofing)
+                const paymentInfo = await mercadopagoService.getPaymentDetails(paymentId);
+                
+                if (paymentInfo.status === 'approved') {
+                    const obligationId = paymentInfo.external_reference;
+                    if (obligationId) {
+                        const obligation = await paymentService.updateStatus(
+                            obligationId, 
+                            'paid', 
+                            { paymentMethod: 'mercadopago', transactionId: paymentId.toString() }
+                        );
+
+                        auditService.logAction({
+                            actorEmail: 'system-webhook',
+                            action: 'OBLIGATION_UPDATED',
+                            targetEntity: 'PaymentObligation',
+                            targetId: obligationId,
+                            metadata: { source: 'MercadoPago', status: 'paid', transactionId: paymentId }
+                        });
+                    }
+                }
+            }
+        } catch (e) {
+            console.error('[WEBHOOK ERROR]', e.message);
+            // Ya retornamos 200, no podemos enviar status de error a MP de nuevo, pero el log queda
         }
     }
 }
