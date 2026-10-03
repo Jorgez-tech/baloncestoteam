@@ -1,14 +1,15 @@
 const paymentService = require('../services/payment.service');
 const mercadopagoService = require('../services/mercadopago.service');
 const auditService = require('../../audit/services/audit.service');
+const mailerService = require('../../notifications/services/mailer.service');
 const Member = require('../../../../models/member.model');
 const PaymentObligation = require('../../../../models/payment_obligation.model');
 
 class PaymentController {
-    // ... métodos anteriores (createObligation, getMemberObligations, etc)
     async createObligation(req, res) {
         try {
             const obligation = await paymentService.createObligation(req.body);
+            
             auditService.logAction({
                 actorId: req.user?.id,
                 action: 'OBLIGATION_CREATED',
@@ -16,10 +17,25 @@ class PaymentController {
                 targetId: obligation._id.toString(),
                 metadata: { type: obligation.type, amount: obligation.amount }
             });
+
+            // Buscar datos del socio para enviar correo
+            const member = await Member.findById(obligation.memberId).populate('userId');
+            if (member && member.userId) {
+                const link = `${process.env.FRONTEND_URL}/payments/${obligation._id}/checkout`;
+                await mailerService.sendObligationGeneratedAlert(
+                    member.userId.email,
+                    member.userId.name || 'Socio',
+                    obligation.title,
+                    obligation.amount,
+                    obligation.dueDate,
+                    link
+                );
+            }
+
             res.status(201).json({ success: true, data: obligation });
         } catch (e) {
             if (e.code === 11000) {
-                return res.status(400).json({ success: false, message: 'Ya existe una obligación de este tipo para el mismo periodo (Anti-doble clic).' });
+                return res.status(400).json({ success: false, message: 'Ya existe una obligación de este tipo para el mismo periodo.' });
             }
             res.status(400).json({ success: false, message: e.message });
         }

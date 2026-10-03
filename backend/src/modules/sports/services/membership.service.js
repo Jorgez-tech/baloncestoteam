@@ -19,7 +19,7 @@ class MembershipService {
             { role, expiresAt, status: 'active' },
             { new: true, upsert: true, setDefaultsOnInsert: true }
         );
-        return membership;
+        return { membership, team, user };
     }
 
     /**

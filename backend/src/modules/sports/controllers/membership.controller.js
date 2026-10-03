@@ -1,5 +1,6 @@
 const membershipService = require('../services/membership.service');
 const auditService = require('../../audit/services/audit.service');
+const mailerService = require('../../notifications/services/mailer.service');
 
 class MembershipController {
     /**
@@ -11,7 +12,10 @@ class MembershipController {
             const { teamId } = req.params;
             const { userId, role, expiresAt } = req.body;
 
-            const membership = await membershipService.assignMember(teamId, userId, role, expiresAt);
+            const { membership, team, user } = await membershipService.assignMember(teamId, userId, role, expiresAt);
+
+            // Enviar alerta al staff
+            await mailerService.sendRoleAssignedAlert(user.email, user.name || 'Staff', role, team.name);
 
             auditService.logAction({
                 actorId: req.user.id,

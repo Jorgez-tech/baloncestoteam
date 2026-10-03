@@ -106,7 +106,7 @@ class AuthService {
         // AQUÍ IRÍA LA INTEGRACIÓN CON MAILER: mailService.sendResetCode(email, code);
         // eslint-disable-next-line no-console
         console.log(`[DEV] CÓDIGO DE RESET PARA ${email}: ${code}`);
-        return true;
+        return { code };
     }
 
     async verifyResetCode(email, code) {

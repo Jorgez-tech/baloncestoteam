@@ -1,5 +1,6 @@
 const authService = require('../services/auth.service');
 const auditService = require('../../audit/services/audit.service');
+const mailerService = require('../../notifications/services/mailer.service');
 
 const cookieOptions = {
     httpOnly: true,
@@ -114,7 +115,8 @@ class AuthController {
     async forgotPassword(req, res) {
         try {
             const { email } = req.body;
-            await authService.forgotPassword(email, req.ip);
+            // Obtenemos el código real para mandarlo por correo (el authService debe retornarlo)
+            const result = await authService.forgotPassword(email, req.ip);
 
             auditService.logAction({
                 actorEmail: email,
@@ -124,9 +126,15 @@ class AuthController {
                 userAgent: req.headers['user-agent']
             });
 
+            // Enviamos el correo (solo si el servicio nos devolvió un código válido)
+            if (result && result.code) {
+                await mailerService.sendPasswordReset(email, result.code);
+            }
+
             res.json({ success: true, message: 'Si el correo existe, enviaremos un código de recuperación' });
         } catch (error) {
-            res.status(400).json({ success: false, message: 'Error procesando solicitud' });
+            // Seguridad: no delatar si el email existe o no
+            res.status(200).json({ success: true, message: 'Si el correo existe, enviaremos un código de recuperación' });
         }
     }
 

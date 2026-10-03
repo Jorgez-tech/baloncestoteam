@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; color: #333; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .header { text-align: center; border-bottom: 2px solid #ff6600; padding-bottom: 10px; margin-bottom: 20px; }
+        .header h1 { color: #ff6600; margin: 0; }
+        .highlight { color: #ff6600; font-weight: bold; }
+        .footer { font-size: 12px; color: #777; text-align: center; margin-top: 30px; border-top: 1px solid #eee; padding-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Club de Baloncesto</h1>
+        </div>
+        <h2>¡Felicidades, <%= name %>!</h2>
+        <p>Has sido oficialmente asignado al equipo <span class="highlight"><%= teamName %></span> con el rol de:</p>
+        
+        <h3 style="text-align: center; background: #eee; padding: 10px; border-radius: 4px;"><%= role %></h3>
+        
+        <p>A partir de ahora, al ingresar a tu cuenta en la plataforma, tendrás acceso al panel de gestión de este equipo.</p>
+        <p>¡Mucho éxito en la temporada!</p>
+        
+        <div class="footer">
+            &copy; 2026 Club de Baloncesto. Notificación automática para el Staff.
+        </div>
+    </div>
+</body>
+</html>
