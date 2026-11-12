@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const softDeletePlugin = require('../src/core/plugins/soft-delete.plugin');
 
 const teamSchema = new mongoose.Schema({
     name: { type: String, required: true, trim: true }, // Ej: 'Los Toros U-17'
@@ -10,5 +11,6 @@ const teamSchema = new mongoose.Schema({
 
 teamSchema.index({ categoryId: 1 });
 teamSchema.index({ season: 1 });
+teamSchema.plugin(softDeletePlugin);
 
 module.exports = mongoose.models.Team || mongoose.model('Team', teamSchema);
