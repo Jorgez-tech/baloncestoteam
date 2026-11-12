@@ -8,25 +8,27 @@
 
 ## 1. Estado Actual de Seguridad
 
+> Estado al cierre del Sprint 1.4 (ver `.agents/IMPLEMENTATION_PLAN.md`). Las capacidades marcadas como *Pendiente* son mejoras objetivo.
+
 | Capacidad | Estado |
 |---|---|
-| JWT de acceso (1h) | Implementado |
+| JWT de acceso (vida corta: 15 min) | Implementado |
 | Blacklist de tokens via Redis | Implementado |
 | Logout seguro | Implementado (invalida token en Redis) |
 | RBAC basico (admin/user) | Implementado |
 | Rate limiting global | Implementado (express-rate-limit) |
+| Rate limiting por endpoint de auth | Pendiente (ver auditoría A-06) |
 | Helmet (headers HTTP seguros) | Implementado |
 | Hashing de contrasenas (bcrypt) | Implementado |
 | CORS configurado | Implementado |
-| Logs de auditoria basicos (consola) | Implementado parcialmente |
-| Refresh token rotation | Pendiente |
-| Cookies HttpOnly | Pendiente |
+| Auditoria persistente (`audit_logs`) | Implementado (Sprint 1.3) |
+| Refresh token rotation | Implementado (Sprint 1.4) |
+| Cookies HttpOnly | Implementado (backend); consumo en frontend pendiente |
+| Recuperacion de contrasena con codigo de verificacion | Implementado (Sprint 1.4, ver seccion 2b) |
 | OTP | Pendiente |
-| Recuperacion de contrasena con codigo de verificacion | Disenado (ver seccion 2b) |
-| ABAC | Pendiente |
+| ABAC | Pendiente (over-fetching detectado) |
 | IP blacklist | Pendiente |
 | Idempotency keys | Pendiente |
-| AuthAuditLog persistente | Pendiente |
 
 ---
 
@@ -340,6 +342,8 @@ Reglas:
 
 ---
 
-**Referencia:** Ver `CLEAN_ARCHITECTURE.md` para la ubicacion de cada control de seguridad dentro de las capas.  
-**Referencia:** Ver `MODULES.md` — Modulo `Auth` para el detalle del flujo de autenticacion.  
-**Referencia:** Ver `../engineering/DEVELOPMENT_PHASES.md` para el orden de implementacion de capacidades de seguridad.
+> **Documentación subordinada al Centro de Operaciones.** Las decisiones de seguridad vigentes son los ADR de `.agents/DECISIONS.md` (ADR-004 cookies HttpOnly, ADR-005 reset de contraseña). Este documento aporta el detalle de defensa en profundidad que complementa esa fuente única de verdad.
+
+**Referencia:** Ver `.agents/DECISIONS.md` (ADR-004/005) para las decisiones de autenticación aceptadas.  
+**Referencia:** Ver `.agents/SPEC.md` y `.agents/SYSTEMS_MAP.md` para el módulo `auth` y sus contratos.  
+**Referencia:** Ver `.agents/IMPLEMENTATION_PLAN.md` para el orden de implementación de capacidades de seguridad.

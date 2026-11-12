@@ -117,13 +117,27 @@ docker compose exec mongo mongosh basketball_team --eval "db.players.find().pret
 docker compose exec mongo mongosh basketball_team --eval "db.players.countDocuments()"
 ```
 
-### 🔧 Problemas Resueltos (No Reintroducir)
+### 🔧 Problemas históricos y estado vigente
 
-#### ✅ Solucionado el 11/Nov/2025:
+Los siguientes puntos fueron resueltos históricamente, pero no representan el cierre
+de la refactorización actual:
+
+#### ✅ Resuelto históricamente el 11/Nov/2025:
 1. **AuthProvider faltante** - Ya integrado en `App.js`
 2. **CSP bloqueando API** - Ya configurado en `nginx.conf`
-3. **Login no funcional** - Ya resuelto y probado
-4. **Jugadores no aparecen** - Ya funcional
+3. **Jugadores no aparecen** - Ya funcional
+
+La auditoría posterior de octubre de 2026 detectó una nueva desalineación del contrato
+de sesión: el backend usa cookies HttpOnly, mientras el frontend todavía depende de
+`localStorage` y de un token en la respuesta JSON. Por tanto, el login web es un
+hallazgo P0 abierto. Consultar siempre:
+
+- `.agents/AGENTS.md` para precedencia y restricciones.
+- `.agents/AUDITORIA_REFACTORIZACION_2026-10-16.md` para hallazgos.
+- `.agents/IMPLEMENTATION_PLAN.md` para la ruta activa.
+
+No declarar resuelto el login ni iniciar nuevas funcionalidades hasta cerrar P0 con
+pruebas de regresión y validación E2E.
 
 ### 🎯 Flujo de Trabajo para Cambios
 
