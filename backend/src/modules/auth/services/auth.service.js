@@ -103,9 +103,6 @@ class AuthService {
         });
         await token.save();
 
-        // AQUÍ IRÍA LA INTEGRACIÓN CON MAILER: mailService.sendResetCode(email, code);
-        // eslint-disable-next-line no-console
-        console.log(`[DEV] CÓDIGO DE RESET PARA ${email}: ${code}`);
         return { code };
     }
 
@@ -113,7 +110,7 @@ class AuthService {
         const token = await PasswordResetToken.findOne({ email, used: false });
         if (!token) throw new Error('Código inválido o expirado');
 
-        if (token.failedAttempts >= 3) {
+        if (token.failedAttempts >= 5) {
             await PasswordResetToken.deleteOne({ _id: token._id });
             throw new Error('Demasiados intentos fallidos. Solicita un nuevo código.');
         }
