@@ -2,14 +2,12 @@ const paymentService = require('../services/payment.service');
 const mercadopagoService = require('../services/mercadopago.service');
 const auditService = require('../../audit/services/audit.service');
 const mailerService = require('../../notifications/services/mailer.service');
-const Member = require('../../../../models/member.model');
-const PaymentObligation = require('../../../../models/payment_obligation.model');
 
 class PaymentController {
     async createObligation(req, res) {
         try {
             const obligation = await paymentService.createObligation(req.body);
-            
+
             auditService.logAction({
                 actorId: req.user?.id,
                 action: 'OBLIGATION_CREATED',
@@ -19,7 +17,7 @@ class PaymentController {
             });
 
             // Buscar datos del socio para enviar correo
-            const member = await Member.findById(obligation.memberId).populate('userId');
+            const member = await paymentService.getMemberWithUser(obligation.memberId);
             if (member && member.userId) {
                 const link = `${process.env.FRONTEND_URL}/payments/${obligation._id}/checkout`;
                 await mailerService.sendObligationGeneratedAlert(
@@ -54,7 +52,7 @@ class PaymentController {
         try {
             const { status, paymentMethod, transactionId } = req.body;
             const obligation = await paymentService.updateStatus(req.params.id, status, { paymentMethod, transactionId });
-            
+
             if (!obligation) return res.status(404).json({ success: false, message: 'Not found' });
 
             auditService.logAction({
@@ -67,14 +65,14 @@ class PaymentController {
 
             res.json({ success: true, data: obligation });
         } catch (e) {
-            res.status(400).json({ success: false, message: e.message });
+            res.status(e.statusCode || 400).json({ success: false, message: e.message });
         }
     }
 
     async generateBatch(req, res) {
         try {
             const result = await paymentService.generateBatchMensualidades(req.body);
-            
+
             auditService.logAction({
                 actorId: req.user?.id,
                 action: 'OBLIGATION_BATCH_GENERATED',
@@ -82,10 +80,10 @@ class PaymentController {
                 metadata: { period: req.body.period, result }
             });
 
-            res.status(201).json({ 
-                success: true, 
+            res.status(201).json({
+                success: true,
                 message: `Generación masiva completada. Insertadas: ${result.inserted}. Omitidas (ya existían): ${result.skipped}.`,
-                data: result 
+                data: result
             });
         } catch (e) {
             res.status(500).json({ success: false, message: e.message });
@@ -96,11 +94,11 @@ class PaymentController {
 
     async createCheckout(req, res) {
         try {
-            const obligation = await PaymentObligation.findById(req.params.id);
+            const obligation = await paymentService.getObligationById(req.params.id);
             if (!obligation) return res.status(404).json({ success: false, message: 'Cuota no encontrada' });
             if (obligation.status === 'paid') return res.status(400).json({ success: false, message: 'La cuota ya está pagada' });
 
-            const member = await Member.findById(obligation.memberId).populate('userId');
+            const member = await paymentService.getMemberWithUser(obligation.memberId);
             if (!member) return res.status(404).json({ success: false, message: 'Socio no encontrado' });
 
             // Solo el socio dueño de la deuda o el admin pueden generar el link
@@ -109,8 +107,8 @@ class PaymentController {
             }
 
             const preferenceData = await mercadopagoService.createCheckoutPreference(
-                obligation, 
-                member, 
+                obligation,
+                member,
                 member.userId.email
             );
 
@@ -133,13 +131,13 @@ class PaymentController {
             if (actionType === 'payment.created' || actionType === 'payment.updated') {
                 // Consultamos a MP la info real (seguridad contra spoofing)
                 const paymentInfo = await mercadopagoService.getPaymentDetails(paymentId);
-                
+
                 if (paymentInfo.status === 'approved') {
                     const obligationId = paymentInfo.external_reference;
                     if (obligationId) {
-                        const obligation = await paymentService.updateStatus(
-                            obligationId, 
-                            'paid', 
+                        await paymentService.updateStatus(
+                            obligationId,
+                            'paid',
                             { paymentMethod: 'mercadopago', transactionId: paymentId.toString() }
                         );
 
@@ -154,8 +152,15 @@ class PaymentController {
                 }
             }
         } catch (e) {
-            console.error('[WEBHOOK ERROR]', e.message);
-            // Ya retornamos 200, no podemos enviar status de error a MP de nuevo, pero el log queda
+            auditService.logAction({
+                actorEmail: 'system-webhook',
+                action: 'OBLIGATION_WEBHOOK_ERROR',
+                targetEntity: 'PaymentObligation',
+                metadata: {
+                    source: 'MercadoPago',
+                    message: e.message
+                }
+            });
         }
     }
 }

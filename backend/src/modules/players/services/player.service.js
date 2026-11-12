@@ -1,7 +1,8 @@
 const Player = require('../../../../models/player.model');
+const TeamPlayer = require('../../../../models/team_player.model');
 
 class PlayerService {
-    async listPlayers(query) {
+    async listPlayers(query = {}) {
         const {
             page = 1,
             limit = 20,
@@ -12,7 +13,7 @@ class PlayerService {
             order = 'asc',
             search,
         } = query;
-        
+
         const filter = {};
 
         if (position) filter.position = position;
@@ -82,7 +83,22 @@ class PlayerService {
     }
 
     async deletePlayer(id) {
-        return await Player.findByIdAndDelete(id);
+        const player = await Player.softDeleteById(id);
+        if (!player) return null;
+
+        // A soft-deleted player must not keep an active roster spot, otherwise the club
+        // would keep competing with (and billing for) a player that no longer exists.
+        const result = await TeamPlayer.updateMany(
+            { playerId: player._id, status: { $ne: 'Inactive' } },
+            { $set: { status: 'Inactive', leftAt: new Date() } }
+        );
+
+        if (result.modifiedCount > 0) {
+            const paymentService = require('../../payments/services/payment.service');
+            await paymentService.reconcileBillingAfterRosterChange(player._id);
+        }
+
+        return player;
     }
 }
 
