@@ -5,8 +5,14 @@ const mongoose = require('mongoose');
 // Mock del modelo Player con métodos de Mongoose
 jest.mock('../models/player.model');
 jest.mock('../models/user.model');
+jest.mock('../models/team_player.model');
+jest.mock('../src/modules/payments/services/payment.service', () => ({
+    reconcileBillingAfterRosterChange: jest.fn()
+}));
 
 const Player = require('../models/player.model');
+const TeamPlayer = require('../models/team_player.model');
+const paymentService = require('../src/modules/payments/services/payment.service');
 // User model imported but not used in current tests
 
 // Mock del middleware de autenticación
@@ -71,7 +77,8 @@ describe('Players API', () => {
         Player.countDocuments = jest.fn();
         Player.findById = jest.fn();
         Player.findByIdAndUpdate = jest.fn();
-        Player.findByIdAndDelete = jest.fn();
+        Player.softDeleteById = jest.fn();
+        TeamPlayer.updateMany = jest.fn().mockResolvedValue({ modifiedCount: 0 });
     });
 
     describe('GET /api/v1/players', () => {
@@ -193,6 +200,54 @@ describe('Players API', () => {
             expect(response.status).toBe(400);
             expect(response.body.success).toBe(false);
             expect(response.body).toHaveProperty('message');
+        });
+    });
+
+    describe('DELETE /api/v1/players/:id', () => {
+        it('should soft delete the player and release its active roster spots', async () => {
+            const playerId = new mongoose.Types.ObjectId();
+            Player.softDeleteById.mockResolvedValue({ _id: playerId, isDeleted: true });
+
+            const response = await request(app).delete(`/api/v1/players/${playerId}`);
+
+            expect(response.status).toBe(200);
+            expect(response.body.success).toBe(true);
+            expect(Player.softDeleteById).toHaveBeenCalledWith(playerId.toString());
+            expect(Player.findByIdAndDelete).not.toHaveBeenCalled();
+            expect(TeamPlayer.updateMany).toHaveBeenCalledWith(
+                { playerId, status: { $ne: 'Inactive' } },
+                { $set: { status: 'Inactive', leftAt: expect.any(Date) } }
+            );
+        });
+
+        it('should return 404 when the player does not exist', async () => {
+            Player.softDeleteById.mockResolvedValue(null);
+
+            const response = await request(app).delete(`/api/v1/players/${new mongoose.Types.ObjectId()}`);
+
+            expect(response.status).toBe(404);
+            expect(response.body.success).toBe(false);
+            expect(TeamPlayer.updateMany).not.toHaveBeenCalled();
+        });
+
+        it('should reconcile billing when an active roster spot was released', async () => {
+            const playerId = new mongoose.Types.ObjectId();
+            Player.softDeleteById.mockResolvedValue({ _id: playerId, isDeleted: true });
+            TeamPlayer.updateMany.mockResolvedValue({ modifiedCount: 1 });
+
+            await request(app).delete(`/api/v1/players/${playerId}`);
+
+            expect(paymentService.reconcileBillingAfterRosterChange).toHaveBeenCalledWith(playerId);
+        });
+
+        it('should skip billing reconciliation when there was no active roster spot', async () => {
+            const playerId = new mongoose.Types.ObjectId();
+            Player.softDeleteById.mockResolvedValue({ _id: playerId, isDeleted: true });
+            TeamPlayer.updateMany.mockResolvedValue({ modifiedCount: 0 });
+
+            await request(app).delete(`/api/v1/players/${playerId}`);
+
+            expect(paymentService.reconcileBillingAfterRosterChange).not.toHaveBeenCalled();
         });
     });
 

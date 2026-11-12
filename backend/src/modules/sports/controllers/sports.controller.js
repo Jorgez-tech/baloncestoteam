@@ -14,7 +14,7 @@ class SportsController {
     }
     async getClubs(req, res) {
         try {
-            const clubs = await sportsService.getClubs(req.query);
+            const clubs = await sportsService.getClubs(req.validatedQuery);
             res.json({ success: true, data: clubs });
         } catch (e) {
             res.status(500).json({ success: false, message: e.message });
@@ -43,7 +43,7 @@ class SportsController {
     }
     async getCategories(req, res) {
         try {
-            const cats = await sportsService.getCategories(req.query);
+            const cats = await sportsService.getCategories(req.validatedQuery);
             res.json({ success: true, data: cats });
         } catch (e) {
             res.status(500).json({ success: false, message: e.message });
@@ -72,7 +72,7 @@ class SportsController {
     }
     async getTeams(req, res) {
         try {
-            const teams = await sportsService.getTeams(req.query);
+            const teams = await sportsService.getTeams(req.validatedQuery);
             res.json({ success: true, data: teams });
         } catch (e) {
             res.status(500).json({ success: false, message: e.message });

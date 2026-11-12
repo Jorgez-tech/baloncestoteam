@@ -20,7 +20,7 @@ class MemberController {
 
     async getMembers(req, res) {
         try {
-            const members = await memberService.getMembers(req.query);
+            const members = await memberService.getMembers(req.validatedQuery);
             res.json({ success: true, data: members });
         } catch (e) {
             res.status(500).json({ success: false, message: e.message });
@@ -31,15 +31,15 @@ class MemberController {
         try {
             const member = await memberService.updateMember(req.params.id, req.body);
             if (!member) return res.status(404).json({ success: false, message: 'Not found' });
-            auditService.logAction({ 
-                actorId: req.user?.id, 
-                action: 'MEMBER_UPDATED', 
-                targetEntity: 'Member', 
-                targetId: member._id.toString() 
+            auditService.logAction({
+                actorId: req.user?.id,
+                action: 'MEMBER_UPDATED',
+                targetEntity: 'Member',
+                targetId: member._id.toString()
             });
             res.json({ success: true, data: member });
         } catch (e) {
-            res.status(400).json({ success: false, message: e.message });
+            res.status(e.statusCode || 400).json({ success: false, message: e.message });
         }
     }
 

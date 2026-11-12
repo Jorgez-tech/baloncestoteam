@@ -9,6 +9,7 @@ const {
     createCategoryDto, updateCategoryDto,
     createTeamDto, updateTeamDto,
     addPlayerToTeamDto, updateTeamPlayerDto,
+    listClubsDto, listCategoriesDto, listTeamsDto,
     validateObjectIdParam
 } = require('../src/modules/sports/dtos/sports.dto');
 
@@ -17,17 +18,17 @@ router.use(authMiddleware);
 
 // ── CLUBS (solo admin) ─────────────────────────────────────────────────────
 router.post('/clubs', requireAdmin, createClubDto, sportsController.createClub);
-router.get('/clubs', sportsController.getClubs);                      // Todos pueden leer
+router.get('/clubs', listClubsDto, sportsController.getClubs);        // Todos pueden leer
 router.put('/clubs/:id', requireAdmin, updateClubDto, sportsController.updateClub);
 
 // ── CATEGORIES (solo admin) ───────────────────────────────────────────────
 router.post('/categories', requireAdmin, createCategoryDto, sportsController.createCategory);
-router.get('/categories', sportsController.getCategories);            // Todos pueden leer
+router.get('/categories', listCategoriesDto, sportsController.getCategories); // Todos pueden leer
 router.put('/categories/:id', requireAdmin, updateCategoryDto, sportsController.updateCategory);
 
 // ── TEAMS (solo admin) ────────────────────────────────────────────────────
 router.post('/teams', requireAdmin, createTeamDto, sportsController.createTeam);
-router.get('/teams', sportsController.getTeams);                      // Todos pueden leer
+router.get('/teams', listTeamsDto, sportsController.getTeams);        // Todos pueden leer
 router.put('/teams/:id', requireAdmin, updateTeamDto, sportsController.updateTeam);
 
 // ── STAFF / MEMBRESÍAS (solo admin gestiona, todos pueden leer) ───────────

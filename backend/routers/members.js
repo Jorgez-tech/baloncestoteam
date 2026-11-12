@@ -8,6 +8,7 @@ const {
     createMemberDto,
     updateMemberDto,
     linkDependentDto,
+    listMembersDto,
     validateObjectIdParam
 } = require('../src/modules/members/dtos/member.dto');
 
@@ -16,7 +17,7 @@ router.use(authMiddleware);
 // --- MEMBERS ---
 // Solo admin puede crear un nuevo socio (asociar un userId con un memberNumber financiero)
 router.post('/', requireAdmin, createMemberDto, memberController.createMember);
-router.get('/', requireAdmin, memberController.getMembers);
+router.get('/', requireAdmin, listMembersDto, memberController.getMembers);
 router.put('/:id', requireAdmin, updateMemberDto, memberController.updateMember);
 
 // --- DEPENDENTS ---

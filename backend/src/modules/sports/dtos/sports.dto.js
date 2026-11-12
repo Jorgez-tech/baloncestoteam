@@ -1,5 +1,5 @@
-const { body, param } = require('express-validator');
-const { withValidation, validateObjectIdParam } = require('../../users/dtos/user.dto'); // Reusing utilities
+const { body, query } = require('express-validator');
+const { withValidation, validateObjectIdParam, withQueryValidation } = require('../../users/dtos/user.dto'); // Reusing utilities
 
 // === CLUB DTOs ===
 const createClubDto = withValidation([
@@ -72,10 +72,37 @@ const updateTeamPlayerDto = withValidation([
     body('leftAt').optional({ nullable: true }).isISO8601().toDate()
 ]);
 
+// === LIST DTOs ===
+const paginationValidations = () => [
+    query('page').optional().isInt({ min: 1 }).withMessage('page debe ser un entero mayor o igual a 1').toInt(),
+    query('limit').optional().isInt({ min: 1, max: 100 }).withMessage('limit debe estar entre 1 y 100').toInt(),
+];
+
+const listClubsDto = withQueryValidation([
+    ...paginationValidations(),
+    query('name').optional().trim().notEmpty().withMessage('name no puede estar vacío'),
+    query('isActive').optional().isBoolean().withMessage('isActive debe ser booleano').toBoolean(),
+]);
+
+const listCategoriesDto = withQueryValidation([
+    ...paginationValidations(),
+    query('clubId').optional().isMongoId().withMessage('clubId inválido'),
+    query('gender').optional().isIn(['M', 'F', 'Mixed']).withMessage('gender debe ser M, F o Mixed'),
+    query('isActive').optional().isBoolean().withMessage('isActive debe ser booleano').toBoolean(),
+]);
+
+const listTeamsDto = withQueryValidation([
+    ...paginationValidations(),
+    query('categoryId').optional().isMongoId().withMessage('categoryId inválido'),
+    query('season').optional().trim().notEmpty().withMessage('season no puede estar vacío'),
+    query('isActive').optional().isBoolean().withMessage('isActive debe ser booleano').toBoolean(),
+]);
+
 module.exports = {
     createClubDto, updateClubDto,
     createCategoryDto, updateCategoryDto,
     createTeamDto, updateTeamDto,
     addPlayerToTeamDto, updateTeamPlayerDto,
+    listClubsDto, listCategoriesDto, listTeamsDto,
     validateObjectIdParam: (field) => withValidation([validateObjectIdParam(field)])
 };

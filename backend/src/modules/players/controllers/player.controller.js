@@ -4,7 +4,7 @@ const auditService = require('../../audit/services/audit.service');
 class PlayerController {
     async listPlayers(req, res) {
         try {
-            const result = await playerService.listPlayers(req.query);
+            const result = await playerService.listPlayers(req.validatedQuery);
             res.json({
                 success: true,
                 data: result.players,
@@ -116,7 +116,7 @@ class PlayerController {
             auditService.logAction({
                 actorId: req.user?.id || req.user?._id,
                 actorEmail: req.user?.email,
-                action: 'PLAYER_DELETED',
+                action: 'PLAYER_SOFT_DELETED',
                 targetEntity: 'Player',
                 targetId: req.params.id,
                 ip: req.ip,
@@ -125,7 +125,7 @@ class PlayerController {
 
             res.json({
                 success: true,
-                message: 'Jugador eliminado exitosamente',
+                message: 'Jugador desactivado exitosamente',
             });
         } catch (error) {
             res.status(500).json({
