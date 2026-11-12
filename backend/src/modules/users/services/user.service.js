@@ -20,7 +20,8 @@ class UserService {
     }
 
     async deleteUser(id) {
-        return await User.findByIdAndDelete(id);
+        // Core entity: users are never physically removed, only flagged as deleted.
+        return await User.softDeleteById(id);
     }
 
     async toggleUserStatus(id) {

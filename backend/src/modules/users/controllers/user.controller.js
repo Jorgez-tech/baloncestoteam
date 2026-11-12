@@ -138,7 +138,7 @@ class UserController {
             auditService.logAction({
                 actorId: requester.id,
                 actorEmail: requester.email,
-                action: 'USER_DELETED',
+                action: 'USER_SOFT_DELETED',
                 targetEntity: 'User',
                 targetId: user._id.toString(),
                 ip: req.ip,
@@ -147,7 +147,7 @@ class UserController {
 
             res.json({
                 success: true,
-                message: 'Usuario eliminado exitosamente',
+                message: 'Usuario desactivado exitosamente',
             });
         } catch (error) {
             console.error('Error deleting user:', error);

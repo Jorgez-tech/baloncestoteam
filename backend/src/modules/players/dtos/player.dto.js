@@ -1,5 +1,6 @@
-const { body, param, validationResult, matchedData } = require('express-validator');
+const { body, param, query, validationResult, matchedData } = require('express-validator');
 const mongoose = require('mongoose');
+const { withQueryValidation } = require('../../users/dtos/user.dto');
 
 const withValidation = (validations) => async (req, res, next) => {
     await Promise.all(validations.map((validation) => validation.run(req)));
@@ -12,7 +13,7 @@ const withValidation = (validations) => async (req, res, next) => {
             errors: errors.array(),
         });
     }
-    
+
     // Whitelisting: filter req.body to only contain validated fields
     req.body = matchedData(req, { locations: ['body'] });
     return next();
@@ -110,9 +111,31 @@ const updatePlayerDto = withValidation([
     body('isActive').optional().isBoolean().toBoolean(),
 ]);
 
+const allowedSortFields = ['name', 'position', 'height', 'weight', 'age', 'jersey_number', 'createdAt'];
+
+const listPlayersDto = withQueryValidation([
+    query('page').optional().isInt({ min: 1 }).withMessage('page debe ser un entero mayor o igual a 1').toInt(),
+    query('limit').optional().isInt({ min: 1, max: 100 }).withMessage('limit debe estar entre 1 y 100').toInt(),
+    query('position')
+        .optional()
+        .trim()
+        .isIn(allowedPositions)
+        .withMessage(`La posición debe ser una de: ${allowedPositions.join(', ')}`),
+    query('minHeight').optional().isFloat({ min: 150, max: 230 }).withMessage('minHeight debe estar entre 150 y 230').toFloat(),
+    query('maxWeight').optional().isFloat({ min: 50, max: 150 }).withMessage('maxWeight debe estar entre 50 y 150').toFloat(),
+    query('sortBy')
+        .optional()
+        .trim()
+        .isIn(allowedSortFields)
+        .withMessage(`sortBy debe ser uno de: ${allowedSortFields.join(', ')}`),
+    query('order').optional().trim().isIn(['asc', 'desc']).withMessage('order debe ser asc o desc'),
+    query('search').optional().trim().notEmpty().withMessage('search no puede estar vacío'),
+]);
+
 module.exports = {
     createPlayerDto,
     updatePlayerDto,
+    listPlayersDto,
     validateObjectIdParam,
     withValidation, // Exported to be reused if needed
 };

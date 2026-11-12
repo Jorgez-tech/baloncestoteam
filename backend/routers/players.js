@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
-const { createPlayerDto, updatePlayerDto, validateObjectIdParam, withValidation } = require('../src/modules/players/dtos/player.dto');
+const { createPlayerDto, updatePlayerDto, listPlayersDto, validateObjectIdParam, withValidation } = require('../src/modules/players/dtos/player.dto');
 const playerController = require('../src/modules/players/controllers/player.controller');
 
 // GET /api/v1/players
-router.get('/', playerController.listPlayers);
+router.get('/', listPlayersDto, playerController.listPlayers);
 
 // GET /api/v1/players/:id
 router.get('/:id', withValidation([validateObjectIdParam('id')]), playerController.getPlayer);

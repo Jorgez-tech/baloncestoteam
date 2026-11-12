@@ -78,6 +78,16 @@ class MailerService {
     }
 
     /**
+     * Para formularios públicos de contacto: notifica al buzón del club.
+     */
+    async sendContactMessage({ nombre, email, telefono, mensaje }) {
+        const recipient = process.env.CONTACT_RECIPIENT_EMAIL || 'contacto@baloncestoteam.com';
+        const html = await this.renderTemplate('contact-message', { nombre, email, telefono, mensaje });
+        // El envío es el propósito del endpoint: un fallo debe propagarse al cliente.
+        return this.sendMail(recipient, `Nuevo mensaje de contacto: ${nombre}`, html);
+    }
+
+    /**
      * Para Socios/Apoderados: Cuota Generada (Mensualidad, matrícula, etc).
      */
     async sendObligationGeneratedAlert(email, memberName, title, amount, dueDate, link) {

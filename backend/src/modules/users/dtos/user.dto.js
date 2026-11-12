@@ -18,6 +18,23 @@ const withValidation = (validations) => async (req, res, next) => {
     return next();
 };
 
+const withQueryValidation = (validations) => async (req, res, next) => {
+    await Promise.all(validations.map((validation) => validation.run(req)));
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            success: false,
+            message: 'Error de validación',
+            errors: errors.array(),
+        });
+    }
+
+    // Whitelisting: solo los query params validados llegan a la capa de servicio.
+    req.validatedQuery = matchedData(req, { locations: ['query'] });
+    return next();
+};
+
 const isObjectId = (value) => mongoose.Types.ObjectId.isValid(value);
 
 const validateObjectIdParam = (field = 'id') =>
@@ -53,4 +70,5 @@ module.exports = {
     updateUserDto,
     validateObjectIdParam,
     withValidation,
+    withQueryValidation,
 };
