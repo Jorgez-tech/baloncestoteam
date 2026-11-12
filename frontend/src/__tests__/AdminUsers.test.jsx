@@ -16,9 +16,15 @@ jest.mock('../api/client', () => {
         delete: jest.fn(),
     };
 
+    const mockMembersAPI = {
+        getAll: jest.fn(),
+        update: jest.fn(),
+    };
+
     return {
         playersAPI: mockPlayersAPI,
         usersAPI: mockUsersAPI,
+        membersAPI: mockMembersAPI,
         apiClient: {},
     };
 });

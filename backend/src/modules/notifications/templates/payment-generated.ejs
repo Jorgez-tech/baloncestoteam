@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; color: #333; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .header { text-align: center; border-bottom: 2px solid #ff6600; padding-bottom: 10px; margin-bottom: 20px; }
+        .header h1 { color: #ff6600; margin: 0; }
+        .details-box { background: #f9f9f9; padding: 15px; border-radius: 4px; margin: 20px 0; border-left: 4px solid #ff6600; }
+        .btn { display: inline-block; background-color: #ff6600; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold; margin-top: 15px; }
+        .footer { font-size: 12px; color: #777; text-align: center; margin-top: 30px; border-top: 1px solid #eee; padding-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Club de Baloncesto</h1>
+        </div>
+        <h2>Nueva Cuota Generada</h2>
+        <p>Hola <strong><%= name %></strong>,</p>
+        <p>Se ha generado una nueva obligación de pago en tu estado de cuenta de Socio.</p>
+        
+        <div class="details-box">
+            <p><strong>Concepto:</strong> <%= title %></p>
+            <p><strong>Monto:</strong> $<%= amount %> CLP</p>
+            <p><strong>Vencimiento:</strong> <%= dueDate %></p>
+        </div>
+        
+        <p>Puedes revisar los detalles y pagar directamente de forma segura presionando el botón a continuación:</p>
+        
+        <div style="text-align: center;">
+            <a href="<%= link %>" class="btn">Pagar Cuota en Línea</a>
+        </div>
+        
+        <p style="margin-top: 25px; font-size: 14px;">Si ya realizaste el pago, por favor ignora este mensaje.</p>
+        
+        <div class="footer">
+            &copy; 2026 Club de Baloncesto. Notificación Financiera.
+        </div>
+    </div>
+</body>
+</html>

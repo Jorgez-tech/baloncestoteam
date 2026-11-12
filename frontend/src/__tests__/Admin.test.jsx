@@ -5,21 +5,14 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import AdminDashboard from '../pages/AdminDashboard';
 
 function renderWithAuth(ui, { user = null, route = '/admin' } = {}) {
-    if (user) {
-        window.localStorage.setItem('user', JSON.stringify(user));
-        window.localStorage.setItem('token', 'test-token');
-    } else {
-        window.localStorage.removeItem('user');
-        window.localStorage.removeItem('token');
-    }
-
     return customRender(
         <MemoryRouter initialEntries={[route]}>
             <Routes>
                 <Route path="/admin" element={ui} />
                 <Route path="/login" element={<div>Login Page</div>} />
             </Routes>
-        </MemoryRouter>
+        </MemoryRouter>,
+        { user }
     );
 }
 
@@ -33,7 +26,6 @@ describe('Admin route protection', () => {
     });
 
     afterEach(() => {
-        window.localStorage.clear();
         warnSpy.mockClear();
         infoSpy.mockClear();
     });
@@ -43,14 +35,14 @@ describe('Admin route protection', () => {
         infoSpy.mockRestore();
     });
 
-    test('muestra acceso denegado para usuarios sin rol admin', () => {
+    test('muestra acceso denegado para usuarios sin rol admin', async () => {
         renderWithAuth(<AdminDashboard />, { user: null });
-        expect(screen.getByText(/Acceso Denegado/i)).toBeInTheDocument();
+        expect(await screen.findByText(/Acceso Denegado/i)).toBeInTheDocument();
     });
 
-    test('renderiza el dashboard para administradores', () => {
+    test('renderiza el dashboard para administradores', async () => {
         const adminUser = createAuthUser({ role: 'admin', email: 'admin@test.com' });
         renderWithAuth(<AdminDashboard />, { user: adminUser });
-        expect(screen.getByText(/Panel de Administración/i)).toBeInTheDocument();
+        expect(await screen.findByText(/Panel de Administración/i)).toBeInTheDocument();
     });
 });

@@ -1,8 +1,63 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { playersAPI, usersAPI } from '../api/client';
+import { playersAPI, usersAPI, membersAPI, auditAPI } from '../api/client';
 import { toast } from 'react-toastify';
 import './AdminDashboard.css';
+
+const MEMBER_STATUS_LABELS = {
+    active: 'Activo',
+    inactive: 'Inactivo',
+    delinquent: 'Moroso'
+};
+
+const AUDIT_ACTIONS = [
+    'LOGIN_SUCCESS',
+    'LOGIN_FAILED',
+    'LOGOUT',
+    'PASSWORD_RESET_REQUESTED',
+    'PASSWORD_RESET_VERIFIED',
+    'PASSWORD_RESET_COMPLETED',
+    'USER_CREATED',
+    'USER_UPDATED',
+    'USER_SOFT_DELETED',
+    'USER_STATUS_TOGGLED',
+    'PLAYER_CREATED',
+    'PLAYER_UPDATED',
+    'PLAYER_SOFT_DELETED',
+    'CLUB_CREATED',
+    'CLUB_UPDATED',
+    'CATEGORY_CREATED',
+    'CATEGORY_UPDATED',
+    'TEAM_CREATED',
+    'TEAM_UPDATED',
+    'ROSTER_ADDED',
+    'ROSTER_UPDATED',
+    'ROSTER_REMOVED',
+    'MEMBERSHIP_ASSIGNED',
+    'MEMBERSHIP_REVOKED',
+    'MEMBER_CREATED',
+    'MEMBER_UPDATED',
+    'DEPENDENT_LINKED',
+    'DEPENDENT_UNLINKED',
+    'OBLIGATION_CREATED',
+    'OBLIGATION_UPDATED',
+    'OBLIGATION_BATCH_GENERATED',
+    'OBLIGATION_WEBHOOK_ERROR'
+];
+
+const AUDIT_ENTITIES = [
+    'Auth',
+    'User',
+    'Player',
+    'Club',
+    'Category',
+    'Team',
+    'TeamPlayer',
+    'TeamMembership',
+    'Member',
+    'GuardianLink',
+    'PaymentObligation'
+];
 
 /**
  * Panel de Administración Completo
@@ -29,6 +84,18 @@ const AdminDashboard = () => {
     const [players, setPlayers] = useState([]);
     const [users, setUsers] = useState([]);
     const [usersError, setUsersError] = useState(null);
+    const [members, setMembers] = useState([]);
+    const [membersError, setMembersError] = useState(null);
+    const [auditLogs, setAuditLogs] = useState([]);
+    const [auditMeta, setAuditMeta] = useState(null);
+    const [auditError, setAuditError] = useState(null);
+    const [auditLoading, setAuditLoading] = useState(false);
+    const [auditFilters, setAuditFilters] = useState({
+        page: 1,
+        limit: 20,
+        action: '',
+        targetEntity: ''
+    });
     const [showModal, setShowModal] = useState(false);
     const [modalType, setModalType] = useState(''); // 'player', 'user', 'delete'
     const [editingItem, setEditingItem] = useState(null);
@@ -62,6 +129,13 @@ const AdminDashboard = () => {
         logAdminAccess();
     }, [isAdmin]);
 
+    // Carga el registro de auditoría cuando el admin abre la pestaña correspondiente.
+    useEffect(() => {
+        if (isAdmin && activeTab === 'audit') {
+            loadAuditLogs();
+        }
+    }, [isAdmin, activeTab]);
+
     // Log de auditoría para acceso al panel
     const logAdminAccess = () => {
         if (isDevMode) {
@@ -82,9 +156,10 @@ const AdminDashboard = () => {
                 return [];
             };
 
-            const [playersResult, usersResult] = await Promise.allSettled([
+            const [playersResult, usersResult, membersResult] = await Promise.allSettled([
                 playersAPI.getAll(),
-                usersAPI.getAll()
+                usersAPI.getAll(),
+                membersAPI.getAll()
             ]);
 
             let playersData = [];
@@ -114,6 +189,24 @@ const AdminDashboard = () => {
                 }
             }
 
+            let membersData = [];
+            if (membersResult.status === 'fulfilled') {
+                membersData = normalizeCollectionResponse(membersResult.value);
+                setMembers(membersData);
+                setMembersError(null);
+            } else {
+                if (isDevMode) {
+                    console.warn('Gestión de socios no disponible:', membersResult.reason);
+                }
+                setMembers([]);
+                if (membersResult.reason?.response?.status === 403) {
+                    setMembersError('Tu sesión no tiene permisos para gestionar socios.');
+                } else {
+                    setMembersError('No se pudieron cargar los socios. Intenta nuevamente más tarde.');
+                    toast.error('No se pudieron cargar los socios');
+                }
+            }
+
             setStats({
                 totalPlayers: playersData.length,
                 totalUsers: usersData.length,
@@ -126,6 +219,46 @@ const AdminDashboard = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    // Carga el registro de auditoría con paginación y filtros
+    const loadAuditLogs = async (filters = auditFilters) => {
+        setAuditLoading(true);
+        try {
+            const params = { page: filters.page, limit: filters.limit };
+            if (filters.action) params.action = filters.action;
+            if (filters.targetEntity) params.targetEntity = filters.targetEntity;
+
+            const response = await auditAPI.getAll(params);
+            setAuditLogs(response.data?.data || []);
+            setAuditMeta(response.data?.meta || null);
+            setAuditError(null);
+        } catch (error) {
+            if (isDevMode) {
+                console.warn('Auditoría no disponible:', error);
+            }
+            setAuditLogs([]);
+            setAuditMeta(null);
+            setAuditError(
+                error.response?.status === 403
+                    ? 'Tu sesión no tiene permisos para consultar la auditoría.'
+                    : 'No se pudo cargar el registro de auditoría. Intenta nuevamente más tarde.'
+            );
+        } finally {
+            setAuditLoading(false);
+        }
+    };
+
+    const handleAuditFilterChange = (field, value) => {
+        const nextFilters = { ...auditFilters, [field]: value, page: 1 };
+        setAuditFilters(nextFilters);
+        loadAuditLogs(nextFilters);
+    };
+
+    const handleAuditPage = (page) => {
+        const nextFilters = { ...auditFilters, page };
+        setAuditFilters(nextFilters);
+        loadAuditLogs(nextFilters);
     };
 
     // Validaciones de formularios
@@ -328,6 +461,33 @@ const AdminDashboard = () => {
         }
     };
 
+    // Handlers para socios
+    const handleToggleMemberStatus = async (member) => {
+        const nextStatus = member.status === 'inactive' ? 'active' : 'inactive';
+        const isDeactivating = nextStatus === 'inactive';
+
+        const confirmMessage = isDeactivating
+            ? `¿Desactivar al socio ${member.memberNumber}? Sus cuotas pendientes quedarán anuladas.`
+            : `¿Reactivar al socio ${member.memberNumber}?`;
+
+        if (!window.confirm(confirmMessage)) {
+            return;
+        }
+
+        try {
+            await membersAPI.update(member._id, { status: nextStatus });
+            logAuditAction(isDeactivating ? 'DEACTIVATE_MEMBER' : 'REACTIVATE_MEMBER', member.memberNumber);
+            toast.success(isDeactivating ? 'Socio desactivado exitosamente' : 'Socio reactivado exitosamente');
+            loadDashboardData();
+        } catch (error) {
+            // El backend responde 409 si el socio mantiene dependientes con inscripción activa.
+            toast.error(
+                error.response?.data?.message ||
+                (isDeactivating ? 'Error al desactivar socio' : 'Error al reactivar socio')
+            );
+        }
+    };
+
     // Utilidades
     const logAuditAction = (action, target) => {
         const auditLog = {
@@ -443,6 +603,12 @@ const AdminDashboard = () => {
                     🏀 Jugadores
                 </button>
                 <button
+                    className={activeTab === 'members' ? 'active' : ''}
+                    onClick={() => setActiveTab('members')}
+                >
+                    🧑‍🤝‍🧑 Socios
+                </button>
+                <button
                     className={activeTab === 'users' ? 'active' : ''}
                     onClick={() => setActiveTab('users')}
                 >
@@ -548,6 +714,84 @@ const AdminDashboard = () => {
                     </div>
                 )}
 
+                {/* Pestaña de Socios */}
+                {activeTab === 'members' && (
+                    <div className="users-tab">
+                        <h2>🧑‍🤝‍🧑 Gestión de Socios</h2>
+
+                        {membersError ? (
+                            <div className="users-table users-table--empty">
+                                <p>{membersError}</p>
+                                <button
+                                    className="btn-secondary"
+                                    type="button"
+                                    onClick={loadDashboardData}
+                                    style={{ marginTop: '12px' }}
+                                >
+                                    Reintentar carga
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="users-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Socio</th>
+                                            <th>Nº Socio</th>
+                                            <th>Estado</th>
+                                            <th>Alta</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {members.length === 0 ? (
+                                            <tr>
+                                                <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
+                                                    {loading ? 'Cargando socios...' : 'No hay socios registrados'}
+                                                </td>
+                                            </tr>
+                                        ) : (
+                                            members.map(member => (
+                                                <tr key={member._id}>
+                                                    <td>{member.userId?.email || 'Sin usuario asociado'}</td>
+                                                    <td>{member.memberNumber}</td>
+                                                    <td>
+                                                        <span className={`status-badge ${member.status === 'active' ? 'active' : 'inactive'}`}>
+                                                            {MEMBER_STATUS_LABELS[member.status] || member.status}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        {member.joinDate ? new Date(member.joinDate).toLocaleDateString() : 'N/D'}
+                                                    </td>
+                                                    <td>
+                                                        {member.status === 'inactive' ? (
+                                                            <button
+                                                                className="btn-edit"
+                                                                onClick={() => handleToggleMemberStatus(member)}
+                                                                title="Reactivar socio"
+                                                            >
+                                                                ♻️ Reactivar
+                                                            </button>
+                                                        ) : (
+                                                            <button
+                                                                className="btn-delete"
+                                                                onClick={() => handleToggleMemberStatus(member)}
+                                                                title="Desactivar socio"
+                                                            >
+                                                                🚫 Desactivar
+                                                            </button>
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </div>
+                )}
+
                 {/* Pestaña de Usuarios */}
                 {activeTab === 'users' && (
                     <div className="users-tab">
@@ -632,20 +876,122 @@ const AdminDashboard = () => {
                 {/* Pestaña de Auditoría */}
                 {activeTab === 'audit' && (
                     <div className="audit-tab">
-                        <h2>📝 Registro de Auditoría</h2>
-                        <p>🚧 Funcionalidad en desarrollo. Los logs se muestran en la consola del navegador.</p>
-                        <div className="audit-info">
-                            <h3>Acciones registradas:</h3>
-                            <ul>
-                                <li>✅ Acceso al panel de administración</li>
-                                <li>✅ Creación de jugadores</li>
-                                <li>✅ Modificación de jugadores</li>
-                                <li>✅ Eliminación de jugadores</li>
-                                <li>✅ Modificación de usuarios</li>
-                                <li>✅ Eliminación de usuarios</li>
-                            </ul>
-                            <p><strong>Nota:</strong> En producción, estos logs se almacenarían en el backend para análisis de seguridad.</p>
+                        <div className="tab-header">
+                            <h2>📝 Registro de Auditoría</h2>
+                            <button
+                                className="btn-secondary"
+                                type="button"
+                                onClick={() => loadAuditLogs(auditFilters)}
+                                disabled={auditLoading}
+                            >
+                                🔄 Actualizar
+                            </button>
                         </div>
+
+                        <div className="form-grid" style={{ marginBottom: '20px' }}>
+                            <label>
+                                Acción
+                                <select
+                                    value={auditFilters.action}
+                                    onChange={(e) => handleAuditFilterChange('action', e.target.value)}
+                                >
+                                    <option value="">Todas las acciones</option>
+                                    {AUDIT_ACTIONS.map(action => (
+                                        <option key={action} value={action}>{action}</option>
+                                    ))}
+                                </select>
+                            </label>
+
+                            <label>
+                                Entidad
+                                <select
+                                    value={auditFilters.targetEntity}
+                                    onChange={(e) => handleAuditFilterChange('targetEntity', e.target.value)}
+                                >
+                                    <option value="">Todas las entidades</option>
+                                    {AUDIT_ENTITIES.map(entity => (
+                                        <option key={entity} value={entity}>{entity}</option>
+                                    ))}
+                                </select>
+                            </label>
+                        </div>
+
+                        {auditError ? (
+                            <div className="users-table users-table--empty">
+                                <p>{auditError}</p>
+                                <button
+                                    className="btn-secondary"
+                                    type="button"
+                                    onClick={() => loadAuditLogs(auditFilters)}
+                                    style={{ marginTop: '12px' }}
+                                >
+                                    Reintentar carga
+                                </button>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="users-table">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Actor</th>
+                                                <th>Acción</th>
+                                                <th>Entidad</th>
+                                                <th>Objetivo</th>
+                                                <th>IP</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {auditLogs.length === 0 ? (
+                                                <tr>
+                                                    <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
+                                                        {auditLoading ? 'Cargando registros...' : 'No hay registros de auditoría'}
+                                                    </td>
+                                                </tr>
+                                            ) : (
+                                                auditLogs.map(log => (
+                                                    <tr key={log._id}>
+                                                        <td>{log.timestamp ? new Date(log.timestamp).toLocaleString() : 'N/D'}</td>
+                                                        <td>{log.actorEmail || 'anónimo'}</td>
+                                                        <td>
+                                                            <span className="role-badge role-user">{log.action}</span>
+                                                        </td>
+                                                        <td>{log.targetEntity || 'N/D'}</td>
+                                                        <td>{log.targetId || '—'}</td>
+                                                        <td>{log.ip || '—'}</td>
+                                                    </tr>
+                                                ))
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                {auditMeta && auditMeta.totalPages > 1 && (
+                                    <div className="audit-pagination">
+                                        <button
+                                            className="btn-secondary"
+                                            type="button"
+                                            disabled={auditFilters.page <= 1 || auditLoading}
+                                            onClick={() => handleAuditPage(auditFilters.page - 1)}
+                                        >
+                                            ← Anterior
+                                        </button>
+                                        <span>
+                                            Página {auditMeta.page} de {auditMeta.totalPages} ({auditMeta.total} registros)
+                                        </span>
+                                        <button
+                                            className="btn-secondary"
+                                            type="button"
+                                            disabled={auditFilters.page >= auditMeta.totalPages || auditLoading}
+                                            onClick={() => handleAuditPage(auditFilters.page + 1)}
+                                        >
+                                            Siguiente →
+                                        </button>
+                                    </div>
+                                )}
+                            </>
+                        )}
                     </div>
                 )}
             </div>

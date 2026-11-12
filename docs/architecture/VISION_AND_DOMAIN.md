@@ -160,11 +160,11 @@ Entidades faltantes que deben incorporarse en la evolucion:
 | `PaymentObligation` | Futuro | Baja (Fase 4) |
 | `PaymentTransaction` | Futuro | Baja (Fase 4) |
 
-Deuda tecnica existente:
+Deuda tecnica de naming (RESUELTA en Sprint 1.1, ver `.agents/IMPLEMENTATION_PLAN.md`):
 
-- `Game` vive en `backend/models/Photo.js` — archivo con nombre semanticamente incorrecto
-- `Practice` vive en `backend/models/Description.js` — archivo con nombre semanticamente incorrecto
-- Estos archivos deben renombrarse en la primera oportunidad de refactor sin riesgo de datos
+- `Game` vivia en `backend/models/Photo.js` — renombrado a `game.model.js` (coleccion `games` intacta)
+- `Practice` vivia en `backend/models/Description.js` — renombrado a `practice.model.js` (coleccion `practices` intacta)
+- El nombre que importa en Mongoose es el de la coleccion, no el del archivo; por ello los datos de produccion no se vieron afectados.
 
 ---
 
@@ -193,6 +193,8 @@ Cuando la necesidad multi-club sea real, el campo `clubId` ya existente permite 
 
 ---
 
-**Referencia:** Ver `CLEAN_ARCHITECTURE.md` para el diseño de capas tecnicas que implementa esta vision.  
-**Referencia:** Ver `MODULES.md` para los limites y responsabilidades de cada modulo.  
-**Referencia:** Ver `../engineering/DEVELOPMENT_PHASES.md` para el roadmap de implementacion.
+> **Documentación subordinada al Centro de Operaciones.** La arquitectura vigente, las decisiones (ADR) y el roadmap se definen en `.agents/`. Este documento aporta el detalle de dominio que complementa —y nunca redefine— esa fuente única de verdad.
+
+**Referencia:** Ver `.agents/SYSTEMS_MAP.md` para el mapa de subsistemas y `.agents/SPEC.md` para los contratos técnicos.  
+**Referencia:** Ver `.agents/IMPLEMENTATION_PLAN.md` para el roadmap de implementación por fases y sprints.  
+**Referencia:** Ver `.agents/ARCHITECTURE_RULES.md` para las leyes de negocio (soft deletion, roster-driven billing, ABAC).

@@ -6,9 +6,9 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const authMiddleware = async (req, res, next) => {
     try {
         const authHeader = req.header('Authorization');
-        const token = authHeader?.startsWith('Bearer ')
-            ? authHeader.substring(7)
-            : req.cookies?.token;
+        let token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null;
+        if (!token) token = req.cookies?.accessToken;
+        if (!token) token = req.cookies?.token; // Retrocompatibilidad
 
         if (!token) {
             return res.status(401).json({

@@ -533,6 +533,112 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/Error'
 
+    /audit:
+        get:
+            summary: Consultar el registro de auditoría (solo admin)
+            tags: [Audit]
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                      type: integer
+                      minimum: 1
+                      default: 1
+                - name: limit
+                  in: query
+                  schema:
+                      type: integer
+                      minimum: 1
+                      maximum: 100
+                      default: 20
+                - name: action
+                  in: query
+                  schema:
+                      type: string
+                      example: 'LOGIN_SUCCESS'
+                - name: targetEntity
+                  in: query
+                  schema:
+                      type: string
+                      example: 'User'
+                - name: actorId
+                  in: query
+                  schema:
+                      type: string
+                      example: '64f1234567890abcdef12345'
+                - name: from
+                  in: query
+                  schema:
+                      type: string
+                      format: date-time
+                - name: to
+                  in: query
+                  schema:
+                      type: string
+                      format: date-time
+            responses:
+                200:
+                    description: Página del registro de auditoría
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                                    data:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                _id:
+                                                    type: string
+                                                actorId:
+                                                    type: string
+                                                    nullable: true
+                                                actorEmail:
+                                                    type: string
+                                                action:
+                                                    type: string
+                                                targetEntity:
+                                                    type: string
+                                                targetId:
+                                                    type: string
+                                                    nullable: true
+                                                metadata:
+                                                    type: object
+                                                ip:
+                                                    type: string
+                                                userAgent:
+                                                    type: string
+                                                timestamp:
+                                                    type: string
+                                                    format: date-time
+                                    meta:
+                                        type: object
+                                        properties:
+                                            total:
+                                                type: integer
+                                            page:
+                                                type: integer
+                                            limit:
+                                                type: integer
+                                            totalPages:
+                                                type: integer
+                401:
+                    description: No autorizado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                403:
+                    description: Acceso denegado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+
     /images/upload:
         post:
             summary: Subir imagen

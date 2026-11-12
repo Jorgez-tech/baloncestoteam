@@ -8,10 +8,7 @@
         "test": "jest",
         "lint": "eslint . --ext .js,.jsx",
         "format": "prettier --write .",
-        "lint:fix": "eslint . --ext .js,.jsx --fix",
-        "db:test": "node seed-db.js test",
-        "db:seed": "node seed-db.js seed",
-        "db:reset": "node seed-db.js seed"
+        "lint:fix": "eslint . --ext .js,.jsx --fix"
     },
     "keywords": [
         "basketball",
@@ -29,14 +26,17 @@
         "cookie-parser": "^1.4.6",
         "cors": "^2.8.5",
         "dotenv": "^16.3.1",
+        "ejs": "^6.0.1",
         "express": "^4.18.2",
         "express-rate-limit": "^6.7.1",
         "express-validator": "^7.2.1",
         "helmet": "^7.0.0",
         "ioredis": "^5.3.2",
         "jsonwebtoken": "^9.0.1",
+        "mercadopago": "^3.6.1",
         "mongoose": "^7.4.0",
         "multer": "^1.4.5-lts.1",
+        "nodemailer": "^10.0.14",
         "swagger-ui-express": "^5.0.0",
         "yamljs": "^0.3.0"
     },

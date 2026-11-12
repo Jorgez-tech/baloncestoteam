@@ -19,37 +19,67 @@ docker compose ps
 
 Ver [ARCHITECTURE.md](ARCHITECTURE.md) para configuracion detallada de entorno y despliegue.
 
+## Centro de operaciones y estado de implementación
+
+La fuente única de verdad para gobernanza, arquitectura, decisiones y roadmap es
+[`.agents/`](../.agents/). Esta documentación es operativa y no redefine su contenido.
+
+Orden de consulta obligatorio:
+
+1. [`.agents/AGENTS.md`](../.agents/AGENTS.md)
+2. [Auditoría de refactorización](../.agents/AUDITORIA_REFACTORIZACION_2026-10-16.md)
+3. [Plan de implementación](../.agents/IMPLEMENTATION_PLAN.md)
+4. Especificación, reglas y ADR de [`.agents/`](../.agents/)
+
+La refactorización permanece abierta. El siguiente trabajo debe comenzar por P0:
+sesión con cookies HttpOnly, `withCredentials`, refresh automático y pruebas de
+regresión. No iniciar nuevas funcionalidades mientras P0 esté abierto.
+
 ---
 
 ## Flujo de Trabajo Git
+
+> Regla canonica: [`.agents/rules/git-workflow.md`](../.agents/rules/git-workflow.md). A continuacion, el resumen practico.
+
+### Modelo de ramas (GitFlow adaptado)
+
+```
+main (produccion, estable)  <- solo merges desde release/*
+release/*                   <- preparacion de entrega
+develop                     <- integracion continua
+   ├── refactor/<fase>-<descripcion>
+   ├── feature/<fase>-<descripcion>
+   └── hotfix/<descripcion>
+```
+
+**Regla invariante:** `main` nunca recibe commits directos. Toda entrega pasa por `develop -> release -> main`.
 
 ### Nomenclatura de ramas
 
 | Tipo | Patron | Ejemplo |
 |---|---|---|
-| Feature | `feat/nombre` | `feat/player-stats` |
-| Fix | `fix/nombre` | `fix/login-error` |
-| Chore | `chore/descripcion` | `chore/update-deps` |
-| Docs | `docs/descripcion` | `docs/api-reference` |
+| Refactor | `refactor/<fase>-<descripcion>` | `refactor/fase1-estructura` |
+| Feature | `feature/<fase>-<descripcion>` | `feature/fase2-club` |
+| Hotfix | `hotfix/<descripcion>` | `hotfix/fix-login` |
 
 ### Commits: Conventional Commits
 
 ```
-feat: add player statistics view
-fix: resolve JWT expiration issue
+feat(players): add player statistics view
+fix(auth): resolve refresh token not invalidated on logout
 docs: update deployment guide
-style: format auth middleware
-refactor: simplify player model
-chore: update npm dependencies
-test: add players API tests
+refactor(auth): extract token validation to service
+chore(deps): update npm dependencies
+test(players): add players API tests
 ```
 
 ### Proceso de merge
 
-1. Crear rama desde `main`
+1. Crear la rama desde `develop` actualizado (los hotfix, desde `main`)
 2. Commits con formato Conventional Commits
-3. Pull Request con descripcion clara
-4. Review antes de merge a `main`
+3. Pull Request con descripcion clara hacia `develop`
+4. CI en verde y revision antes del merge
+5. `main` solo recibe merges desde `release/*`
 
 ---
 
@@ -101,4 +131,4 @@ docs/
 ```
 
 ---
-**Ultima actualizacion**: Febrero 2026
+**Ultima actualizacion**: Noviembre 2026
