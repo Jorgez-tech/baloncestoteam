@@ -15,58 +15,56 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // La sesión vive en cookies HttpOnly (ADR-004): se hidrata consultando el
+    // backend en vez de leer un token desde localStorage.
     useEffect(() => {
-        // Verificar si hay sesión activa al iniciar
-        const token = localStorage.getItem('token');
-        const savedUser = localStorage.getItem('user');
+        let isMounted = true;
 
-        if (token && savedUser && savedUser !== 'undefined') {
+        const hydrateSession = async () => {
             try {
-                const parsedUser = JSON.parse(savedUser);
-                setUser(parsedUser);
+                const response = await authAPI.getProfile();
+                if (isMounted && response.data?.user) {
+                    setUser(response.data.user);
+                }
             } catch (error) {
-                console.error('Error parsing user data:', error);
-                clearAuthData();
+                if (isMounted) setUser(null);
+            } finally {
+                if (isMounted) setLoading(false);
             }
-        } else {
-            clearAuthData();
-        }
+        };
 
-        setLoading(false);
+        const handleSessionExpired = () => setUser(null);
+
+        hydrateSession();
+        window.addEventListener('auth:session-expired', handleSessionExpired);
+
+        return () => {
+            isMounted = false;
+            window.removeEventListener('auth:session-expired', handleSessionExpired);
+        };
     }, []);
-
-    const clearAuthData = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        setUser(null);
-    };
-
-    const saveAuthData = (authData) => {
-        const { user, token } = authData;
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
-        setUser(user);
-    };
 
     const login = async (credentials) => {
         try {
             setLoading(true);
             const response = await authAPI.login(credentials);
 
-            // El backend responde directamente con { user, token }
-            const { user, token } = response.data;
+            // El backend responde con { user } y fija las cookies HttpOnly.
+            const authenticatedUser = response.data?.user;
 
-            if (user && token) {
-                saveAuthData({ user, token });
-                return { success: true, user };
-            } else {
-                return { success: false, error: 'Error al iniciar sesión' };
+            if (authenticatedUser) {
+                setUser(authenticatedUser);
+                return { success: true, user: authenticatedUser };
             }
+
+            return { success: false, error: 'Error al iniciar sesión' };
         } catch (error) {
             let errorMessage = 'Error al iniciar sesión';
 
             if (error.response?.data?.msg) {
                 errorMessage = error.response.data.msg;
+            } else if (error.response?.data?.message) {
+                errorMessage = error.response.data.message;
             } else if (error.response?.status === 429) {
                 errorMessage = 'Demasiados intentos. Por favor espera un momento.';
             } else if (error.code === 'NETWORK_ERROR') {
@@ -85,20 +83,20 @@ export const AuthProvider = ({ children }) => {
             setLoading(true);
             const response = await authAPI.register(userData);
 
-            // El backend solo responde con { msg: 'User registered' }
-            // NO devuelve token, así que el usuario debe hacer login después
+            // El backend solo responde con { message }; el registro no crea sesión.
             if (response.status === 201) {
                 return {
                     success: true,
-                    message: 'Cuenta creada exitosamente. Por favor inicia sesión.'
+                    message: response.data?.message || 'Cuenta creada exitosamente. Por favor inicia sesión.'
                 };
-            } else {
-                return { success: false, error: 'Error al crear la cuenta' };
             }
+            return { success: false, error: 'Error al crear la cuenta' };
         } catch (error) {
             let errorMessage = 'Error al crear la cuenta';
 
-            if (error.response?.data?.msg) {
+            if (error.response?.data?.message) {
+                errorMessage = error.response.data.message;
+            } else if (error.response?.data?.msg) {
                 errorMessage = error.response.data.msg;
             } else if (error.response?.data?.errors) {
                 const errors = error.response.data.errors;
@@ -112,13 +110,19 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const logout = () => {
-        clearAuthData();
+    const logout = async () => {
+        // Limpiamos el estado de inmediato y notificamos al backend para que
+        // invalide las cookies HttpOnly.
+        setUser(null);
+        try {
+            await authAPI.logout();
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
     };
 
     const updateUser = (updatedUser) => {
         setUser(updatedUser);
-        localStorage.setItem('user', JSON.stringify(updatedUser));
     };
 
     const value = {
@@ -130,7 +134,6 @@ export const AuthProvider = ({ children }) => {
         updateUser,
         isAuthenticated: !!user,
         isAdmin: user?.role === 'admin',
-        getToken: () => localStorage.getItem('token'),
     };
 
     return (
