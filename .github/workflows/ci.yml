@@ -2,9 +2,15 @@ name: CI
 
 on:
   push:
-    branches: [main, deploy, chore/limpieza-rutas-estructura, backup/antes-recuperacion, feat-dockerize-app]
+    branches:
+      - main
+      - develop
+      - 'refactor/**'
+      - 'feature/**'
+      - 'docs/**'
+      - 'ci/**'
   pull_request:
-    branches: [main, deploy]
+    branches: [main, develop]
 
 jobs:
   backend:
@@ -42,9 +48,8 @@ jobs:
           timeout 30s npm start &
           SERVER_PID=$!
           sleep 5
-          curl -f http://localhost:5000/health || echo "Health check failed but continuing..."
+          curl -f http://localhost:5000/health
           kill $SERVER_PID 2>/dev/null || true
-        continue-on-error: true
 
       - name: Test backend
         run: npm test --prefix backend
@@ -81,7 +86,6 @@ jobs:
         run: npm test --prefix frontend -- --coverage --watchAll=false
         env:
           CI: true
-        continue-on-error: true
 
       # - name: Coverage
       #   run: npm run test:coverage --prefix frontend
