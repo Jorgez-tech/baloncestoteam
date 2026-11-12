@@ -425,6 +425,21 @@ tbody tr:hover {
     line-height: 1.8;
 }
 
+.audit-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    color: #4a5568;
+    font-weight: 600;
+}
+
+.audit-pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 /* Access Denied */
 .admin-access-denied {
     display: flex;
