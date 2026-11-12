@@ -79,8 +79,11 @@ const seedDatabase = async () => {
 
         // Limpiar colecciones existentes
         console.log('Limpiando colecciones existentes...');
-        await User.deleteMany({});
-        await Player.deleteMany({});
+        // Las entidades core bloquean el borrado físico a nivel de modelo. Este script
+        // destructivo solo debe ejecutarse sobre bases de datos de prueba, por lo que
+        // usa el driver crudo de forma explícita.
+        await User.collection.deleteMany({});
+        await Player.collection.deleteMany({});
         console.log('Colecciones limpiadas');
 
         // Crear usuarios
