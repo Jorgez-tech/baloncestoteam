@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const softDeletePlugin = require('../src/core/plugins/soft-delete.plugin');
 
 const clubSchema = new mongoose.Schema({
     name: { type: String, required: true, trim: true },
@@ -7,5 +8,7 @@ const clubSchema = new mongoose.Schema({
     address: { type: String, trim: true },
     isActive: { type: Boolean, default: true }
 }, { timestamps: true });
+
+clubSchema.plugin(softDeletePlugin);
 
 module.exports = mongoose.models.Club || mongoose.model('Club', clubSchema);

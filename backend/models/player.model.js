@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const softDeletePlugin = require('../src/core/plugins/soft-delete.plugin');
 
 const playerSchema = new mongoose.Schema(
     {
@@ -70,6 +71,10 @@ const playerSchema = new mongoose.Schema(
 // Índice para búsquedas por posición
 playerSchema.index({ position: 1 });
 playerSchema.index({ user_id: 1 });
+
+// Players are referenced by the roster (TeamPlayer): removing them physically would
+// leave orphan roster entries, so they use the same soft deletion rules as core entities.
+playerSchema.plugin(softDeletePlugin);
 
 const Player = mongoose.models.Player || mongoose.model('Player', playerSchema);
 
