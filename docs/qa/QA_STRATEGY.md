@@ -310,6 +310,8 @@ Estos tests ya existen parcialmente en `frontend/src/__tests__/Admin.test.jsx`. 
 
 ---
 
-**Referencia:** Ver `../engineering/ENGINEERING_GUIDELINES.md` para convenciones de nombrado de archivos de test.  
-**Referencia:** Ver `../engineering/DEVELOPMENT_PHASES.md` para el criterio de completitud de cada fase.  
-**Referencia:** Ver `../architecture/CLEAN_ARCHITECTURE.md` para entender por que cada capa tiene su tipo de test.
+> **Documentación subordinada al Centro de Operaciones.** Las reglas de código y los contratos vigentes se definen en `.agents/rules/` y `.agents/SPEC.md`. Este documento aporta la estrategia de pruebas que complementa esa fuente única de verdad.
+
+**Referencia:** Ver `.agents/rules/backend-rules.md` y `.agents/rules/frontend-rules.md` para las reglas de código que estas pruebas verifican.  
+**Referencia:** Ver `.agents/IMPLEMENTATION_PLAN.md` para el criterio de completitud (DoD) de cada fase.  
+**Referencia:** Ver `.agents/ARCHITECTURE_RULES.md` para las invariantes de dominio que deben cubrirse con tests.

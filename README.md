@@ -8,6 +8,12 @@ Sistema de gestion integral para equipos de baloncesto, construido con el stack 
 
 > **Validacion local (Febrero 2026):** La solucion fue probada satisfactoriamente en entorno local — frontend (http://localhost:3000), backend (http://localhost:5000) y base de datos MongoDB en Docker, todos funcionales con datos reales persistentes.
 
+> **Estado de refactorizacion (Noviembre 2026):** La refactorizacion arquitectonica
+> permanece abierta. El bloqueador actual es la alineacion del login web con cookies
+> HttpOnly. Consultar [`.agents/AGENTS.md`](.agents/AGENTS.md), la
+> [auditoria](.agents/AUDITORIA_REFACTORIZACION_2026-10-16.md) y el
+> [plan activo](.agents/IMPLEMENTATION_PLAN.md) antes de continuar la implementacion.
+
 ---
 
 ## Inicio Rapido
