@@ -1,6 +1,7 @@
 const request = require('supertest');
 const express = require('express');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 
 // Mock del modelo Player con métodos de Mongoose
 jest.mock('../models/player.model');
@@ -10,6 +11,12 @@ jest.mock('../src/modules/payments/services/payment.service', () => ({
     reconcileBillingAfterRosterChange: jest.fn()
 }));
 
+// Redis deshabilitado: el optionalAuth real no debe intentar conectarse durante los tests.
+jest.mock('../config/redis', () => ({
+    getRedisClient: () => null,
+    connectRedis: () => null,
+}));
+
 const Player = require('../models/player.model');
 const TeamPlayer = require('../models/team_player.model');
 const paymentService = require('../src/modules/payments/services/payment.service');
@@ -17,7 +24,7 @@ const paymentService = require('../src/modules/payments/services/payment.service
 
 // Mock del middleware de autenticación
 jest.mock('../middleware/auth', () => {
-    return (req, res, next) => {
+    const authMiddleware = (req, res, next) => {
         req.user = {
             _id: 'mock-user-id',
             email: 'test@example.com',
@@ -25,6 +32,17 @@ jest.mock('../middleware/auth', () => {
         };
         next();
     };
+
+    authMiddleware.optionalAuth = (req, res, next) => {
+        req.user = {
+            _id: 'mock-user-id',
+            email: 'test@example.com',
+            role: 'admin'
+        };
+        next();
+    };
+
+    return authMiddleware;
 });
 
 // Mock del middleware de validación para simplificar tests
@@ -275,5 +293,61 @@ describe('Players API', () => {
             expect(response.status).not.toBe(401);
             expect(response.status).not.toBe(403);
         });
+    });
+});
+
+// Ejercita el middleware real (no el mock) para validar el comportamiento opcional (SPEC §3).
+describe('optionalAuth middleware (SPEC §3)', () => {
+    const { optionalAuth } = jest.requireActual('../middleware/auth');
+    const ORIGINAL_SECRET = process.env.JWT_SECRET;
+
+    const buildProbeApp = () => {
+        const probe = express();
+        probe.get('/probe', optionalAuth, (req, res) => {
+            res.json({ user: req.user || null });
+        });
+        return probe;
+    };
+
+    beforeAll(() => {
+        process.env.JWT_SECRET = 'test-optional-auth-secret';
+    });
+
+    afterAll(() => {
+        process.env.JWT_SECRET = ORIGINAL_SECRET;
+    });
+
+    it('grants anonymous access when no token is provided', async () => {
+        const response = await request(buildProbeApp()).get('/probe');
+
+        expect(response.status).toBe(200);
+        expect(response.body.user).toBeNull();
+    });
+
+    it('hydrates req.user when a valid token is provided', async () => {
+        const token = jwt.sign(
+            { id: 'user-1', email: 'user@example.com', role: 'admin' },
+            process.env.JWT_SECRET
+        );
+
+        const response = await request(buildProbeApp())
+            .get('/probe')
+            .set('Authorization', `Bearer ${token}`);
+
+        expect(response.status).toBe(200);
+        expect(response.body.user).toEqual({
+            id: 'user-1',
+            email: 'user@example.com',
+            role: 'admin',
+        });
+    });
+
+    it('degrades gracefully to anonymous access when the token is invalid', async () => {
+        const response = await request(buildProbeApp())
+            .get('/probe')
+            .set('Authorization', 'Bearer not-a-real-token');
+
+        expect(response.status).toBe(200);
+        expect(response.body.user).toBeNull();
     });
 });
