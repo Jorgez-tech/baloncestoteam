@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middleware/auth');
 const userController = require('../src/modules/users/controllers/user.controller');
-const { updateUserDto, validateObjectIdParam, withValidation } = require('../src/modules/users/dtos/user.dto');
+const { updateUserDto, listUsersDto, validateObjectIdParam, withValidation } = require('../src/modules/users/dtos/user.dto');
 
 // Validar parámetros genéricos
 const validateId = withValidation([validateObjectIdParam('id')]);
 
-// GET /api/v1/users - Listar usuarios (solo admin)
-router.get('/', authMiddleware, userController.listUsers);
+// GET /api/v1/users - Listar usuarios (solo admin, con filtros/paginación opcionales)
+router.get('/', authMiddleware, listUsersDto, userController.listUsers);
 
 // GET /api/v1/users/:id - Obtener usuario específico
 router.get('/:id', authMiddleware, validateId, userController.getUser);

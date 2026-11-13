@@ -1,10 +1,24 @@
 const User = require('../../../../models/user.model');
 
 class UserService {
-    async listUsers() {
-        return await User.find()
+    async listUsers(query = {}) {
+        const { page, limit, role, isActive, search } = query;
+
+        const filter = {};
+        if (role) filter.role = role;
+        if (isActive !== undefined) filter.isActive = isActive;
+        if (search) filter.name = { $regex: search, $options: 'i' };
+
+        const findQuery = User.find(filter)
             .select('-password')
             .sort({ createdAt: -1 });
+
+        // Pagination stays opt-in so existing consumers still receive the full list.
+        if (limit) {
+            findQuery.skip(((page || 1) - 1) * limit).limit(limit);
+        }
+
+        return findQuery;
     }
 
     async getUserById(id) {

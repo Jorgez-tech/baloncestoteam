@@ -1,5 +1,5 @@
-const { body } = require('express-validator');
-const { withValidation, validateObjectIdParam } = require('../../users/dtos/user.dto');
+const { body, query } = require('express-validator');
+const { withValidation, validateObjectIdParam, withQueryValidation } = require('../../users/dtos/user.dto');
 
 const createObligationDto = withValidation([
     body('memberId').notEmpty().isMongoId().withMessage('memberId inválido'),
@@ -25,9 +25,18 @@ const generateBatchDto = withValidation([
     body('dueDate').isISO8601().toDate().withMessage('dueDate debe ser una fecha válida')
 ]);
 
+const listMemberObligationsDto = withQueryValidation([
+    query('page').optional().isInt({ min: 1 }).withMessage('page debe ser un entero mayor o igual a 1').toInt(),
+    query('limit').optional().isInt({ min: 1, max: 100 }).withMessage('limit debe estar entre 1 y 100').toInt(),
+    query('status').optional().trim().isIn(['pending', 'paid', 'overdue', 'cancelled']).withMessage('Estado inválido'),
+    query('type').optional().trim().isIn(['mensualidad', 'matricula', 'uniforme', 'otro']).withMessage('Tipo inválido'),
+    query('period').optional().trim().notEmpty().withMessage('period no puede estar vacío'),
+]);
+
 module.exports = {
     createObligationDto,
     updateObligationStatusDto,
     generateBatchDto,
+    listMemberObligationsDto,
     validateObjectIdParam: (field) => withValidation([validateObjectIdParam(field)])
 };

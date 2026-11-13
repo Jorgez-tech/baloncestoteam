@@ -517,21 +517,158 @@ paths:
         get:
             summary: Obtener lista de usuarios (solo admin)
             tags: [Users]
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: page
+                  in: query
+                  description: Número de página (paginación opcional)
+                  schema:
+                      type: integer
+                      minimum: 1
+                      default: 1
+                - name: limit
+                  in: query
+                  description: Elementos por página (opcional; sin límite devuelve la lista completa)
+                  schema:
+                      type: integer
+                      minimum: 1
+                      maximum: 100
+                - name: role
+                  in: query
+                  description: Filtrar por rol
+                  schema:
+                      type: string
+                      enum: [user, admin]
+                - name: isActive
+                  in: query
+                  description: Filtrar por estado de activación
+                  schema:
+                      type: boolean
+                - name: search
+                  in: query
+                  description: Buscar por nombre
+                  schema:
+                      type: string
             responses:
                 200:
                     description: Lista de usuarios
                     content:
                         application/json:
                             schema:
-                                type: array
-                                items:
-                                    $ref: '#/components/schemas/User'
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                                    data:
+                                        type: array
+                                        items:
+                                            $ref: '#/components/schemas/User'
+                                    meta:
+                                        type: object
+                                        properties:
+                                            total:
+                                                type: integer
                 401:
                     description: No autorizado
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Error'
+                403:
+                    description: Prohibido (se requieren permisos de administrador)
+
+    /obligations/member/{memberId}:
+        get:
+            summary: Obtener las obligaciones de un socio
+            tags: [Payments]
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: memberId
+                  in: path
+                  required: true
+                  description: ID del socio
+                  schema:
+                      type: string
+                      example: '64f1234567890abcdef12345'
+                - name: page
+                  in: query
+                  description: Número de página (paginación opcional)
+                  schema:
+                      type: integer
+                      minimum: 1
+                      default: 1
+                - name: limit
+                  in: query
+                  description: Elementos por página (opcional; sin límite devuelve la lista completa)
+                  schema:
+                      type: integer
+                      minimum: 1
+                      maximum: 100
+                - name: status
+                  in: query
+                  description: Filtrar por estado de la obligación
+                  schema:
+                      type: string
+                      enum: [pending, paid, overdue, cancelled]
+                - name: type
+                  in: query
+                  description: Filtrar por tipo de obligación
+                  schema:
+                      type: string
+                      enum: [mensualidad, matricula, uniforme, otro]
+                - name: period
+                  in: query
+                  description: Filtrar por periodo (ej. 2026-10)
+                  schema:
+                      type: string
+                      example: '2026-10'
+            responses:
+                200:
+                    description: Lista de obligaciones del socio
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                                    data:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                _id:
+                                                    type: string
+                                                memberId:
+                                                    type: string
+                                                title:
+                                                    type: string
+                                                type:
+                                                    type: string
+                                                    enum: [mensualidad, matricula, uniforme, otro]
+                                                period:
+                                                    type: string
+                                                    nullable: true
+                                                amount:
+                                                    type: number
+                                                status:
+                                                    type: string
+                                                    enum: [pending, paid, overdue, cancelled]
+                                                dueDate:
+                                                    type: string
+                                                    format: date-time
+                401:
+                    description: No autorizado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                403:
+                    description: Prohibido (solo el socio o un administrador)
 
     /audit:
         get:
