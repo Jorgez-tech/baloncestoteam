@@ -79,8 +79,8 @@ Base de datos: basketball_team
 #### Backend:
 - `backend/server.js` - Servidor Express con validación JWT
 - `backend/config/db.js` - Conexión MongoDB
-- `backend/models/player.js` - Modelo de jugadores (revisar antes de cambios)
-- `backend/models/user.js` - Modelo de usuarios (revisar antes de cambios)
+- `backend/models/player.model.js` - Modelo de jugadores (revisar antes de cambios)
+- `backend/models/user.model.js` - Modelo de usuarios (revisar antes de cambios)
 - `backend/seed-db.js` - ⚠️ NO EJECUTAR (sobrescribe datos reales)
 
 #### Docker:

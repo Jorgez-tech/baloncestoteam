@@ -3,8 +3,8 @@ const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 // Import models
-const User = require('./models/user');
-const Player = require('./models/player');
+const User = require('./models/user.model');
+const Player = require('./models/player.model');
 
 const sampleUsers = [
     {
