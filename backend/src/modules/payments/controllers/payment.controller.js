@@ -41,7 +41,7 @@ class PaymentController {
 
     async getMemberObligations(req, res) {
         try {
-            const obligations = await paymentService.getMemberObligations(req.params.memberId);
+            const obligations = await paymentService.getMemberObligations(req.params.memberId, req.validatedQuery);
             res.json({ success: true, data: obligations });
         } catch (e) {
             res.status(500).json({ success: false, message: e.message });

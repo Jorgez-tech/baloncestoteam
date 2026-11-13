@@ -8,6 +8,7 @@ const {
     createObligationDto,
     updateObligationStatusDto,
     generateBatchDto,
+    listMemberObligationsDto,
     validateObjectIdParam
 } = require('../src/modules/payments/dtos/payment.dto');
 
@@ -26,8 +27,8 @@ router.post('/batch', requireAdmin, generateBatchDto, paymentController.generate
 router.patch('/:id/status', requireAdmin, updateObligationStatusDto, paymentController.updateStatus);
 
 // --- RUTAS DE ACCESO DE SOCIOS ---
-// El socio puede ver su propio estado de cuenta (todas sus cuotas)
-router.get('/member/:memberId', requireMemberAccess, validateObjectIdParam('memberId'), paymentController.getMemberObligations);
+// El socio puede ver su propio estado de cuenta (todas sus cuotas, con filtros/paginación opcionales)
+router.get('/member/:memberId', requireMemberAccess, validateObjectIdParam('memberId'), listMemberObligationsDto, paymentController.getMemberObligations);
 
 // --- INTEGRACIÓN CON MERCADO PAGO ---
 // El socio (o admin) genera el link de pago para una cuota específica

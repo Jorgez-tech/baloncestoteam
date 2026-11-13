@@ -16,8 +16,22 @@ class PaymentService {
         return obligation.save();
     }
 
-    async getMemberObligations(memberId) {
-        return PaymentObligation.find({ memberId }).sort({ dueDate: -1 });
+    async getMemberObligations(memberId, query = {}) {
+        const { page, limit, status, type, period } = query;
+
+        const filter = { memberId };
+        if (status) filter.status = status;
+        if (type) filter.type = type;
+        if (period) filter.period = period;
+
+        const findQuery = PaymentObligation.find(filter).sort({ dueDate: -1 });
+
+        // Pagination stays opt-in so existing consumers still receive the full list.
+        if (limit) {
+            findQuery.skip(((page || 1) - 1) * limit).limit(limit);
+        }
+
+        return findQuery;
     }
 
     async getObligationById(id) {

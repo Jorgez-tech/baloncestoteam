@@ -12,7 +12,7 @@ class UserController {
                 });
             }
 
-            const users = await userService.listUsers();
+            const users = await userService.listUsers(req.validatedQuery);
             res.json({
                 success: true,
                 data: users,

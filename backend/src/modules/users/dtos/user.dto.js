@@ -1,4 +1,4 @@
-const { body, param, validationResult, matchedData } = require('express-validator');
+const { body, param, query, validationResult, matchedData } = require('express-validator');
 const mongoose = require('mongoose');
 
 const withValidation = (validations) => async (req, res, next) => {
@@ -66,8 +66,17 @@ const updateUserDto = withValidation([
         .toBoolean(),
 ]);
 
+const listUsersDto = withQueryValidation([
+    query('page').optional().isInt({ min: 1 }).withMessage('page debe ser un entero mayor o igual a 1').toInt(),
+    query('limit').optional().isInt({ min: 1, max: 100 }).withMessage('limit debe estar entre 1 y 100').toInt(),
+    query('role').optional().trim().isIn(['user', 'admin']).withMessage('El rol debe ser user o admin'),
+    query('isActive').optional().isBoolean().withMessage('isActive debe ser booleano').toBoolean(),
+    query('search').optional().trim().notEmpty().withMessage('search no puede estar vacío'),
+]);
+
 module.exports = {
     updateUserDto,
+    listUsersDto,
     validateObjectIdParam,
     withValidation,
     withQueryValidation,
